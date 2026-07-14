@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+:root {
+  --gold-start: #F0B429;
+  --gold-end: #B8621B;
+  --primary: #C1791F;
+  --navy: #122B54;
+  --navy-light: #1E3A6B;
+  --background: #FDFBF7;
+  --background-alt: #FAF4E9;
+  --foreground: #1A1A1A;
+  --muted-foreground: #5C5C5C;
+  --border: #EDE3D0;
+  --accent: #6E8B5E;
+  --destructive: #B3492F;
+}
+
+@theme {
+  --color-gold-start: var(--gold-start);
+  --color-gold-end: var(--gold-end);
+  --color-primary: var(--primary);
+  --color-navy: var(--navy);
+  --color-navy-light: var(--navy-light);
+  --color-background: var(--background);
+  --color-background-alt: var(--background-alt);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-destructive: var(--destructive);
+
+  --font-serif: var(--font-playfair), Georgia, serif;
+  --font-sans: var(--font-inter), sans-serif;
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-spin-slow: spin 20s linear infinite;
+  --animate-fade-in-up: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom premium utilities */
+.bg-gold-gradient {
+  background: linear-gradient(135deg, var(--gold-start) 0%, var(--gold-end) 100%);
+}
+
+.text-gold-gradient {
+  background: linear-gradient(135deg, var(--gold-start) 0%, var(--gold-end) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.border-gold-gradient {
+  border-image: linear-gradient(135deg, var(--gold-start) 0%, var(--gold-end) 100%) 1;
+}
+
+.shadow-premium {
+  box-shadow: 0 4px 20px -2px rgba(184, 98, 27, 0.08), 0 2px 8px -1px rgba(18, 43, 84, 0.04);
+}
+
+.shadow-premium-lg {
+  box-shadow: 0 10px 30px -5px rgba(184, 98, 27, 0.12), 0 4px 12px -2px rgba(18, 43, 84, 0.06);
+}
+
+/* Swiper custom styles */
+.swiper-pagination-bullet-active {
+  background: linear-gradient(135deg, var(--gold-start) 0%, var(--gold-end) 100%) !important;
+}
+
+/* Custom Vastu compass/mandala overlay decoration */
+.vastu-mandala-bg {
+  background-image: radial-gradient(circle at center, rgba(184, 98, 27, 0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Lenis smooth scrolling configurations */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
