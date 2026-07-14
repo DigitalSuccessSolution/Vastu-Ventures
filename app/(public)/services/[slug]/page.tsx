@@ -551,7 +551,7 @@ export default function ServiceDetailsPage({ params }: Props) {
                   <Calendar className="w-4 h-4" />
                 </Link>
                 <Link
-                  href="#booking-inquiry"
+                  href="#book-consultation"
                   className="px-6 py-3.5 rounded-xl bg-white border border-[#EDE3D0] hover:border-[#E28A3E] hover:bg-[#FEF3E4]/35 text-navy text-xs font-bold shadow-sm hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2"
                 >
                   <span>Talk to Expert</span>
@@ -751,62 +751,7 @@ export default function ServiceDetailsPage({ params }: Props) {
           </div>
         </section>
 
-        {/* 7. REQUIRED INFORMATION */}
-        <section className="mb-20">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="text-xs uppercase font-bold text-[#E28A3E] tracking-widest">Prerequisites</span>
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-navy mt-2">
-              Required Information
-            </h2>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-3 font-light max-w-lg mx-auto">
-              Please gather these details to help our Acharyas conduct a high-accuracy energy scan of your premises.
-            </p>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {service.requiredInfo.map((info, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ ...transition, delay: idx * 0.05 }}
-                className="bg-white border border-[#EDE3D0]/60 rounded-2xl p-6 text-left shadow-sm flex flex-col gap-3"
-              >
-                <Check className="w-4 h-4 text-black flex-shrink-0" strokeWidth={3} />
-                <h4 className="text-xs sm:text-sm font-bold text-navy mt-1 leading-snug">{info.title}</h4>
-                <p className="text-[11px] text-muted-foreground font-light mt-1 leading-relaxed">{info.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-
-        {/* 8. WHY CHOOSE VASTUVIDYA */}
-        <section className="mb-20">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center text-left">
-            <div className="lg:col-span-6 flex flex-col gap-5">
-              <span className="text-xs uppercase font-bold text-[#E28A3E] tracking-widest">Our Difference</span>
-              <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-navy">
-                Why Choose VastuVidya?
-              </h2>
-              <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
-                We bridge ancient Vedic wisdom with modern spatial diagnostic methodologies to deliver reliable spatial balancing.
-              </p>
-            </div>
-
-            <div className="lg:col-span-6 flex flex-col gap-4">
-              {service.whyPoints.map((point, index) => (
-                <div key={index} className="bg-white border border-[#EDE3D0]/60 rounded-2xl p-5 shadow-sm flex gap-4 items-start hover:border-[#E28A3E]/30 transition-all">
-                  <ShieldCheck className="w-6 h-6 text-black flex-shrink-0" strokeWidth={1.5} />
-                  <div>
-                    <h4 className="text-xs sm:text-sm font-bold text-navy">{point.title}</h4>
-                    <p className="text-xs text-muted-foreground font-light mt-1.5 leading-relaxed">{point.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* 9. CLIENT SUCCESS STORIES */}
         <section className="mb-20">
@@ -961,7 +906,7 @@ export default function ServiceDetailsPage({ params }: Props) {
                 {/* Consultation Fee Badge */}
                 <div className="flex items-center gap-3 mt-1">
                   <Link
-                    href="#booking-inquiry"
+                    href="#book-consultation"
                     className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-gold-gradient hover:opacity-95 text-white text-xs font-bold shadow-premium hover:shadow-premium-lg hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
                   >
                     <span>Inquire Now</span>
@@ -977,47 +922,6 @@ export default function ServiceDetailsPage({ params }: Props) {
           </div>
         </section>
 
-        {/* 13. RELATED SERVICES */}
-        <section id="booking-inquiry" className="mb-8 scroll-mt-24">
-          <div className="text-center max-w-3xl mx-auto mb-10">
-            <span className="text-xs uppercase font-bold text-[#E28A3E] tracking-widest">Other Options</span>
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-navy mt-2">
-              Explore Related Services
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {otherServices.map((item, index) => {
-              const ItemIcon = item.icon || Compass;
-              return (
-                <div
-                  key={index}
-                  className="group bg-white border border-[#EDE3D0]/60 rounded-2xl p-5 text-left shadow-sm hover:shadow-premium hover:border-[#E28A3E]/30 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
-                >
-                  <div className="flex flex-col gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#FEF3E4] flex items-center justify-center text-[#E28A3E] group-hover:bg-[#E28A3E]/10 transition-colors">
-                      <ItemIcon className="w-5.5 h-5.5" strokeWidth={1.5} />
-                    </div>
-                    <h3 className="font-serif text-sm sm:text-base font-bold text-navy group-hover:text-[#E28A3E] transition-colors leading-snug">
-                      {item.name}
-                    </h3>
-                    <p className="text-[11px] text-muted-foreground font-light leading-relaxed">{item.desc}</p>
-                  </div>
-
-                  <div className="mt-4 pt-3 border-t border-[#EDE3D0]/40 flex items-center justify-between text-xs">
-                    <span className="font-bold text-navy">₹{item.price}</span>
-                    <Link
-                      href={`/services/${item.slug}`}
-                      className="text-xs font-semibold text-[#E28A3E] flex items-center gap-1 hover:gap-1.5 transition-all"
-                    >
-                      Details <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
 
       </div>
     </div>

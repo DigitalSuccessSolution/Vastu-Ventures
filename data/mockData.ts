@@ -488,7 +488,7 @@ export const FAQS: FAQ[] = [
   {
     id: 'f4',
     question: 'Is the certificate globally recognized?',
-    answer: 'VastuVidya certificates are recognized by leading traditional Vedic research boards and architecture forums. It showcases your rigorous coursework, live training hours, and technical understanding of layout metrics.',
+    answer: 'Vastu Ventures certificates are recognized by leading traditional Vedic research boards and architecture forums. It showcases your rigorous coursework, live training hours, and technical understanding of layout metrics.',
     category: 'Education'
   }
 ];

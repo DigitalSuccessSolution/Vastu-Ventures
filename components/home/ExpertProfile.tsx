@@ -69,7 +69,7 @@ export default function ExpertProfile() {
               <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#E28A3E]">
                 • Meet Our Expert •
               </span>
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold mt-2 leading-tight">
+              <h2 className="font-serif text-3xl sm:text-4xl font-medium mt-2 leading-tight">
                 <span className="text-navy">Acharya </span>
                 <span className="text-[#E28A3E]">Vastu Dev</span>
               </h2>

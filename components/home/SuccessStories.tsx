@@ -64,7 +64,7 @@ export default function SuccessStories() {
           <span className="text-xs uppercase font-bold text-[#E28A3E] tracking-widest">
             Real Transformations
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-navy mt-2.5">
+          <h2 className="font-serif text-3xl sm:text-4xl font-medium text-navy mt-2.5">
             Success Stories & Case Studies
           </h2>
           <p className="text-sm text-muted-foreground mt-3 font-light leading-relaxed">

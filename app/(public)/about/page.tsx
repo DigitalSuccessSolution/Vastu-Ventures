@@ -19,7 +19,7 @@ export default function AboutPage() {
             Ancient Wisdom, Modern Guidance
           </h1>
           <p className="text-xs sm:text-sm text-muted-foreground mt-4 max-w-xl mx-auto font-light leading-relaxed">
-            At VastuVidya, we bridge the gap between traditional Indian spatial guidelines (Shilpashastra) and contemporary architecture requirements.
+            At Vastu Ventures, we bridge the gap between traditional Indian spatial guidelines (Shilpashastra) and contemporary architecture requirements.
           </p>
         </div>
       </section>
@@ -27,13 +27,13 @@ export default function AboutPage() {
       {/* Main Narrative */}
       <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          
+
           <div className="lg:col-span-6 flex flex-col gap-6 text-left">
             <h2 className="font-serif text-2xl sm:text-3xl font-bold text-navy">
               Honoring a Lineage of Vedic Harmony
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-light">
-              Vastu Vidya is not just a consultation practice—it is an educational guild. Founded by Acharya Raghavendra, a practitioner with over two decades of experience, our mission is to demystify traditional architecture.
+              Vastu Ventures is not just a consultation practice—it is an educational guild. Founded by Acharya Raghavendra, a practitioner with over two decades of experience, our mission is to demystify traditional architecture.
             </p>
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-light">
               We focus on elemental chemistry: managing the flow of Solar Energy (from the East), Magnetic Currents (from the North), and elemental fire, water, earth, and air balances.
@@ -64,7 +64,7 @@ export default function AboutPage() {
               <div className="absolute inset-0 bg-gradient-to-t from-navy/30 to-transparent" />
             </div>
           </div>
-          
+
         </div>
       </section>
 

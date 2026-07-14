@@ -86,7 +86,7 @@ export default function LatestBlogs() {
             <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#E28A3E]">
               • Latest Blogs •
             </span>
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold mt-1 leading-none text-center">
+            <h2 className="font-serif text-3xl sm:text-4xl font-medium mt-1 leading-none text-center">
               <span className="text-navy">Insights & </span>
               <span className="text-[#E28A3E]">Vastu Tips</span>
             </h2>

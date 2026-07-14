@@ -15,7 +15,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "VastuVidya | Ancient Wisdom, Modern Guidance",
+  title: "Vastu Ventures | Ancient Wisdom, Modern Guidance",
   description: "Premium Vastu Consultation and Online Certification Courses. Bring harmony, prosperity, and peace to your spaces.",
 };
 

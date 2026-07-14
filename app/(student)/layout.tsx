@@ -45,7 +45,7 @@ export default function StudentLayout({
         {/* Sidebar Header */}
         <div className="h-16 flex items-center px-6 border-b border-border bg-white">
           <Link href="/" className="flex items-center gap-2 group">
-            <img src="/logo.png" alt="VastuVidya Logo" className="h-12 w-auto object-contain" />
+            <img src="/logo.png" alt="Vastu Ventures Logo" className="h-12 w-auto object-contain" />
           </Link>
         </div>
 
@@ -58,11 +58,10 @@ export default function StudentLayout({
               <Link
                 key={item.name}
                 href={item.href}
-                className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                  isActive
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${isActive
                     ? "bg-gold-gradient text-white shadow-premium"
                     : "text-navy-light hover:bg-background-alt hover:text-primary"
-                }`}
+                  }`}
               >
                 <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-primary"}`} />
                 {item.name}
@@ -136,11 +135,10 @@ export default function StudentLayout({
                       key={item.name}
                       href={item.href}
                       onClick={() => setSidebarOpen(false)}
-                      className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                        isActive
+                      className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${isActive
                           ? "bg-gold-gradient text-white shadow-premium"
                           : "text-navy-light hover:bg-background-alt hover:text-primary"
-                      }`}
+                        }`}
                     >
                       <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-primary"}`} />
                       {item.name}

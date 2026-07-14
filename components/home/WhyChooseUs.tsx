@@ -53,7 +53,7 @@ export default function WhyChooseUs() {
     <section className="py-16 bg-[#FDFBF7] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-          
+
           {/* Left Column: Premium Vastu interior image */}
           <motion.div
             initial="hidden"
@@ -65,7 +65,7 @@ export default function WhyChooseUs() {
             <div className="relative aspect-[4/3] sm:aspect-[1.6/1] lg:aspect-[4/3] rounded-3xl overflow-hidden shadow-premium border border-border/50">
               <img
                 src="/why-choose-us-vastu.png"
-                alt="Why Thousands Trust VastuVidya"
+                alt="Why Thousands Trust Vastu Ventures"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -83,7 +83,7 @@ export default function WhyChooseUs() {
               <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#E28A3E]">
                 • Why Choose Us •
               </span>
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold mt-2 leading-tight">
+              <h2 className="font-serif text-3xl sm:text-4xl font-medium mt-2 leading-tight">
                 <span className="text-navy">Why Thousands Trust </span>
                 <br />
                 <span className="text-navy">Vastu</span>

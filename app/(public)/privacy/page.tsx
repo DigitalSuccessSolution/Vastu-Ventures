@@ -9,7 +9,7 @@ export default function PrivacyPage() {
         </h1>
         <div className="prose max-w-none text-xs sm:text-sm text-navy leading-relaxed font-light flex flex-col gap-6">
           <p>
-            VastuVidya respects your privacy and is committed to protecting the personal information you share with us during consultations, course sign-ups, and form submissions.
+            Vastu Ventures respects your privacy and is committed to protecting the personal information you share with us during consultations, course sign-ups, and form submissions.
           </p>
           <div>
             <h3 className="font-serif text-base font-bold text-navy mb-2">1. Information We Collect</h3>

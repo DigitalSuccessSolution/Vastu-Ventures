@@ -48,7 +48,7 @@ export default function ContactPage() {
   return (
     <div className="bg-background vastu-mandala-bg min-h-screen py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Title Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="text-xs uppercase font-bold text-primary tracking-widest">Connect With Us</span>
@@ -62,7 +62,7 @@ export default function ContactPage() {
 
         {/* Contact Info & Form Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20 items-stretch">
-          
+
           {/* Contact details */}
           <div className="lg:col-span-5 flex flex-col justify-between text-left bg-navy text-white rounded-3xl p-8 shadow-premium-lg relative overflow-hidden">
             {/* Background Vastu grid decor */}
@@ -81,8 +81,8 @@ export default function ContactPage() {
                 </div>
                 <div className="flex items-center gap-3">
                   <Mail className="w-5 h-5 text-gold-start flex-shrink-0" />
-                  <a href="mailto:contact@vastuvidya.com" className="hover:text-gold-start">
-                    contact@vastuvidya.com
+                  <a href="mailto:contact@Vastu Ventures.com" className="hover:text-gold-start">
+                    contact@Vastu Ventures.com
                   </a>
                 </div>
                 <div className="flex items-center gap-3">

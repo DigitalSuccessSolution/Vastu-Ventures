@@ -98,7 +98,7 @@ export default function Testimonials() {
           <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#E28A3E]">
             • Client Love •
           </span>
-          <h2 className="font-serif text-2xl sm:text-3xl font-bold mt-2 leading-none">
+          <h2 className="font-serif text-3xl sm:text-4xl font-medium mt-2 leading-none">
             <span className="text-navy">What Our </span>
             <span className="text-[#E28A3E]">Clients Say</span>
           </h2>

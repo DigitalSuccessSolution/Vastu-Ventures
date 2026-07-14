@@ -80,7 +80,7 @@ export default function ConsultationProcess() {
           <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#E28A3E]">
             • Our Process •
           </span>
-          <h2 className="font-serif text-2xl sm:text-3xl font-bold mt-2 leading-none">
+          <h2 className="font-serif text-3xl sm:text-4xl font-medium mt-2 leading-none">
             <span className="text-navy">Simple Steps to Positive </span>
             <span className="text-[#E28A3E]">Change</span>
           </h2>

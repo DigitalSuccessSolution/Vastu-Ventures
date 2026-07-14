@@ -100,7 +100,7 @@ export default function FeaturedCourses() {
             <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#E28A3E]">
               • Learn, Apply, Transform. •
             </span>
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold mt-1 leading-none text-center">
+            <h2 className="font-serif text-3xl sm:text-4xl font-medium mt-1 leading-none text-center">
               <span className="text-navy">Featured Vastu </span>
               <span className="text-[#E28A3E]">Courses</span>
             </h2>

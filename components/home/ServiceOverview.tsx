@@ -77,7 +77,7 @@ export default function ServiceOverview() {
           <span className="text-[11px] uppercase font-bold text-[#E28A3E] tracking-[0.22em]">
             • What We Offer •
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-navy mt-2.5">
+          <h2 className="font-serif text-3xl sm:text-4xl font-medium text-navy mt-2.5">
             Our Vastu <span className="text-[#E28A3E]">Services</span>
           </h2>
         </motion.div>

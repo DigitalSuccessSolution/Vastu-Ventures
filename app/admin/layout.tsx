@@ -52,7 +52,7 @@ export default function AdminLayout({
         {/* Sidebar Brand Header */}
         <div className="h-20 flex items-center justify-between px-6 border-b border-navy-light/15 bg-navy-dark">
           <Link href="/" className="flex items-center gap-2">
-            <img src="/logo.png" alt="VastuVidya Logo" className="h-14 w-auto object-contain brightness-0 invert" />
+            <img src="/logo.png" alt="Vastu Ventures Logo" className="h-14 w-auto object-contain brightness-0 invert" />
           </Link>
           <span className="text-[8px] tracking-widest uppercase font-bold text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-md">
             v1.2
@@ -69,8 +69,8 @@ export default function AdminLayout({
                 key={item.id}
                 href={item.href}
                 className={`group relative flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-300 ${isActive
-                    ? "bg-white/10 text-gold-start shadow-sm"
-                    : "text-slate-200 hover:bg-white/5 hover:text-white"
+                  ? "bg-white/10 text-gold-start shadow-sm"
+                  : "text-slate-200 hover:bg-white/5 hover:text-white"
                   }`}
               >
                 {/* Left glowing gold indicator card */}
@@ -150,7 +150,7 @@ export default function AdminLayout({
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-navy-light/10 pb-4 mb-2 h-16">
-              <img src="/logo.png" alt="VastuVidya Logo" className="h-12 w-auto object-contain brightness-0 invert" />
+              <img src="/logo.png" alt="Vastu Ventures Logo" className="h-12 w-auto object-contain brightness-0 invert" />
               <button onClick={() => setSidebarOpen(false)} className="text-white hover:text-primary border border-white/10 p-1 rounded-lg">
                 <X className="w-5 h-5" />
               </button>
@@ -166,8 +166,8 @@ export default function AdminLayout({
                     href={item.href}
                     onClick={() => setSidebarOpen(false)}
                     className={`group relative flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-300 ${isActive
-                        ? "bg-white/10 text-gold-start shadow-sm"
-                        : "text-slate-400 hover:bg-white/5 hover:text-white"
+                      ? "bg-white/10 text-gold-start shadow-sm"
+                      : "text-slate-400 hover:bg-white/5 hover:text-white"
                       }`}
                   >
                     {isActive && (

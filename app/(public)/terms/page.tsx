@@ -9,7 +9,7 @@ export default function TermsPage() {
         </h1>
         <div className="prose max-w-none text-xs sm:text-sm text-navy leading-relaxed font-light flex flex-col gap-6">
           <p>
-            Welcome to VastuVidya ("Website", "Academy", "Services"). These Terms and Conditions govern your access to and use of our consulting packages, online video courses, and materials provided by VastuVidya.
+            Welcome to Vastu Ventures ("Website", "Academy", "Services"). These Terms and Conditions govern your access to and use of our consulting packages, online video courses, and materials provided by Vastu Ventures.
           </p>
           <div>
             <h3 className="font-serif text-base font-bold text-navy mb-2">1. Consultation Services</h3>
