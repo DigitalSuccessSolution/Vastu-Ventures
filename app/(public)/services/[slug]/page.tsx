@@ -375,6 +375,10 @@ const otherServicesList = [
   { name: "Offline Site Vastu Audit", slug: "offline-consultation", icon: UserRound, desc: "Expert Visit to Your Place", price: "499" }
 ];
 
+interface Props {
+  params: Promise<{ slug: string }>;
+}
+
 export default function ServiceDetailsPage({ params }: Props) {
   const { slug } = use(params);
   const service = servicesDetails[slug as keyof typeof servicesDetails];
@@ -504,7 +508,7 @@ export default function ServiceDetailsPage({ params }: Props) {
   };
 
   // Animation constants
-  const transition = { duration: 0.8, ease: [0.25, 1, 0.5, 1] };
+  const transition = { duration: 0.8, ease: [0.25, 1, 0.5, 1] as const };
 
   return (
     <div className="bg-[#FDFBF7] min-h-screen pt-0 pb-20 relative overflow-hidden">
@@ -914,7 +918,7 @@ export default function ServiceDetailsPage({ params }: Props) {
                   </Link>
                   <div className="text-white">
                     <span className="text-[9px] uppercase text-white/60 block leading-none">Consultation Fee</span>
-                    <span className="text-sm font-extrabold">₹{service.price}</span>
+                    <span className="text-sm font-extrabold">₹{otherServicesList.find(s => s.slug === slug)?.price || "150"}</span>
                   </div>
                 </div>
               </div>
