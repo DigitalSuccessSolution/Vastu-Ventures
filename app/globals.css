@@ -29,8 +29,8 @@
   --color-accent: var(--accent);
   --color-destructive: var(--destructive);
 
-  --font-serif: var(--font-playfair), Georgia, serif;
-  --font-sans: var(--font-inter), sans-serif;
+  --font-serif: var(--font-poppins), sans-serif;
+  --font-sans: var(--font-poppins), sans-serif;
 
   --animate-float: float 6s ease-in-out infinite;
   --animate-spin-slow: spin 20s linear infinite;
@@ -64,7 +64,7 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-poppins), sans-serif;
   overflow-x: hidden;
 }
 
