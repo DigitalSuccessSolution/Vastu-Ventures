@@ -54,7 +54,7 @@ export default function BlogDetailsPage({ params }: Props) {
           className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start"
         >
           
-          {/* Article details (Left) */}
+          {/* Article content (Left) */}
           <div className="lg:col-span-8 flex flex-col gap-6">
             <div>
               <span className="px-3 py-1 bg-background-alt text-primary border border-border rounded-lg text-[10px] uppercase font-bold tracking-wider">
@@ -80,15 +80,6 @@ export default function BlogDetailsPage({ params }: Props) {
               </div>
             </div>
 
-            {/* Main Image */}
-            <div className="relative w-full h-80 sm:h-96 rounded-2xl overflow-hidden shadow-premium">
-              <img
-                src={blog.image}
-                alt={blog.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-
             {/* Body Content */}
             <div className="prose max-w-none text-xs sm:text-sm text-navy leading-relaxed font-light flex flex-col gap-4">
               <p>{blog.content}</p>
@@ -102,25 +93,56 @@ export default function BlogDetailsPage({ params }: Props) {
             </div>
           </div>
 
-          {/* Related Articles Sidebar (Right) */}
-          <div className="lg:col-span-4 sticky top-28">
-            <div className="bg-white border border-border rounded-2xl p-5 shadow-premium">
-              <h3 className="font-serif text-base font-bold text-navy mb-4 pb-2 border-b border-border">Related Articles</h3>
-              <div className="flex flex-col gap-5">
-                {related.map((item) => (
-                  <div key={item.id} className="flex flex-col gap-1.5 text-left">
-                    <span className="text-[9px] uppercase tracking-wider font-bold text-primary">{item.category}</span>
-                    <h4 className="text-xs font-semibold text-navy hover:text-primary transition-colors leading-snug">
-                      <Link href={`/blogs/${item.slug}`}>{item.title}</Link>
-                    </h4>
-                    <span className="text-[10px] text-muted-foreground">{item.date}</span>
-                  </div>
-                ))}
-              </div>
+          {/* Main Image (Right) */}
+          <div className="lg:col-span-4 lg:sticky lg:top-28">
+            <div className="relative w-full h-80 sm:h-96 lg:h-[450px] rounded-2xl overflow-hidden shadow-premium border border-border/40">
+              <img
+                src={blog.image}
+                alt={blog.title}
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
 
         </motion.div>
+
+        {/* Related Articles (Bottom) */}
+        <div className="mt-16 pt-12 border-t border-border">
+          <h3 className="font-serif text-2xl font-bold text-navy mb-8">Related Articles</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {related.map((item) => (
+              <Link
+                href={`/blogs/${item.slug}`}
+                key={item.id}
+                className="group flex gap-4 bg-white border border-border/60 rounded-2xl p-4 shadow-sm hover:shadow-premium transition-all"
+              >
+                <div className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div className="flex flex-col justify-between py-1 text-left">
+                  <div>
+                    <span className="text-[10px] uppercase tracking-wider font-bold text-primary">
+                      {item.category}
+                    </span>
+                    <h4 className="text-sm font-semibold text-navy mt-1 group-hover:text-primary transition-colors leading-snug line-clamp-2">
+                      {item.title}
+                    </h4>
+                  </div>
+                  <div className="text-[10px] text-muted-foreground flex gap-3">
+                    <span>{item.date}</span>
+                    <span>•</span>
+                    <span>{item.readTime}</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+
       </div>
     </div>
   );
