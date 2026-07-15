@@ -530,13 +530,13 @@ export default function ServiceDetailsPage({ params }: Props) {
               className="lg:col-span-7 flex flex-col justify-center gap-5 pt-[60px] pb-8 lg:pt-[65px] lg:pb-12 pointer-events-auto text-left"
             >
               {/* Category Pill Tag */}
-              <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-[#E28A3E]">
+              <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[#E28A3E]">
                 <Compass className="w-4 h-4 text-black" />
                 {service.category} Vastu
               </span>
               
               {/* Main Heading */}
-              <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold text-navy leading-tight max-w-[480px]">
+              <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-normal text-navy leading-tight max-w-[480px]">
                 {service.title.split(" ").map((word, i) => {
                   if (word.toLowerCase() === "vastu") {
                     return <span key={i} className="text-[#E28A3E]">{word} </span>;
@@ -619,7 +619,7 @@ export default function ServiceDetailsPage({ params }: Props) {
 
             {/* Right Column: Narrative Content & Features Strip */}
             <div className="lg:col-span-7 flex flex-col gap-6">
-              <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-navy">
+              <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-navy">
                 {aboutInfo[slug as keyof typeof aboutInfo]?.title}
               </h2>
               <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
@@ -652,7 +652,7 @@ export default function ServiceDetailsPage({ params }: Props) {
         <section id="what-we-analyze" className="mb-20 scroll-mt-24">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <span className="text-xs uppercase font-bold text-[#E28A3E] tracking-widest">Methodical Evaluation</span>
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-navy mt-2">
+            <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-navy mt-2">
               What We Analyze
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground mt-3 font-light max-w-lg mx-auto">
@@ -683,40 +683,12 @@ export default function ServiceDetailsPage({ params }: Props) {
           </div>
         </section>
 
-        {/* 5. BENEFITS SECTION */}
-        <section className="mb-20">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-navy">
-              {benefitsInfo[slug as keyof typeof benefitsInfo]?.title}
-            </h2>
-          </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
-            {benefitsInfo[slug as keyof typeof benefitsInfo]?.cards.map((benefit, index) => {
-              const BenefitIcon = benefit.icon;
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ ...transition, delay: index * 0.05 }}
-                  className="bg-white border border-[#EDE3D0]/60 rounded-3xl p-5 shadow-sm hover:shadow-premium hover:-translate-y-1 transition-all duration-300 flex flex-col items-center justify-center min-h-[140px] text-center group"
-                >
-                  <BenefitIcon className="w-7 h-7 text-black mb-2 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.5} />
-                  <h3 className="font-serif text-xs sm:text-sm font-bold text-navy mt-3 leading-snug">
-                    {benefit.title}
-                  </h3>
-                </motion.div>
-              );
-            })}
-          </div>
-        </section>
 
         {/* 6. CONSULTATION PROCESS */}
         <section className="mb-20">
           <div className="text-center max-w-3xl mx-auto mb-12">
-            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-navy">
+            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-navy">
               Our Consultation Process
             </h2>
           </div>
@@ -768,7 +740,7 @@ export default function ServiceDetailsPage({ params }: Props) {
             <span className="inline-block px-4 py-1.5 rounded-full bg-[#FEF3E4] text-[#A67C37] text-xs font-bold uppercase tracking-wider mb-3">
               Client Stories
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-navy mt-2.5">
+            <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-navy mt-2.5">
               Real Transformations
             </h2>
           </div>
@@ -835,7 +807,7 @@ export default function ServiceDetailsPage({ params }: Props) {
         <section className="mb-20">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <span className="text-xs uppercase font-bold text-[#E28A3E] tracking-widest">FAQ</span>
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-navy mt-2">
+            <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-navy mt-2">
               Frequently Asked Questions
             </h2>
           </div>
