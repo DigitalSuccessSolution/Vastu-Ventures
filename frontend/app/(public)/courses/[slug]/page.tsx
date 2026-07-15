@@ -187,9 +187,9 @@ export default function CourseDetailsPage({ params }: Props) {
                   <input
                     type="text"
                     placeholder="Search lectures..."
-                    className="flex-grow text-xs px-4 py-2 border border-border bg-white rounded-xl outline-none focus:border-primary/50"
+                    className="flex-grow text-sm px-4 py-2 border border-border bg-white rounded-xl outline-none focus:border-primary/50"
                   />
-                  <button className="px-4 py-2 bg-primary text-white text-xs font-bold rounded-xl shadow-premium hover:bg-navy-light transition-all">
+                  <button className="px-4 py-2 bg-primary text-white text-xs sm:text-sm font-bold rounded-xl shadow-premium hover:bg-navy-light transition-all">
                     Search
                   </button>
                 </div>
@@ -207,7 +207,7 @@ export default function CourseDetailsPage({ params }: Props) {
                       <p className="text-[10px] text-muted-foreground mt-0.5 font-light">Created on: 12 July 2026</p>
                     </div>
                   </div>
-                  <button className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition-all shadow-premium">
+                  <button className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs sm:text-sm font-bold transition-all shadow-premium">
                     Download
                   </button>
                 </div>
@@ -266,7 +266,7 @@ export default function CourseDetailsPage({ params }: Props) {
 
                             <button 
                               onClick={() => alert(`Launching Lecture Preview Video: "${lesson.title}"...`)}
-                              className="px-5 py-2 bg-navy hover:bg-navy-light text-white rounded-lg text-xs font-bold shadow-premium transition-all sm:self-center w-full sm:w-auto"
+                              className="px-5 py-2 bg-navy hover:bg-navy-light text-white rounded-lg text-xs sm:text-sm font-bold shadow-premium transition-all sm:self-center w-full sm:w-auto"
                             >
                               Watch
                             </button>
@@ -300,7 +300,7 @@ export default function CourseDetailsPage({ params }: Props) {
                   </div>
                   <button 
                     onClick={() => alert("Launching Video Lecture Preview...")}
-                    className="px-5 py-2.5 bg-navy hover:bg-navy-light text-white rounded-xl text-xs font-bold shadow-premium transition-all sm:self-center shrink-0 cursor-pointer"
+                    className="px-5 py-2.5 bg-navy hover:bg-navy-light text-white rounded-xl text-xs sm:text-sm font-bold shadow-premium transition-all sm:self-center shrink-0 cursor-pointer"
                   >
                     Watch
                   </button>
@@ -323,7 +323,7 @@ export default function CourseDetailsPage({ params }: Props) {
                   </div>
                   <button 
                     onClick={() => alert("Launching Student Feedback Preview Video...")}
-                    className="px-5 py-2.5 bg-navy hover:bg-navy-light text-white rounded-xl text-xs font-bold shadow-premium transition-all sm:self-center shrink-0 cursor-pointer"
+                    className="px-5 py-2.5 bg-navy hover:bg-navy-light text-white rounded-xl text-xs sm:text-sm font-bold shadow-premium transition-all sm:self-center shrink-0 cursor-pointer"
                   >
                     Watch
                   </button>
@@ -346,7 +346,7 @@ export default function CourseDetailsPage({ params }: Props) {
                   </div>
                   <button 
                     onClick={() => alert("Opening PDF Document Preview...")}
-                    className="px-5 py-2.5 bg-navy hover:bg-navy-light text-white rounded-xl text-xs font-bold shadow-premium transition-all sm:self-center shrink-0 cursor-pointer"
+                    className="px-5 py-2.5 bg-navy hover:bg-navy-light text-white rounded-xl text-xs sm:text-sm font-bold shadow-premium transition-all sm:self-center shrink-0 cursor-pointer"
                   >
                     View PDF
                   </button>
@@ -369,7 +369,7 @@ export default function CourseDetailsPage({ params }: Props) {
                   </div>
                   <button 
                     onClick={() => alert("Launching Day-2 Lecture Preview...")}
-                    className="px-5 py-2.5 bg-navy hover:bg-navy-light text-white rounded-xl text-xs font-bold shadow-premium transition-all sm:self-center shrink-0 cursor-pointer"
+                    className="px-5 py-2.5 bg-navy hover:bg-navy-light text-white rounded-xl text-xs sm:text-sm font-bold shadow-premium transition-all sm:self-center shrink-0 cursor-pointer"
                   >
                     Watch
                   </button>
@@ -392,7 +392,7 @@ export default function CourseDetailsPage({ params }: Props) {
                   </div>
                   <button 
                     onClick={() => alert("Launching Key Principles Preview Video...")}
-                    className="px-5 py-2.5 bg-navy hover:bg-navy-light text-white rounded-xl text-xs font-bold shadow-premium transition-all sm:self-center shrink-0 cursor-pointer"
+                    className="px-5 py-2.5 bg-navy hover:bg-navy-light text-white rounded-xl text-xs sm:text-sm font-bold shadow-premium transition-all sm:self-center shrink-0 cursor-pointer"
                   >
                     Watch
                   </button>
@@ -426,21 +426,21 @@ export default function CourseDetailsPage({ params }: Props) {
                 {/* Price and Likes header */}
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="text-[10px] text-muted-foreground uppercase font-semibold">Tuition Fee</span>
+                    <span className="text-xs text-muted-foreground uppercase font-semibold">Tuition Fee</span>
                     <div className="flex items-baseline gap-2 mt-0.5">
                       <span className="text-2xl font-extrabold text-navy">₹{course.price}</span>
-                      <span className="text-xs text-muted-foreground line-through">₹{course.originalPrice}</span>
+                      <span className="text-xs sm:text-sm text-muted-foreground line-through">₹{course.originalPrice}</span>
                     </div>
                   </div>
 
                   <div className="flex flex-col items-end gap-1.5">
                     {/* Thumbs up count */}
-                    <div className="flex items-center gap-1 text-navy-light font-bold text-xs bg-background-alt px-2.5 py-1 rounded-lg border border-border/40">
+                    <div className="flex items-center gap-1 text-navy-light font-bold text-xs sm:text-sm bg-background-alt px-2.5 py-1 rounded-lg border border-border/40">
                       <ThumbsUp className="w-3.5 h-3.5 text-navy-light" />
                       <span>{getLikesCount(course.id)} Likes</span>
                     </div>
                     {/* Discount badge */}
-                    <span className="px-2 py-0.5 bg-green-50 text-green-700 border border-green-200/50 rounded-lg text-[10px] font-bold">
+                    <span className="px-2 py-0.5 bg-green-50 text-green-700 border border-green-200/50 rounded-lg text-xs font-bold">
                       {discountPercent}% off
                     </span>
                   </div>
@@ -448,11 +448,11 @@ export default function CourseDetailsPage({ params }: Props) {
 
                 {/* Choose Currency Selector */}
                 <div>
-                  <label className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground block mb-1.5">
+                  <label className="text-xs uppercase font-bold tracking-wider text-muted-foreground block mb-1.5">
                     Choose Currency
                   </label>
                   <div className="relative">
-                    <select className="w-full text-xs font-semibold text-navy bg-background-alt border border-border px-3 py-2.5 rounded-xl outline-none focus:border-primary/50 cursor-pointer appearance-none">
+                    <select className="w-full text-sm font-semibold text-navy bg-background-alt border border-border px-3 py-2.5 rounded-xl outline-none focus:border-primary/50 cursor-pointer appearance-none">
                       <option value="INR">INR (₹)</option>
                       <option value="USD">USD ($)</option>
                       <option value="EUR">EUR (€)</option>
@@ -465,13 +465,13 @@ export default function CourseDetailsPage({ params }: Props) {
                 <div className="flex flex-col gap-2.5 mt-2">
                   <button
                     onClick={() => alert("Redirecting to secure payment portal...")}
-                    className="w-full py-3.5 bg-navy hover:bg-navy-light text-white text-xs font-bold rounded-xl shadow-premium hover:shadow-premium-lg transition-all cursor-pointer text-center"
+                    className="w-full py-3.5 bg-navy hover:bg-navy-light text-white text-xs sm:text-sm font-bold rounded-xl shadow-premium hover:shadow-premium-lg transition-all cursor-pointer text-center"
                   >
                     Buy Now
                   </button>
                   <button
                     onClick={() => alert("Redirecting to installment setup options...")}
-                    className="w-full py-3.5 border border-border bg-white text-navy hover:bg-background-alt text-xs font-bold rounded-xl shadow-premium transition-all cursor-pointer text-center"
+                    className="w-full py-3.5 border border-border bg-white text-navy hover:bg-background-alt text-xs sm:text-sm font-bold rounded-xl shadow-premium transition-all cursor-pointer text-center"
                   >
                     Buy with Installment
                   </button>

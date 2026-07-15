@@ -40,7 +40,7 @@ export default function Newsletter() {
               <h3 className="text-sm sm:text-base font-bold text-white tracking-tight">
                 Stay Updated with Vastu Tips & Insights
               </h3>
-              <p className="text-[11px] text-slate-300 font-light mt-1.5">
+              <p className="text-xs sm:text-sm text-slate-300 font-light mt-1.5">
                 Subscribe to our newsletter and never miss an update.
               </p>
             </div>
@@ -63,11 +63,11 @@ export default function Newsletter() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="flex-grow bg-transparent text-navy text-xs placeholder:text-muted-foreground/60 px-3 outline-none py-2"
+                  className="flex-grow bg-transparent text-navy text-sm placeholder:text-muted-foreground/60 px-3 outline-none py-2"
                 />
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-[#E28A3E] hover:bg-[#C1791F] text-white text-xs font-extrabold rounded-lg shadow-sm transition-colors cursor-pointer"
+                  className="px-5 py-2 bg-[#E28A3E] hover:bg-[#C1791F] text-white text-xs sm:text-sm font-extrabold rounded-lg shadow-sm transition-colors cursor-pointer"
                 >
                   Subscribe
                 </button>

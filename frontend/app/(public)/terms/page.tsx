@@ -28,7 +28,7 @@ export default function TermsPage() {
         <h1 className="font-serif text-3xl font-bold text-navy mb-8 border-b border-border pb-4">
           Terms & Conditions
         </h1>
-        <div className="prose max-w-none text-xs sm:text-sm text-navy leading-relaxed font-light flex flex-col gap-6">
+        <div className="prose max-w-none text-sm md:text-base text-navy leading-relaxed font-light flex flex-col gap-6">
           <p>
             Welcome to Vastu Ventures ("Website", "Academy", "Services"). These Terms and Conditions govern your access to and use of our consulting packages, online video courses, and materials provided by Vastu Ventures.
           </p>

@@ -63,7 +63,7 @@ export default function ServiceOverview() {
   };
 
   return (
-    <section className="py-20 bg-[#FDFBF7] relative vastu-mandala-bg">
+    <section className="py-16 bg-[#FDFBF7] relative vastu-mandala-bg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Section Header — centered */}
@@ -72,9 +72,9 @@ export default function ServiceOverview() {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={headerVariants}
-          className="text-center mb-12"
+          className="text-center mb-10"
         >
-          <span className="text-[11px] uppercase font-bold text-[#E28A3E] tracking-[0.22em]">
+          <span className="text-xs uppercase font-bold text-[#E28A3E] tracking-[0.22em]">
             • What We Offer •
           </span>
           <h2 className="font-serif text-3xl sm:text-4xl font-medium text-navy mt-2.5">
@@ -82,13 +82,13 @@ export default function ServiceOverview() {
           </h2>
         </motion.div>
 
-        {/* Services — 5 cards in a row */}
+        {/* Services Grid (2 Columns on mobile for 2x2 layout, responsive up to 5 on desktop) */}
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
           variants={containerVariants}
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5"
+          className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-5"
         >
           {services.map((service) => {
             const Icon = service.icon;
@@ -96,27 +96,27 @@ export default function ServiceOverview() {
               <motion.div
                 key={service.id}
                 variants={cardVariants}
-                className="group bg-white border border-[#EDE3D0]/60 rounded-2xl p-6 shadow-sm hover:shadow-premium hover:-translate-y-1 transition-all duration-300 flex flex-col items-start gap-3"
+                className="group bg-white border border-[#EDE3D0]/60 rounded-2xl p-4 sm:p-6 shadow-sm hover:shadow-premium hover:-translate-y-1 transition-all duration-300 flex flex-col items-start gap-3 text-left"
               >
-                <Icon className="w-8 h-8 text-black mb-2 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.2} />
+                <Icon className="w-6 h-6 sm:w-8 sm:h-8 text-black mb-1 sm:mb-2 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.2} />
 
                 {/* Title */}
-                <h3 className="font-serif text-base font-semibold text-black leading-snug group-hover:text-[#E28A3E] transition-colors">
+                <h3 className="font-serif text-xs sm:text-base font-semibold text-black leading-snug group-hover:text-[#E28A3E] transition-colors">
                   {service.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-xs text-muted-foreground font-light leading-relaxed flex-1">
+                <p className="text-[10px] sm:text-sm text-muted-foreground font-light leading-relaxed flex-1">
                   {service.description}
                 </p>
 
                 {/* Learn More link */}
                 <Link
                   href={service.href}
-                  className="flex items-center gap-1 text-xs font-semibold text-black hover:gap-2 transition-all mt-1"
+                  className="flex items-center gap-1 text-[10px] sm:text-sm font-semibold text-black hover:gap-2 transition-all mt-1"
                 >
                   Learn More
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                 </Link>
               </motion.div>
             );

@@ -80,7 +80,7 @@ export default function WhyChooseUs() {
             className="lg:col-span-7 text-left flex flex-col gap-6"
           >
             <div>
-              <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#E28A3E]">
+              <span className="text-xs uppercase font-bold tracking-[0.2em] text-[#E28A3E]">
                 • Why Choose Us •
               </span>
               <h2 className="font-serif text-3xl sm:text-4xl font-medium mt-2 leading-tight">
@@ -91,18 +91,18 @@ export default function WhyChooseUs() {
               </h2>
             </div>
 
-            {/* Features 2x2 Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6 mt-2">
+            {/* Features 2x2 Grid on mobile & tablet */}
+            <div className="grid grid-cols-2 sm:grid-cols-2 gap-x-3.5 gap-y-5 sm:gap-x-8 sm:gap-y-6 mt-2">
               {points.map((point, index) => {
                 const Icon = point.icon;
                 return (
-                  <div key={index} className="flex gap-4 items-start">
-                    <Icon className="w-6 h-6 text-black font-semibold flex-shrink-0 mt-0.5" />
+                  <div key={index} className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-start">
+                    <Icon className="w-5.5 h-5.5 sm:w-6 sm:h-6 text-black font-semibold flex-shrink-0 mt-0.5" />
                     <div>
-                      <h3 className="font-serif text-sm font-semibold text-black leading-snug">
+                      <h3 className="font-serif text-xs sm:text-sm font-semibold text-black leading-snug">
                         {point.title}
                       </h3>
-                      <p className="text-[11px] text-muted-foreground mt-1.5 font-light leading-relaxed">
+                      <p className="text-[10px] sm:text-sm text-muted-foreground mt-1.5 font-light leading-relaxed">
                         {point.description}
                       </p>
                     </div>

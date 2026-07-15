@@ -73,12 +73,12 @@ export default function HomePage() {
                   <span className="text-[#E28A3E]">Your Life?</span>
                 </h2>
 
-                <p className="text-xs sm:text-sm text-white/75 font-light leading-relaxed max-w-md mx-auto">
+                <p className="text-sm md:text-base text-white/75 font-light leading-relaxed max-w-md mx-auto">
                   Book a consultation today and take the first step towards positivity and prosperity.
                 </p>
 
                 {/* Key value checkmarks */}
-                <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-[10px] text-white/80 font-bold uppercase tracking-wider">
+                <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-white/80 font-bold uppercase tracking-wider">
                   <span className="flex items-center gap-1.5">
                     <Check className="w-4 h-4 text-[#E28A3E]" /> No Demolitions
                   </span>
@@ -93,7 +93,7 @@ export default function HomePage() {
                 <div>
                   <Link
                     href="/book"
-                    className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-gold-gradient hover:opacity-95 text-white text-xs font-bold shadow-premium hover:shadow-premium-lg hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
+                    className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-gold-gradient hover:opacity-95 text-white text-xs sm:text-sm font-bold shadow-premium hover:shadow-premium-lg hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
                   >
                     <span>Book Consultation</span>
                     <Calendar className="w-4 h-4" />

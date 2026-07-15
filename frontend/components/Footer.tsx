@@ -11,17 +11,17 @@ import {
 
 export default function Footer() {
   return (
-    <footer className="bg-navy text-background-alt pt-16 pb-8 border-t border-navy-light relative overflow-hidden">
+    <footer className="w-full max-w-full bg-navy text-background-alt pt-16 pb-8 border-t border-navy-light relative overflow-hidden shadow-none rounded-none border-x-0">
       {/* Subtle mandala background ring art overlay */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-[radial-gradient(circle_at_center,rgba(240,180,41,0.02)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-        {/* Main 5-Column Grid Layout */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 mb-12">
+        {/* Main Grid Layout - 2 columns on mobile, 5 on desktop */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 mb-12">
 
-          {/* Column 1: Brand Info */}
-          <div className="flex flex-col gap-4 text-left">
+          {/* Column 1: Brand Info (Spans 2 columns on mobile for clean top block) */}
+          <div className="flex flex-col gap-4 text-left col-span-2 sm:col-span-1 lg:col-span-1">
             
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group h-14 relative w-48 shrink-0">

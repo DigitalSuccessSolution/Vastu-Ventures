@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { FAQS } from "@/data/mockData";
-import { HelpCircle, ChevronDown, Search, ArrowRight, MessageSquare, Phone, Mail, Sparkles } from "lucide-react";
+import { HelpCircle, ChevronDown, Search, ArrowRight, MessageSquare, Sparkles } from "lucide-react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 
@@ -57,14 +57,14 @@ export default function FAQPage() {
           variants={fadeUpVariants}
           className="text-center max-w-3xl mx-auto mb-16"
         >
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FEF3E4] text-[#E28A3E] text-xs font-bold uppercase tracking-wider mb-4">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FEF3E4] text-[#E28A3E] text-xs sm:text-sm font-bold uppercase tracking-wider mb-4">
             <Sparkles className="w-3.5 h-3.5" />
             Common Inquiries
           </span>
           <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-navy leading-tight">
             Frequently Asked <span className="text-[#E28A3E]">Questions</span>
           </h1>
-          <p className="text-sm sm:text-base text-muted-foreground mt-4 font-light leading-relaxed">
+          <p className="text-sm md:text-base text-muted-foreground mt-4 font-light leading-relaxed">
             Find answers to commonly asked questions about Vastu sciences, our remote or physical consultation processes, and academic courses.
           </p>
         </motion.div>
@@ -84,7 +84,7 @@ export default function FAQPage() {
               placeholder="Search questions or keywords..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full text-xs pl-10 pr-4 py-3 rounded-xl border border-border bg-background focus:bg-white outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary transition-all text-navy"
+              className="w-full text-sm pl-10 pr-4 py-3 rounded-xl border border-border bg-background focus:bg-white outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary transition-all text-navy placeholder:text-muted-foreground/60"
             />
             <Search className="w-4 h-4 text-muted-foreground absolute left-3.5 top-1/2 -translate-y-1/2" />
           </div>
@@ -95,7 +95,7 @@ export default function FAQPage() {
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wide transition-all shadow-sm cursor-pointer ${
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold tracking-wide transition-all shadow-sm cursor-pointer ${
                   activeCategory === cat.id
                     ? "bg-gold-gradient text-white shadow-premium"
                     : "bg-[#FAF6F0] border border-[#EDE3D0]/40 text-navy hover:bg-[#FAF6F0]/80"
@@ -133,7 +133,7 @@ export default function FAQPage() {
                       onClick={() => toggleFaq(faq.id)}
                       className="w-full px-6 py-5 flex items-center justify-between text-left cursor-pointer hover:bg-[#FAF6F0]/20 transition-colors"
                     >
-                      <span className="text-sm font-semibold text-navy pr-4">{faq.question}</span>
+                      <span className="text-sm md:text-base font-semibold text-navy pr-4">{faq.question}</span>
                       <ChevronDown
                         className={`w-4.5 h-4.5 text-primary flex-shrink-0 transition-transform duration-300 ${
                           isOpen ? "rotate-180" : ""
@@ -150,7 +150,7 @@ export default function FAQPage() {
                           transition={{ duration: 0.35, ease: premiumEase }}
                           className="overflow-hidden"
                         >
-                          <div className="px-6 pb-6 text-xs sm:text-sm text-navy/80 font-light leading-relaxed border-t border-[#EDE3D0]/20 pt-4 bg-[#FAF6F0]/10">
+                          <div className="px-6 pb-6 text-sm md:text-base text-navy/80 font-light leading-relaxed border-t border-[#EDE3D0]/20 pt-4 bg-[#FAF6F0]/10">
                             {faq.answer}
                           </div>
                         </motion.div>
@@ -167,7 +167,7 @@ export default function FAQPage() {
               >
                 <HelpCircle className="w-10 h-10 text-primary/30 mx-auto mb-3" />
                 <p className="text-sm font-medium text-navy">No matches found</p>
-                <p className="text-xs text-muted-foreground mt-1 font-light">Try adjusting your keywords or category filters.</p>
+                <p className="text-sm text-muted-foreground mt-1 font-light">Try adjusting your keywords or category filters.</p>
               </motion.div>
             )}
           </AnimatePresence>
@@ -185,20 +185,20 @@ export default function FAQPage() {
           <div className="absolute top-0 right-0 w-64 h-64 opacity-[0.03] bg-[radial-gradient(circle_at_center,var(--gold-start)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
 
           <h3 className="font-serif text-2xl font-bold text-gold-start mb-2">Still Have Questions?</h3>
-          <p className="text-xs sm:text-sm text-background-alt/85 max-w-xl mx-auto font-light leading-relaxed mb-8">
+          <p className="text-sm md:text-base text-background-alt/85 max-w-xl mx-auto font-light leading-relaxed mb-8">
             If you need detailed layout guidance or custom project discussions, feel free to schedule a direct session or call our support lines.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
               href="/book"
-              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gold-gradient text-white text-xs font-semibold shadow-premium hover:shadow-premium-lg transition-all flex items-center justify-center gap-1.5 hover:scale-[1.02]"
+              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gold-gradient text-white text-xs sm:text-sm font-semibold shadow-premium hover:shadow-premium-lg transition-all flex items-center justify-center gap-1.5 hover:scale-[1.02]"
             >
               Book Consultation <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               href="/contact"
-              className="w-full sm:w-auto px-6 py-3 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 text-white text-xs font-semibold transition-all flex items-center justify-center gap-1.5 hover:scale-[1.02]"
+              className="w-full sm:w-auto px-6 py-3 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 text-white text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-1.5 hover:scale-[1.02]"
             >
               Contact Support <MessageSquare className="w-4 h-4" />
             </Link>

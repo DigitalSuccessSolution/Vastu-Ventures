@@ -66,7 +66,7 @@ export default function ExpertProfile() {
             className="lg:col-span-7 text-left flex flex-col gap-6"
           >
             <div>
-              <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#E28A3E]">
+              <span className="text-xs uppercase font-bold tracking-[0.2em] text-[#E28A3E]">
                 • Meet Our Expert •
               </span>
               <h2 className="font-serif text-3xl sm:text-4xl font-medium mt-2 leading-tight">
@@ -75,7 +75,7 @@ export default function ExpertProfile() {
               </h2>
             </div>
 
-            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-light max-w-2xl">
+            <p className="text-sm md:text-base text-muted-foreground leading-relaxed font-light max-w-2xl">
               Renowned Vastu Consultant & Mentor with 20+ years of experience in residential, commercial & industrial Vastu. Dedicated to helping thousands of people create harmonious and successful spaces.
             </p>
 
@@ -86,7 +86,7 @@ export default function ExpertProfile() {
                   <Award className="w-4 h-4 text-[#E28A3E]" />
                   <span className="text-sm font-semibold text-black">20+</span>
                 </div>
-                <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+                <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
                   Years Experience
                 </span>
               </div>
@@ -96,7 +96,7 @@ export default function ExpertProfile() {
                   <Users className="w-4 h-4 text-[#E28A3E]" />
                   <span className="text-sm font-semibold text-black">5000+</span>
                 </div>
-                <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+                <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
                   Happy Clients
                 </span>
               </div>
@@ -106,7 +106,7 @@ export default function ExpertProfile() {
                   <CheckCircle2 className="w-4 h-4 text-[#E28A3E]" />
                   <span className="text-sm font-semibold text-black">2500+</span>
                 </div>
-                <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+                <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
                   Projects Completed
                 </span>
               </div>
@@ -116,7 +116,7 @@ export default function ExpertProfile() {
             <div className="mt-4">
               <Link
                 href="/book"
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-gold-gradient hover:opacity-95 text-white text-xs font-bold shadow-premium hover:shadow-premium-lg hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-gold-gradient hover:opacity-95 text-white text-xs sm:text-sm font-bold shadow-premium hover:shadow-premium-lg hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
               >
                 <span>Book Consultation</span>
                 <ArrowRight className="w-4 h-4" />

@@ -21,7 +21,7 @@ export default function BlogsPage() {
 
   return (
     <div className="bg-background vastu-mandala-bg min-h-screen">
-      
+
       {/* Academy Hero Banner */}
       <section className="relative py-20 md:py-28 bg-navy text-white overflow-hidden border-b border-border">
         {/* Background Image with subtle overlay */}
@@ -39,7 +39,7 @@ export default function BlogsPage() {
           <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight leading-tight text-white max-w-3xl">
             Vastu Science & Architectural Wisdom
           </h1>
-          
+
           <p className="text-xs sm:text-sm text-white/80 max-w-xl font-light leading-relaxed">
             Discover simple spatial adjustments, design formulas, and tips to clean energy zones in your properties.
           </p>
@@ -48,7 +48,7 @@ export default function BlogsPage() {
 
       {/* Blogs list */}
       <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <motion.div 
+        <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
@@ -120,3 +120,4 @@ export default function BlogsPage() {
     </div>
   );
 }
+

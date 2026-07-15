@@ -71,7 +71,7 @@ export default function StatsStrip() {
                 <CountUp to={stat.value} decimals={stat.decimals} />
                 {stat.suffix}
               </span>
-              <span className="text-[10px] sm:text-xs text-background-alt/80 uppercase font-medium tracking-widest mt-1.5">
+              <span className="text-xs sm:text-sm text-background-alt/80 uppercase font-medium tracking-widest mt-1.5">
                 {stat.label}
               </span>
             </div>

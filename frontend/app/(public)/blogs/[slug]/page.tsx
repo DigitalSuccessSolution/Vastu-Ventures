@@ -1,9 +1,8 @@
 "use client";
 
-import React, { use } from "react";
+import React, { use, useState, useEffect } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { BLOGS } from "@/data/mockData";
 import { Calendar, User, Clock, ArrowLeft } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 
@@ -13,7 +12,9 @@ interface Props {
 
 export default function BlogDetailsPage({ params }: Props) {
   const { slug } = use(params);
-  const blog = BLOGS.find((b) => b.slug === slug);
+  const [blog, setBlog] = useState<any>(null);
+  const [related, setRelated] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const shouldReduceMotion = useReducedMotion();
   const premiumEase = [0.16, 1, 0.3, 1] as const;
 
@@ -26,16 +27,147 @@ export default function BlogDetailsPage({ params }: Props) {
     }
   };
 
+  useEffect(() => {
+    const loadBlogData = async () => {
+      try {
+        const res = await fetch(`http://localhost:5000/api/v1/blogs/${slug}`);
+        const data = await res.json();
+        if (data.success && data.data) {
+          const blogData = data.data;
+          const now = new Date();
+          if (blogData.status === "Draft") {
+            setBlog(null);
+          } else if (blogData.status === "Scheduled" && now < new Date(blogData.date)) {
+            setBlog(null);
+          } else {
+            setBlog(blogData);
+            
+            // Fetch related
+            const relRes = await fetch(`http://localhost:5000/api/v1/blogs/${slug}/related`);
+            const relData = await relRes.json();
+            if (relData.success) {
+              setRelated(relData.data || []);
+            }
+          }
+        } else {
+          setBlog(null);
+        }
+      } catch (err) {
+        console.error("Error loading blog details from DB:", err);
+        setBlog(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadBlogData();
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-10 h-10 border-4 border-[#E28A3E] border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   if (!blog) {
     notFound();
   }
 
-  // Find related articles (excluding current)
-  const related = BLOGS.filter((b) => b.id !== blog.id).slice(0, 2);
-
   return (
     <div className="bg-background vastu-mandala-bg py-12 text-left">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <style dangerouslySetInnerHTML={{ __html: `
+        .html-content h1 {
+          font-size: 1.5rem;
+          font-weight: 700;
+          margin-top: 1.5rem;
+          margin-bottom: 0.5rem;
+          font-family: serif;
+          color: #0b1a30;
+        }
+        .html-content h2 {
+          font-size: 1.25rem;
+          font-weight: 700;
+          margin-top: 1.5rem;
+          margin-bottom: 0.75rem;
+          font-family: serif;
+          color: #0b1a30;
+        }
+        .html-content h3 {
+          font-size: 1.1rem;
+          font-weight: 700;
+          margin-top: 1.2rem;
+          margin-bottom: 0.6rem;
+          font-family: serif;
+          color: #0b1a30;
+        }
+        .html-content ul {
+          list-style-type: disc;
+          padding-left: 1.5rem;
+          margin-top: 0.75rem;
+          margin-bottom: 0.75rem;
+        }
+        .html-content ol {
+          list-style-type: decimal;
+          padding-left: 1.5rem;
+          margin-top: 0.75rem;
+          margin-bottom: 0.75rem;
+        }
+        .html-content blockquote {
+          border-left: 4px solid #E28A3E;
+          padding-left: 1.25rem;
+          font-style: italic;
+          color: #64748b;
+          margin-top: 1.25rem;
+          margin-bottom: 1.25rem;
+          background-color: rgba(226, 138, 62, 0.05);
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+          border-radius: 0 0.5rem 0.5rem 0;
+        }
+        .html-content p {
+          margin-bottom: 1rem;
+        }
+        .html-content table {
+          border-collapse: collapse;
+          table-layout: fixed;
+          width: 100%;
+          margin: 1.5rem 0;
+          overflow: hidden;
+        }
+        .html-content td, .html-content th {
+          border: 1px solid #cbd5e1;
+          padding: 8px 12px;
+          vertical-align: top;
+          box-sizing: border-box;
+        }
+        .html-content th {
+          font-weight: bold;
+          text-align: left;
+          background-color: #f8fafc;
+        }
+        .html-content .text-align-center {
+          text-align: center;
+        }
+        .html-content .text-align-right {
+          text-align: right;
+        }
+        .html-content mark {
+          background-color: #fef08a;
+          padding: 0.1rem 0.25rem;
+          border-radius: 0.25rem;
+        }
+        .html-content hr {
+          border: 0;
+          border-top: 1px solid #cbd5e1;
+          margin: 2rem 0;
+        }
+        .html-content a {
+          color: #E28A3E;
+          text-decoration: underline;
+        }
+      ` }} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Back Link */}
         <Link
@@ -60,7 +192,7 @@ export default function BlogDetailsPage({ params }: Props) {
               <span className="px-3 py-1 bg-background-alt text-primary border border-border rounded-lg text-[10px] uppercase font-bold tracking-wider">
                 {blog.category}
               </span>
-              <h1 className="font-serif text-3xl sm:text-4xl font-extrabold text-navy mt-4 leading-tight">
+              <h1 className="font-serif text-3xl sm:text-4xl font-semibold text-navy mt-4 leading-tight">
                 {blog.title}
               </h1>
 
@@ -81,25 +213,19 @@ export default function BlogDetailsPage({ params }: Props) {
             </div>
 
             {/* Body Content */}
-            <div className="prose max-w-none text-xs sm:text-sm text-navy leading-relaxed font-light flex flex-col gap-4">
-              <p>{blog.content}</p>
-              <p>
-                Applying Vastu principles requires careful mapping of environmental factors. An ideal setup doesn't involve hacking walls. Instead, we can introduce balancing metals like copper wire for South-East blocks, or brass dividers for primary entrances. These metals work as energy shields.
-              </p>
-              <h3 className="font-serif text-lg font-bold text-navy mt-6">Implementing Basic Corrections</h3>
-              <p>
-                Before executing corrections, make sure to verify the magnetic directions using an accurate compass reading. Smartphones can have calibration offsets, so a standard fluid-filled lensatic compass is recommended. Measure directions from the exact geometric center (Brahmasthan) of your space.
-              </p>
-            </div>
+            <div 
+              className="prose max-w-none text-xs sm:text-sm text-navy leading-relaxed font-light html-content animate-fade-in"
+              dangerouslySetInnerHTML={{ __html: blog.content }}
+            />
           </div>
 
           {/* Main Image (Right) */}
           <div className="lg:col-span-4 lg:sticky lg:top-28">
-            <div className="relative w-full h-80 sm:h-96 lg:h-[450px] rounded-2xl overflow-hidden shadow-premium border border-border/40">
+            <div className="relative w-full rounded-2xl overflow-hidden shadow-premium border border-border/40 bg-white/40">
               <img
                 src={blog.image}
                 alt={blog.title}
-                className="w-full h-full object-cover"
+                className="w-full h-auto object-contain rounded-2xl"
               />
             </div>
           </div>
@@ -113,7 +239,7 @@ export default function BlogDetailsPage({ params }: Props) {
             {related.map((item) => (
               <Link
                 href={`/blogs/${item.slug}`}
-                key={item.id}
+                key={item.id || item._id}
                 className="group flex gap-4 bg-white border border-border/60 rounded-2xl p-4 shadow-sm hover:shadow-premium transition-all"
               >
                 <div className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0">

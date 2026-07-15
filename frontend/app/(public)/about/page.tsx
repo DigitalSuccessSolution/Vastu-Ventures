@@ -44,7 +44,7 @@ export default function AboutPage() {
             Ancient Wisdom, Modern Guidance
           </h1>
           
-          <p className="text-xs sm:text-sm text-white/80 max-w-xl font-light leading-relaxed">
+          <p className="text-sm md:text-base text-white/85 max-w-xl font-light leading-relaxed">
             At Vastu Ventures, we bridge the gap between traditional Indian spatial guidelines (Shilpashastra) and contemporary architecture requirements.
           </p>
         </div>
@@ -65,25 +65,25 @@ export default function AboutPage() {
             <h2 className="font-serif text-3xl sm:text-4xl font-medium text-navy mt-1">
               Honoring a Lineage of Vedic Harmony
             </h2>
-            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-light">
+            <p className="text-sm md:text-base text-muted-foreground leading-relaxed font-light">
               Vastu Ventures is not just a consultation practice—it is an educational guild. Founded by Acharya Raghavendra, a practitioner with over two decades of experience, our mission is to demystify traditional architecture.
             </p>
-            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-light">
+            <p className="text-sm md:text-base text-muted-foreground leading-relaxed font-light">
               We focus on elemental chemistry: managing the flow of Solar Energy (from the East), Magnetic Currents (from the North), and elemental fire, water, earth, and air balances.
             </p>
             
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-4">
               <div className="text-center p-4 bg-white border border-border rounded-2xl shadow-sm hover:shadow-premium hover:border-[#E28A3E]/30 transition-all duration-300">
-                <span className="font-serif text-2xl font-semibold text-black block">22+</span>
-                <span className="text-[10px] text-muted-foreground uppercase font-medium mt-1 block">Years of Audit</span>
+                <span className="font-serif text-2xl font-semibold text-navy block">22+</span>
+                <span className="text-xs text-muted-foreground uppercase font-medium mt-1 block">Years of Audit</span>
               </div>
               <div className="text-center p-4 bg-white border border-border rounded-2xl shadow-sm hover:shadow-premium hover:border-[#E28A3E]/30 transition-all duration-300">
-                <span className="font-serif text-2xl font-semibold text-black block">15k+</span>
-                <span className="text-[10px] text-muted-foreground uppercase font-medium mt-1 block">Homes Balanced</span>
+                <span className="font-serif text-2xl font-semibold text-navy block">15k+</span>
+                <span className="text-xs text-muted-foreground uppercase font-medium mt-1 block">Homes Balanced</span>
               </div>
               <div className="text-center p-4 bg-white border border-border rounded-2xl shadow-sm hover:shadow-premium hover:border-[#E28A3E]/30 transition-all duration-300">
-                <span className="font-serif text-2xl font-semibold text-black block">5,000+</span>
-                <span className="text-[10px] text-muted-foreground uppercase font-medium mt-1 block">Students Certified</span>
+                <span className="font-serif text-2xl font-semibold text-navy block">5,000+</span>
+                <span className="text-xs text-muted-foreground uppercase font-medium mt-1 block">Students Certified</span>
               </div>
             </div>
           </div>
@@ -140,7 +140,7 @@ export default function AboutPage() {
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
                 <h3 className="font-serif text-base font-semibold text-black group-hover:text-[#E28A3E] transition-colors">{val.title}</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed font-light">{val.desc}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed font-light">{val.desc}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -156,12 +156,12 @@ export default function AboutPage() {
           variants={fadeUpVariants}
         >
           <h2 className="font-serif text-3xl sm:text-4xl font-medium text-navy">Need Custom Spatial Guidance?</h2>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-3 font-light leading-relaxed max-w-md mx-auto">
+          <p className="text-sm md:text-base text-muted-foreground mt-3 font-light leading-relaxed max-w-md mx-auto">
             Our specialized team is available for residential, corporate, and macro industrial layout designs.
           </p>
           <Link
             href="/book"
-            className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#E28A3E] hover:bg-[#C67830] text-white text-xs font-bold rounded-xl shadow-premium hover:shadow-premium-lg mt-8 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#E28A3E] hover:bg-[#C67830] text-white text-xs sm:text-sm font-bold rounded-xl shadow-premium hover:shadow-premium-lg mt-8 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
           >
             <Calendar className="w-4.5 h-4.5 animate-pulse" /> Book Consultation Call
           </Link>

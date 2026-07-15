@@ -95,7 +95,7 @@ export default function Testimonials() {
           variants={headerVariants}
           className="text-center max-w-3xl mx-auto mb-14"
         >
-          <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#E28A3E]">
+          <span className="text-xs uppercase font-bold text-[#E28A3E] tracking-widest">
             • Client Love •
           </span>
           <h2 className="font-serif text-3xl sm:text-4xl font-medium mt-2 leading-none">
@@ -139,10 +139,10 @@ export default function Testimonials() {
                       />
                     </div>
                     <div>
-                      <h4 className="text-xs font-semibold text-black leading-none">
+                      <h4 className="text-xs sm:text-sm font-semibold text-black leading-none">
                         {item.name}
                       </h4>
-                      <p className="text-[10px] text-muted-foreground mt-1.5 leading-none">
+                      <p className="text-xs text-muted-foreground mt-1.5 leading-none">
                         {item.city}
                       </p>
                     </div>

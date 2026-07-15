@@ -1,74 +1,74 @@
 import Blog from "./blog.model.js";
-import BlogCategory from "./blogCategory.model.js";
-import slugify from "../../utils/slugify.js";
-import { ERROR_MESSAGES } from "../../constants/errorMessages.js";
 
-// Blog Categories Services
-export const getActiveCategories = async () => {
-  return BlogCategory.find({ isActive: true });
+// Helper to seed initial blogs by slug check
+const seedInitialBlogs = async () => {
+  const initial = [
+    {
+      title: 'Top 5 Main Entrance Vastu Mistakes You Must Fix Right Away',
+      slug: 'top-5-main-entrance-vastu-mistakes',
+      date: 'July 10, 2026',
+      author: 'Acharya Raghavendra',
+      category: 'Residential Vastu',
+      shortDescription: 'The entrance (Maha Dwaar) determines what energies flow into your home. Learn how to identify and resolve entrance blocks.',
+      content: 'In traditional Vastu, the main entrance is considered the mouth of the house. If the entrance is cluttered, poorly lit, or falls into a negative zone, it blocks wealth and harmony from entering. In this article, we cover why you must keep your main door larger than other doors, avoid shadows over the entrance, avoid mirrors reflecting the entrance, clean rusty locks, and place brass or copper elements to shield negative energies.',
+      image: 'https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&q=80&w=800',
+      readTime: '5 min read',
+      status: 'Published'
+    },
+    {
+      title: 'How to Place Boilers and Furnaces in Commercial Offices',
+      slug: 'how-to-place-boilers-furnaces-vastu',
+      date: 'June 28, 2026',
+      author: 'Vastu Specialist Team',
+      category: 'Commercial & Industrial',
+      shortDescription: 'Improper fire elements cause friction and heavy expenses. Master the Southeast zone placement rules.',
+      content: 'Fire (Agni) represents power, drive, and wealth. Placing boilers, generators, computer servers, or heavy electrical panels in the wrong quadrant (like Northeast) causes direct cash-flow losses, legal issues, or accidental damage. Here we discuss structural mappings for corporate workspaces, locating electrical hubs in the Southeast, and simple remedies if your server room is permanently stuck in the North.',
+      image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=800',
+      readTime: '8 min read',
+      status: 'Published'
+    },
+    {
+      title: 'Understanding Pancha Bhootas: The Five Elements of Architecture',
+      slug: 'understanding-pancha-bhoot-architecture',
+      date: 'May 15, 2026',
+      author: 'Acharya Raghavendra',
+      category: 'Vastu Philosophy',
+      shortDescription: 'Discover the profound connection between nature’s elements—Earth, Water, Fire, Air, and Space—and modern structural design.',
+      content: 'Pancha Bhootas are the building blocks of existence. When we construct a building, we partition space, which changes the local dynamics of Earth, Air, Water, and Fire. Learn how traditional Indian temple architecture and home builders harmonize these forces to create structures that stand for centuries while radiating positive vibrations.',
+      image: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&q=80&w=800',
+      readTime: '6 min read',
+      status: 'Published'
+    }
+  ];
+
+  for (const item of initial) {
+    const exists = await Blog.findOne({ slug: item.slug });
+    if (!exists) {
+      await Blog.create(item);
+    }
+  }
 };
 
-export const getBlogCategoriesAdmin = async () => {
-  return BlogCategory.find();
-};
-
-export const createBlogCategory = async (data) => {
-  const slug = slugify(data.name);
-  const existing = await BlogCategory.findOne({ slug });
-  if (existing) {
-    const error = new Error("Category with similar name already exists");
-    error.statusCode = 409;
-    throw error;
-  }
-  return BlogCategory.create({ ...data, slug });
-};
-
-export const updateBlogCategory = async (id, data) => {
-  const updatePayload = { ...data };
-  if (data.name) {
-    updatePayload.slug = slugify(data.name);
-  }
-  const category = await BlogCategory.findByIdAndUpdate(id, { $set: updatePayload }, { new: true });
-  if (!category) {
-    const error = new Error(ERROR_MESSAGES.NOT_FOUND);
-    error.statusCode = 404;
-    throw error;
-  }
-  return category;
-};
-
-export const deleteBlogCategory = async (id) => {
-  const linkedBlogsCount = await Blog.countDocuments({ category: id });
-  if (linkedBlogsCount > 0) {
-    const error = new Error("Cannot delete category containing linked blogs.");
-    error.statusCode = 400;
-    throw error;
-  }
-  const category = await BlogCategory.findByIdAndDelete(id);
-  if (!category) {
-    const error = new Error(ERROR_MESSAGES.NOT_FOUND);
-    error.statusCode = 404;
-    throw error;
-  }
-  return { message: "Blog category deleted successfully" };
-};
-
-// Blog Posts Services
-export const getPublishedBlogs = async (categorySlug) => {
-  const query = { status: "published" };
-  if (categorySlug) {
-    const cat = await BlogCategory.findOne({ slug: categorySlug });
-    if (cat) query.category = cat._id;
-  }
-  return Blog.find(query).populate("category").populate("author", "firstName lastName").sort({ publishedAt: -1 });
+export const getPublishedBlogs = async () => {
+  await seedInitialBlogs();
+  const now = new Date();
+  const blogs = await Blog.find().sort({ createdAt: -1 });
+  
+  return blogs.filter((blog) => {
+    if (blog.status === "Draft") return false;
+    if (blog.status === "Scheduled") {
+      const publishDate = new Date(blog.date);
+      return now >= publishDate;
+    }
+    return true;
+  });
 };
 
 export const getBlogBySlug = async (slug) => {
-  const blog = await Blog.findOne({ slug, status: "published" })
-    .populate("category")
-    .populate("author", "firstName lastName");
+  await seedInitialBlogs();
+  const blog = await Blog.findOne({ slug });
   if (!blog) {
-    const error = new Error(ERROR_MESSAGES.NOT_FOUND);
+    const error = new Error("Blog not found");
     error.statusCode = 404;
     throw error;
   }
@@ -76,63 +76,58 @@ export const getBlogBySlug = async (slug) => {
 };
 
 export const getRelatedBlogs = async (slug) => {
+  await seedInitialBlogs();
   const currentBlog = await Blog.findOne({ slug });
   if (!currentBlog) return [];
 
-  return Blog.find({
-    category: currentBlog.category,
-    slug: { $ne: slug },
-    status: "published"
-  })
-    .limit(3)
-    .populate("author", "firstName lastName");
+  const allBlogs = await Blog.find({ slug: { $ne: slug } });
+  const now = new Date();
+
+  return allBlogs
+    .filter((blog) => {
+      if (blog.status === "Draft") return false;
+      if (blog.status === "Scheduled") {
+        const publishDate = new Date(blog.date);
+        return now >= publishDate;
+      }
+      return blog.category === currentBlog.category;
+    })
+    .slice(0, 2);
 };
 
 export const getAllBlogsAdmin = async () => {
-  return Blog.find().populate("category").populate("author", "firstName lastName");
+  await seedInitialBlogs();
+  return Blog.find().sort({ createdAt: -1 });
 };
 
 export const getBlogByIdAdmin = async (id) => {
-  const blog = await Blog.findById(id).populate("category");
+  const blog = await Blog.findById(id);
   if (!blog) {
-    const error = new Error(ERROR_MESSAGES.NOT_FOUND);
+    const error = new Error("Blog not found");
     error.statusCode = 404;
     throw error;
   }
   return blog;
 };
 
-export const createBlog = async (userId, data) => {
-  const slug = slugify(data.title);
+export const createBlog = async (data) => {
+  let slug = data.slug || data.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  
   const existing = await Blog.findOne({ slug });
   if (existing) {
-    const error = new Error("Blog with similar title already exists");
-    error.statusCode = 409;
-    throw error;
+    slug = `${slug}-${Date.now()}`;
   }
-
-  const publishedAt = data.status === "published" ? new Date() : undefined;
 
   return Blog.create({
     ...data,
-    slug,
-    author: userId,
-    publishedAt
+    slug
   });
 };
 
 export const updateBlog = async (id, data) => {
-  const updatePayload = { ...data };
-  if (data.title) {
-    updatePayload.slug = slugify(data.title);
-  }
-  if (data.status === "published") {
-    updatePayload.publishedAt = new Date();
-  }
-
-  const blog = await Blog.findByIdAndUpdate(id, { $set: updatePayload }, { new: true });
+  const blog = await Blog.findByIdAndUpdate(id, { $set: data }, { new: true });
   if (!blog) {
-    const error = new Error(ERROR_MESSAGES.NOT_FOUND);
+    const error = new Error("Blog not found");
     error.statusCode = 404;
     throw error;
   }
@@ -142,7 +137,7 @@ export const updateBlog = async (id, data) => {
 export const deleteBlog = async (id) => {
   const blog = await Blog.findByIdAndDelete(id);
   if (!blog) {
-    const error = new Error(ERROR_MESSAGES.NOT_FOUND);
+    const error = new Error("Blog not found");
     error.statusCode = 404;
     throw error;
   }

@@ -77,7 +77,7 @@ export default function ConsultationProcess() {
           variants={headerVariants}
           className="text-center max-w-3xl mx-auto mb-14"
         >
-          <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#E28A3E]">
+          <span className="text-xs uppercase font-bold tracking-[0.2em] text-[#E28A3E]">
             • Our Process •
           </span>
           <h2 className="font-serif text-3xl sm:text-4xl font-medium mt-2 leading-none">
@@ -86,13 +86,13 @@ export default function ConsultationProcess() {
           </h2>
         </motion.div>
 
-        {/* Process Flow row */}
+        {/* Process Flow Row (2 columns on mobile, 3 on tablet, 5 on desktop) */}
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
           variants={containerVariants}
-          className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-6 relative"
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5 sm:gap-8 lg:gap-6 relative"
         >
           {steps.map((step, index) => {
             const Icon = step.icon;
@@ -118,10 +118,10 @@ export default function ConsultationProcess() {
 
                 {/* Text Block directly below circle */}
                 <div className="mt-5 max-w-[180px]">
-                  <h3 className="font-serif text-sm font-semibold text-black group-hover:text-primary transition-colors">
+                  <h3 className="font-serif text-xs sm:text-sm font-semibold text-black group-hover:text-primary transition-colors">
                     {step.title}
                   </h3>
-                  <p className="text-[11px] text-muted-foreground mt-2 font-light leading-relaxed">
+                  <p className="text-[10px] sm:text-sm text-muted-foreground mt-2 font-light leading-relaxed">
                     {step.desc}
                   </p>
                 </div>

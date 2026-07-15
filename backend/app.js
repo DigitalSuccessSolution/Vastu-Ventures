@@ -33,6 +33,17 @@ app.use(
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// Redefine req.query to be writable for Express 5 + express-mongo-sanitize compatibility
+app.use((req, res, next) => {
+  Object.defineProperty(req, 'query', {
+    value: { ...req.query },
+    writable: true,
+    configurable: true,
+    enumerable: true,
+  });
+  next();
+});
+
 // Sanitize against NoSQL injection
 app.use(mongoSanitize());
 

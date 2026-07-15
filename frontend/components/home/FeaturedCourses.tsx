@@ -97,7 +97,7 @@ export default function FeaturedCourses() {
         >
           {/* Centered Title text */}
           <div className="text-center">
-            <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#E28A3E]">
+            <span className="text-xs uppercase font-bold tracking-[0.2em] text-[#E28A3E]">
               • Learn, Apply, Transform. •
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl font-medium mt-1 leading-none text-center">
@@ -107,10 +107,10 @@ export default function FeaturedCourses() {
           </div>
 
           {/* View All button on the right for md+ screens, centered below on mobile */}
-          <div className="md:absolute md:right-0 md:top-1/2 md:-translate-y-1/2">
+          <div className="md:absolute md:right-0 md:top-1/2 md:-translate-y-1/2 mt-4 md:mt-0">
             <Link
               href="/courses"
-              className="border border-border/80 bg-white hover:bg-[#FAF6F0] text-navy font-semibold text-xs px-5 py-2.5 rounded-xl shadow-sm flex items-center gap-1.5 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+              className="border border-border/80 bg-white hover:bg-[#FAF6F0] text-navy font-semibold text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-sm flex items-center gap-1.5 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
             >
               <span>View All Courses</span>
               <ArrowRight className="w-4 h-4 text-[#E28A3E]" />
@@ -120,19 +120,19 @@ export default function FeaturedCourses() {
 
         {/* Slider row container */}
         <div className="relative">
-          {/* Courses Grid Row */}
+          {/* Courses Grid Row (2 columns on mobile, 2 on tablet, 4 on desktop) */}
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
             variants={containerVariants}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+            className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6"
           >
             {featuredCoursesData.map((course) => (
               <motion.div
                 key={course.id}
                 variants={cardVariants}
-                className="bg-white border border-border/70 rounded-2xl overflow-hidden shadow-premium hover:shadow-premium-lg transition-all duration-300 flex flex-col group"
+                className="bg-white border border-border/70 rounded-2xl overflow-hidden shadow-premium hover:shadow-premium-lg transition-all duration-300 flex flex-col group text-left"
               >
                 {/* Image Block */}
                 <div className="relative aspect-[4/3] w-full overflow-hidden">
@@ -145,8 +145,8 @@ export default function FeaturedCourses() {
                   
                   {/* Category badge */}
                   {course.badge && (
-                    <div className="absolute top-3 left-3 px-2.5 py-1 bg-[#E28A3E] text-white rounded-lg shadow-sm border border-[#E28A3E]/30">
-                      <span className="text-[9px] uppercase tracking-wider font-extrabold">
+                    <div className="absolute top-3 left-3 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-[#E28A3E] text-white rounded-lg shadow-sm border border-[#E28A3E]/30">
+                      <span className="text-[8px] sm:text-[9px] uppercase tracking-wider font-extrabold">
                         {course.badge}
                       </span>
                     </div>
@@ -154,22 +154,22 @@ export default function FeaturedCourses() {
                 </div>
 
                 {/* Card Body */}
-                <div className="p-5 flex-grow flex flex-col justify-between text-left">
+                <div className="p-3.5 sm:p-5 flex-grow flex flex-col justify-between">
                   <div>
-                    <h3 className="font-serif text-sm font-semibold text-black hover:text-primary transition-colors line-clamp-2 min-h-[40px] leading-snug">
+                    <h3 className="font-serif text-xs sm:text-sm font-semibold text-black hover:text-primary transition-colors line-clamp-2 min-h-[36px] sm:min-h-[40px] leading-snug">
                       <Link href={`/courses/${course.slug}`}>{course.title}</Link>
                     </h3>
-                    <p className="text-[11px] text-muted-foreground mt-2 font-medium">
+                    <p className="text-[10px] sm:text-xs text-muted-foreground mt-2 font-medium">
                       {course.level}
                     </p>
                   </div>
 
                   {/* Rating star/reviews strip */}
-                  <div className="mt-4 pt-4 border-t border-border/50 flex items-center justify-between">
-                    <div className="flex items-center text-[#E28A3E] text-[11px] font-extrabold gap-0.5">
+                  <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-border/50 flex items-center justify-between">
+                    <div className="flex items-center text-[#E28A3E] text-[10px] sm:text-xs font-extrabold gap-0.5">
                       {course.id === "c1" ? (
                         <>
-                          <Star className="w-3.5 h-3.5 fill-current" />
+                          <Star className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current" />
                           <span>4.8 (1300+)</span>
                         </>
                       ) : (
@@ -177,11 +177,11 @@ export default function FeaturedCourses() {
                       )}
                     </div>
 
-                    <div className="text-right text-[#E28A3E] text-[11px] font-extrabold">
+                    <div className="text-right text-[#E28A3E] text-[10px] sm:text-xs font-extrabold">
                       {course.id === "c1" ? (
-                        <span className="text-black font-semibold">{course.rightFooter}</span>
+                        <span className="text-navy font-semibold">{course.rightFooter}</span>
                       ) : (
-                        <span className="text-black font-semibold">{course.rightFooter}</span>
+                        <span className="text-navy font-semibold">{course.rightFooter}</span>
                       )}
                     </div>
                   </div>

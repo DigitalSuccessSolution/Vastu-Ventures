@@ -58,13 +58,13 @@ export default function FAQPreview() {
           variants={headerVariants}
           className="text-center max-w-2xl mx-auto mb-12"
         >
-          <span className="text-xs uppercase font-bold text-primary tracking-widest">
+          <span className="text-xs sm:text-sm uppercase font-bold text-primary tracking-widest">
             Common Inquiries
           </span>
           <h2 className="font-serif text-3xl sm:text-4xl font-medium text-navy mt-2.5">
             Frequently Asked Questions
           </h2>
-          <p className="text-sm text-muted-foreground mt-3 font-light">
+          <p className="text-sm md:text-base text-muted-foreground mt-3 font-light">
             Got questions about Vastu corrections? We have compiled responses to help clarify common queries.
           </p>
         </motion.div>
@@ -89,7 +89,7 @@ export default function FAQPreview() {
                   onClick={() => toggle(faq.id)}
                   className="w-full flex items-center justify-between p-5 text-left text-black hover:text-primary transition-colors cursor-pointer"
                 >
-                  <span className="text-sm font-semibold flex items-center gap-2.5">
+                  <span className="text-sm md:text-base font-semibold flex items-center gap-2.5">
                     <HelpCircle className="w-4.5 h-4.5 text-primary flex-shrink-0" />
                     {faq.question}
                   </span>
@@ -104,7 +104,7 @@ export default function FAQPreview() {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.25, ease: "easeInOut" }}
                     >
-                      <div className="px-5 pb-5 pt-1 text-xs text-muted-foreground font-light leading-relaxed border-t border-border/40">
+                      <div className="px-5 pb-5 pt-1 text-sm md:text-base text-muted-foreground font-light leading-relaxed border-t border-border/40">
                         {faq.answer}
                       </div>
                     </motion.div>
@@ -125,7 +125,7 @@ export default function FAQPreview() {
         >
           <Link
             href="/contact"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-gold-end group transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-primary hover:text-gold-end group transition-colors"
           >
             Have more questions? Read our full FAQ Guide
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />

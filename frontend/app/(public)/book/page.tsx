@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import { SERVICES, TIME_SLOTS } from "@/data/mockData";
-import { Compass, Calendar as CalendarIcon, Clock, CheckCircle2, ChevronRight, Laptop, MapPin, User, Mail, Phone, ChevronLeft } from "lucide-react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { Compass, Calendar as CalendarIcon, Clock, CheckCircle2, ChevronRight, Laptop, MapPin, ChevronLeft } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
 
 export default function BookConsultationPage() {
   const [step, setStep] = useState(1);
@@ -83,10 +83,10 @@ export default function BookConsultationPage() {
           </div>
           <div className="text-center">
             <h1 className="font-serif text-2xl sm:text-3xl font-bold text-navy">Consultation Scheduled!</h1>
-            <p className="text-xs text-muted-foreground mt-2 font-light">Your session has been successfully booked in our calendar.</p>
+            <p className="text-sm text-muted-foreground mt-2 font-light">Your session has been successfully booked in our calendar.</p>
           </div>
 
-          <div className="w-full bg-background-alt border border-border rounded-2xl p-5 text-left text-xs text-navy flex flex-col gap-3">
+          <div className="w-full bg-background-alt border border-border rounded-2xl p-5 text-left text-sm text-navy flex flex-col gap-3">
             <div className="flex justify-between font-light">
               <span className="text-muted-foreground">Vastu Package:</span>
               <span className="font-semibold">{activeService.title}</span>
@@ -105,7 +105,7 @@ export default function BookConsultationPage() {
             </div>
           </div>
 
-          <p className="text-[11px] text-muted-foreground font-light max-w-sm leading-relaxed">
+          <p className="text-xs sm:text-sm text-muted-foreground font-light max-w-sm leading-relaxed">
             We have sent a calendar invite and payment details link to your email <span className="font-semibold text-navy">{details.email}</span>. Please review the attachments to prepare your premises floor plan beforehand.
           </p>
 
@@ -117,7 +117,7 @@ export default function BookConsultationPage() {
               setSelectedSlot("");
               setDetails({ name: "", email: "", phone: "", notes: "" });
             }}
-            className="px-6 py-2.5 bg-navy hover:bg-navy-light text-white text-xs font-semibold rounded-xl shadow-premium transition-all cursor-pointer"
+            className="px-6 py-2.5 bg-navy hover:bg-navy-light text-white text-xs sm:text-sm font-semibold rounded-xl shadow-premium transition-all cursor-pointer"
           >
             Schedule another slot
           </button>
@@ -138,11 +138,11 @@ export default function BookConsultationPage() {
         
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="text-xs uppercase font-bold text-primary tracking-widest font-sans">Appointments Scheduler</span>
+          <span className="text-xs sm:text-sm uppercase font-bold text-primary tracking-widest font-sans">Appointments Scheduler</span>
           <h1 className="font-serif text-3xl sm:text-4xl font-bold text-navy mt-2">
             Book Vastu Audit Consultation
           </h1>
-          <p className="text-xs text-muted-foreground mt-3 font-light">
+          <p className="text-sm text-muted-foreground mt-3 font-light">
             Follow our steps to select a service type, date, slot, and complete details for booking.
           </p>
         </div>
@@ -184,8 +184,8 @@ export default function BookConsultationPage() {
                           : "border-border bg-white hover:bg-background-alt/30"
                       }`}
                     >
-                      <span className="text-xs font-bold text-navy">{s.title}</span>
-                      <span className="text-[10px] text-primary font-bold mt-2">₹{s.price} Fee</span>
+                      <span className="text-sm font-bold text-navy">{s.title}</span>
+                      <span className="text-xs text-primary font-bold mt-2">₹{s.price} Fee</span>
                     </button>
                   ))}
                 </div>
@@ -204,8 +204,8 @@ export default function BookConsultationPage() {
                   >
                     <Laptop className="w-6 h-6 text-primary flex-shrink-0" />
                     <div>
-                      <h4 className="text-xs font-bold text-navy">Online video consultation</h4>
-                      <p className="text-[10px] text-muted-foreground mt-1 font-light leading-relaxed">
+                      <h4 className="text-sm font-bold text-navy">Online video consultation</h4>
+                      <p className="text-xs text-muted-foreground mt-1.5 font-light leading-relaxed">
                         60-min session on Zoom. Requires floor plan and direction mapping details. Available globally.
                       </p>
                     </div>
@@ -221,8 +221,8 @@ export default function BookConsultationPage() {
                   >
                     <MapPin className="w-6 h-6 text-primary flex-shrink-0" />
                     <div>
-                      <h4 className="text-xs font-bold text-navy">Offline site-inspection</h4>
-                      <p className="text-[10px] text-muted-foreground mt-1 font-light leading-relaxed">
+                      <h4 className="text-sm font-bold text-navy">Offline site-inspection</h4>
+                      <p className="text-xs text-muted-foreground mt-1.5 font-light leading-relaxed">
                         Physical audit by Raghavendra or team. Subject to location and travel expenses.
                       </p>
                     </div>
@@ -268,7 +268,7 @@ export default function BookConsultationPage() {
                       <button
                         key={slot}
                         onClick={() => setSelectedSlot(slot)}
-                        className={`p-3 rounded-xl border text-center text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                        className={`p-3 rounded-xl border text-center text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                           isSelected
                             ? "bg-navy border-navy text-white shadow-premium"
                             : "bg-white border-border text-navy-light hover:bg-background-alt"
@@ -291,7 +291,7 @@ export default function BookConsultationPage() {
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
                 <div>
-                  <label className="block text-[10px] font-semibold text-navy uppercase tracking-wider mb-1.5">
+                  <label className="block text-[11px] sm:text-xs font-semibold text-navy uppercase tracking-wider mb-1.5">
                     Your Name
                   </label>
                   <input
@@ -300,12 +300,12 @@ export default function BookConsultationPage() {
                     value={details.name}
                     onChange={(e) => setDetails({ ...details, name: e.target.value })}
                     placeholder="John Doe"
-                    className="w-full text-xs px-3.5 py-3 rounded-xl border border-border bg-background focus:bg-white outline-none text-navy"
+                    className="w-full text-sm px-3.5 py-3 rounded-xl border border-border bg-background focus:bg-white outline-none text-navy placeholder:text-muted-foreground/60"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-semibold text-navy uppercase tracking-wider mb-1.5">
+                  <label className="block text-[11px] sm:text-xs font-semibold text-navy uppercase tracking-wider mb-1.5">
                     Email Address
                   </label>
                   <input
@@ -314,13 +314,13 @@ export default function BookConsultationPage() {
                     value={details.email}
                     onChange={(e) => setDetails({ ...details, email: e.target.value })}
                     placeholder="john@example.com"
-                    className="w-full text-xs px-3.5 py-3 rounded-xl border border-border bg-background focus:bg-white outline-none text-navy"
+                    className="w-full text-sm px-3.5 py-3 rounded-xl border border-border bg-background focus:bg-white outline-none text-navy placeholder:text-muted-foreground/60"
                   />
                 </div>
               </div>
 
               <div className="text-left">
-                <label className="block text-[10px] font-semibold text-navy uppercase tracking-wider mb-1.5">
+                <label className="block text-[11px] sm:text-xs font-semibold text-navy uppercase tracking-wider mb-1.5">
                   Phone Number
                 </label>
                 <input
@@ -329,12 +329,12 @@ export default function BookConsultationPage() {
                   value={details.phone}
                   onChange={(e) => setDetails({ ...details, phone: e.target.value })}
                   placeholder="+1 (555) 000-0000"
-                  className="w-full text-xs px-3.5 py-3 rounded-xl border border-border bg-background focus:bg-white outline-none text-navy"
+                  className="w-full text-sm px-3.5 py-3 rounded-xl border border-border bg-background focus:bg-white outline-none text-navy placeholder:text-muted-foreground/60"
                 />
               </div>
 
               <div className="text-left">
-                <label className="block text-[10px] font-semibold text-navy uppercase tracking-wider mb-1.5">
+                <label className="block text-[11px] sm:text-xs font-semibold text-navy uppercase tracking-wider mb-1.5">
                   Space details / Consultation Goals
                 </label>
                 <textarea
@@ -342,18 +342,18 @@ export default function BookConsultationPage() {
                   value={details.notes}
                   onChange={(e) => setDetails({ ...details, notes: e.target.value })}
                   placeholder="Describe your space concerns, size, or primary targets of this audit..."
-                  className="w-full text-xs px-3.5 py-3 rounded-xl border border-border bg-background focus:bg-white outline-none text-navy resize-none"
+                  className="w-full text-sm px-3.5 py-3 rounded-xl border border-border bg-background focus:bg-white outline-none text-navy resize-none placeholder:text-muted-foreground/60"
                 />
               </div>
 
-              <div className="bg-background-alt border border-border rounded-xl p-4 text-[10px] text-muted-foreground leading-normal mt-2 flex items-start gap-2.5">
+              <div className="bg-background-alt border border-border rounded-xl p-4 text-xs md:text-sm text-muted-foreground leading-relaxed mt-2 flex items-start gap-2.5">
                 <Compass className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                 <p>By scheduling, you request an assessment hold. Session link will remain active for 48 hours waiting for baseline plan uploads.</p>
               </div>
 
               <button
                 type="submit"
-                className="w-full py-3.5 bg-gold-gradient text-white text-xs font-semibold rounded-xl shadow-premium hover:shadow-premium-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer mt-4"
+                className="w-full py-3.5 bg-gold-gradient text-white text-xs sm:text-sm font-semibold rounded-xl shadow-premium hover:shadow-premium-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer mt-4 hover:opacity-95"
               >
                 Confirm Consultation Session Booking
               </button>
@@ -366,14 +366,14 @@ export default function BookConsultationPage() {
               <button
                 onClick={handleBack}
                 disabled={step === 1}
-                className="px-4 py-2 border border-border text-navy-light text-xs font-semibold rounded-lg hover:bg-background-alt disabled:opacity-40 transition-all flex items-center gap-1 cursor-pointer"
+                className="px-4 py-2 border border-border text-navy-light text-xs sm:text-sm font-semibold rounded-lg hover:bg-background-alt disabled:opacity-40 transition-all flex items-center gap-1 cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4" /> Back
               </button>
 
               <button
                 onClick={handleNext}
-                className="px-5 py-2.5 bg-navy hover:bg-navy-light text-white text-xs font-semibold rounded-lg shadow-premium transition-all flex items-center gap-1 cursor-pointer"
+                className="px-5 py-2.5 bg-navy hover:bg-navy-light text-white text-xs sm:text-sm font-semibold rounded-lg shadow-premium transition-all flex items-center gap-1 cursor-pointer"
               >
                 Next Step <ChevronRight className="w-4 h-4" />
               </button>
@@ -384,7 +384,7 @@ export default function BookConsultationPage() {
             <div className="flex items-center justify-start mt-4">
               <button
                 onClick={handleBack}
-                className="px-4 py-2 border border-border text-navy-light text-xs font-semibold rounded-lg hover:bg-background-alt transition-all flex items-center gap-1 cursor-pointer"
+                className="px-4 py-2 border border-border text-navy-light text-xs sm:text-sm font-semibold rounded-lg hover:bg-background-alt transition-all flex items-center gap-1 cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4" /> Back to Slots
               </button>

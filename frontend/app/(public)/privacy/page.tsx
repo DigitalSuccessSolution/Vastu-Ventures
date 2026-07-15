@@ -28,7 +28,7 @@ export default function PrivacyPage() {
         <h1 className="font-serif text-3xl font-bold text-navy mb-8 border-b border-border pb-4">
           Privacy Policy
         </h1>
-        <div className="prose max-w-none text-xs sm:text-sm text-navy leading-relaxed font-light flex flex-col gap-6">
+        <div className="prose max-w-none text-sm md:text-base text-navy leading-relaxed font-light flex flex-col gap-6">
           <p>
             Vastu Ventures respects your privacy and is committed to protecting the personal information you share with us during consultations, course sign-ups, and form submissions.
           </p>

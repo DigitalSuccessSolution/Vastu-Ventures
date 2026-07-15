@@ -546,7 +546,7 @@ export default function ServiceDetailsPage({ params }: Props) {
               </h1>
               
               {/* Description */}
-              <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed max-w-xl">
+              <p className="text-sm md:text-base text-muted-foreground font-light leading-relaxed max-w-xl">
                 {service.heroDescription}
               </p>
 
@@ -622,7 +622,7 @@ export default function ServiceDetailsPage({ params }: Props) {
               <h2 className="font-serif text-3xl sm:text-4xl font-medium text-navy mt-2.5">
                 {aboutInfo[slug as keyof typeof aboutInfo]?.title}
               </h2>
-              <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
+              <p className="text-sm md:text-base text-muted-foreground font-light leading-relaxed">
                 {aboutInfo[slug as keyof typeof aboutInfo]?.text}
               </p>
 
@@ -655,7 +655,7 @@ export default function ServiceDetailsPage({ params }: Props) {
             <h2 className="font-serif text-3xl sm:text-4xl font-medium text-navy mt-2.5">
               What We Analyze
             </h2>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-3 font-light max-w-lg mx-auto">
+            <p className="text-sm md:text-base text-muted-foreground mt-3 font-light max-w-lg mx-auto">
               Our experts scan the active nodes and zones of your space to pinpoint environmental blocks.
             </p>
           </div>
@@ -675,7 +675,7 @@ export default function ServiceDetailsPage({ params }: Props) {
                   <ItemIcon className="w-7 h-7 text-black flex-shrink-0 mb-3 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.5} />
                   <div>
                     <h3 className="font-serif text-sm font-semibold text-black group-hover:text-[#E28A3E] transition-colors">{item.title}</h3>
-                    <p className="text-xs text-muted-foreground font-light leading-relaxed mt-2">{item.desc}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed mt-2">{item.desc}</p>
                   </div>
                 </motion.div>
               );
@@ -716,7 +716,7 @@ export default function ServiceDetailsPage({ params }: Props) {
                     
                     {/* Content */}
                     <h4 className="text-xs sm:text-sm font-semibold text-black leading-snug group-hover:text-[#E28A3E] transition-colors">{step.title}</h4>
-                    <p className="text-[10px] sm:text-xs text-muted-foreground font-light mt-1.5 leading-relaxed max-w-[160px] mx-auto">
+                    <p className="text-xs sm:text-sm text-muted-foreground font-light mt-1.5 leading-relaxed max-w-[160px] mx-auto">
                       {step.desc}
                     </p>
                   </motion.div>
@@ -788,7 +788,7 @@ export default function ServiceDetailsPage({ params }: Props) {
                     <h3 className="font-serif text-sm sm:text-base font-semibold text-black leading-snug group-hover:text-[#E28A3E] transition-colors">
                       {story.title}
                     </h3>
-                    <p className="text-[11px] sm:text-xs text-muted-foreground font-light leading-relaxed">
+                    <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
                       {story.result}
                     </p>
                   </div>
@@ -834,7 +834,7 @@ export default function ServiceDetailsPage({ params }: Props) {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.25 }}
                     >
-                      <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-muted-foreground font-light leading-relaxed border-t border-dashed border-[#EDE3D0]/40">
+                      <div className="px-5 pb-5 pt-1 text-sm md:text-base text-muted-foreground font-light leading-relaxed border-t border-dashed border-[#EDE3D0]/40">
                         {faq.answer}
                       </div>
                     </motion.div>
@@ -867,7 +867,7 @@ export default function ServiceDetailsPage({ params }: Props) {
                   <span className="text-[#E28A3E]">Your Life?</span>
                 </h2>
 
-                <p className="text-xs sm:text-sm text-white/75 font-light leading-relaxed max-w-md mx-auto">
+                <p className="text-sm md:text-base text-white/75 font-light leading-relaxed max-w-md mx-auto">
                   Book a consultation today and take the first step towards direction harmony, sound sleep, and career success.
                 </p>
 

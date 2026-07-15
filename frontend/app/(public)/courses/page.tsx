@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Star, Clock, BookOpen, ChevronRight, ArrowRight, ThumbsUp } from "lucide-react";
+import { ArrowRight, ThumbsUp } from "lucide-react";
 import { COURSES } from "@/data/mockData";
 import { motion, useReducedMotion } from "framer-motion";
 
@@ -51,7 +51,7 @@ export default function CoursesPage() {
             Vastu Shastra Certification Courses
           </h1>
           
-          <p className="text-xs sm:text-sm text-white/80 max-w-xl font-light leading-relaxed">
+          <p className="text-sm md:text-base text-white/85 max-w-xl font-light leading-relaxed">
             Acquire verified Vedic space auditing capabilities. Study at your own pace with expert instructions, live check-ins, and auditing tool kits.
           </p>
         </div>
@@ -80,7 +80,7 @@ export default function CoursesPage() {
               <motion.div
                 key={course.id}
                 variants={fadeUpVariants}
-                className="group bg-white border border-border rounded-2xl overflow-hidden shadow-premium hover:shadow-premium-lg hover:border-primary/30 transition-all duration-300 flex flex-col justify-between p-4"
+                className="group bg-white border border-border rounded-2xl overflow-hidden shadow-premium hover:shadow-premium-lg hover:border-primary/30 transition-all duration-300 flex flex-col justify-between p-4 text-left"
               >
                 <div>
                   {/* Image Block */}
@@ -106,7 +106,7 @@ export default function CoursesPage() {
                       </div>
                     </div>
 
-                    <p className="text-xs text-muted-foreground mt-2 line-clamp-2 font-light leading-relaxed">
+                    <p className="text-sm text-muted-foreground mt-2 line-clamp-2 font-light leading-relaxed">
                       {course.shortDescription}
                     </p>
 
@@ -119,7 +119,7 @@ export default function CoursesPage() {
                   <div className="flex items-center justify-between pt-3.5 border-t border-border/60">
                     <div className="flex items-baseline gap-1.5">
                       <span className="text-lg font-extrabold text-primary">₹{course.price}</span>
-                      <span className="text-xs text-muted-foreground line-through">₹{course.originalPrice}</span>
+                      <span className="text-xs sm:text-sm text-muted-foreground line-through">₹{course.originalPrice}</span>
                     </div>
                     <span className="px-2 py-0.5 bg-green-50 text-green-700 border border-green-200/50 rounded-lg text-[10px] font-bold">
                       {discountPercent}% off
@@ -129,7 +129,7 @@ export default function CoursesPage() {
                   {/* Full-width View Details button */}
                   <Link
                     href={`/courses/${course.slug}`}
-                    className="w-full mt-4 py-3 bg-navy hover:bg-navy-light text-white text-center rounded-xl text-xs font-bold shadow-premium hover:shadow-premium-lg transition-all duration-300 flex items-center justify-center gap-1.5 group/btn"
+                    className="w-full mt-4 py-3 bg-navy hover:bg-navy-light text-white text-center rounded-xl text-xs sm:text-sm font-bold shadow-premium hover:shadow-premium-lg transition-all duration-300 flex items-center justify-center gap-1.5 group/btn"
                   >
                     <span>View Details</span>
                     <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-0.5" />
