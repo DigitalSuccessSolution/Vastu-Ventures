@@ -530,14 +530,19 @@ export default function ServiceDetailsPage({ params }: Props) {
               className="lg:col-span-7 flex flex-col justify-center gap-5 pt-[60px] pb-8 lg:pt-[65px] lg:pb-12 pointer-events-auto text-left"
             >
               {/* Category Pill Tag */}
-              <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[#E28A3E]">
+              <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-[#E28A3E]">
                 <Compass className="w-4 h-4 text-black" />
                 {service.category} Vastu
               </span>
               
               {/* Main Heading */}
-              <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-bold text-navy leading-tight max-w-[480px]">
-                {service.title}
+              <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold text-navy leading-tight max-w-[480px]">
+                {service.title.split(" ").map((word, i) => {
+                  if (word.toLowerCase() === "vastu") {
+                    return <span key={i} className="text-[#E28A3E]">{word} </span>;
+                  }
+                  return word + " ";
+                })}
               </h1>
               
               {/* Description */}
