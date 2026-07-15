@@ -63,11 +63,10 @@ export default function AdminLayout({
       {/* Sidebar for Desktop */}
       <aside className="hidden md:flex flex-col w-72 bg-navy text-white h-screen sticky top-0 border-r border-[#1e2d4d] flex-shrink-0 z-30 shadow-premium">
 
-        <div className="h-20 flex items-center justify-between px-6 border-b border-white/10 bg-transparent">
+        <div className="py-6 flex items-center justify-between px-6 border-b border-white/10 bg-transparent">
           <Link href="/admin" className="flex items-center gap-2">
             <img src="/logo2.png" alt="Vastu Ventures Logo" className="h-14 w-auto object-contain" />
           </Link>
-
         </div>
 
         {/* Navigation items list */}
@@ -164,7 +163,7 @@ export default function AdminLayout({
             className="w-72 bg-navy text-white h-full flex flex-col p-4 gap-4 animate-fade-in-right"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-2 h-16">
+            <div className="flex items-center justify-between border-b border-white/10 py-5 px-2 mb-2">
               <Link href="/admin" onClick={() => setSidebarOpen(false)} className="flex items-center">
                 <img src="/logo2.png" alt="Vastu Ventures Logo" className="h-12 w-auto object-contain" />
               </Link>
