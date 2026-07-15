@@ -29,9 +29,9 @@ export default function CoursesPage() {
           <img
             src="images/cources.png"
             alt="Courses Background"
-            className="w-full h-full object-cover opacity-35"
+            className="w-full h-full object-cover opacity-60"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-navy/60 via-navy/80 to-navy" />
+          <div className="absolute inset-0 bg-gradient-to-b from-navy/35 via-navy/55 to-navy/80" />
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center flex flex-col items-center gap-4 animate-fade-in-up">
