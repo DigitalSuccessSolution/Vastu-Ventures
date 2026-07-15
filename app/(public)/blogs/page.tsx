@@ -12,7 +12,7 @@ export default function BlogsPage() {
         {/* Background Image with subtle overlay */}
         <div className="absolute inset-0 z-0">
           <img
-            src="/image.png"
+            src="/vastu-cta-compass.png"
             alt="Blogs Background"
             className="w-full h-full object-cover opacity-60"
           />

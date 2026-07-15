@@ -16,7 +16,7 @@ export default function AboutPage() {
         {/* Background Image with subtle overlay */}
         <div className="absolute inset-0 z-0">
           <img
-            src="/image.png"
+            src="/why-choose-us-vastu.png"
             alt="About Vastu Ventures Background"
             className="w-full h-full object-cover opacity-60"
           />
