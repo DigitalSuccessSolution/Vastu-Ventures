@@ -101,7 +101,7 @@ export default function ServiceOverview() {
                 <Icon className="w-8 h-8 text-black mb-2 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.2} />
 
                 {/* Title */}
-                <h3 className="font-serif text-base font-semibold text-navy leading-snug group-hover:text-[#E28A3E] transition-colors">
+                <h3 className="font-serif text-base font-semibold text-black leading-snug group-hover:text-[#E28A3E] transition-colors">
                   {service.title}
                 </h3>
 

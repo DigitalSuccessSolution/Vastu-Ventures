@@ -87,7 +87,7 @@ export default function FAQPreview() {
               >
                 <button
                   onClick={() => toggle(faq.id)}
-                  className="w-full flex items-center justify-between p-5 text-left text-navy hover:text-primary transition-colors cursor-pointer"
+                  className="w-full flex items-center justify-between p-5 text-left text-black hover:text-primary transition-colors cursor-pointer"
                 >
                   <span className="text-sm font-semibold flex items-center gap-2.5">
                     <HelpCircle className="w-4.5 h-4.5 text-primary flex-shrink-0" />

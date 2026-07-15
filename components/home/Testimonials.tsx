@@ -123,7 +123,7 @@ export default function Testimonials() {
                   <span className="text-3xl font-serif text-[#E28A3E] font-extrabold leading-none opacity-85 select-none block">
                     ““
                   </span>
-                  <p className="text-xs sm:text-sm text-navy font-light leading-relaxed mt-2.5">
+                  <p className="text-xs sm:text-sm text-black font-light leading-relaxed mt-2.5">
                     {item.text}
                   </p>
                 </div>
@@ -139,7 +139,7 @@ export default function Testimonials() {
                       />
                     </div>
                     <div>
-                      <h4 className="text-xs font-bold text-navy leading-none">
+                      <h4 className="text-xs font-semibold text-black leading-none">
                         {item.name}
                       </h4>
                       <p className="text-[10px] text-muted-foreground mt-1.5 leading-none">

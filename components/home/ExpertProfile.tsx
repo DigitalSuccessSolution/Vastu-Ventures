@@ -84,7 +84,7 @@ export default function ExpertProfile() {
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center gap-1.5">
                   <Award className="w-4 h-4 text-[#E28A3E]" />
-                  <span className="text-sm font-extrabold text-navy">20+</span>
+                  <span className="text-sm font-semibold text-black">20+</span>
                 </div>
                 <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
                   Years Experience
@@ -94,7 +94,7 @@ export default function ExpertProfile() {
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center gap-1.5">
                   <Users className="w-4 h-4 text-[#E28A3E]" />
-                  <span className="text-sm font-extrabold text-navy">5000+</span>
+                  <span className="text-sm font-semibold text-black">5000+</span>
                 </div>
                 <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
                   Happy Clients
@@ -104,7 +104,7 @@ export default function ExpertProfile() {
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-[#E28A3E]" />
-                  <span className="text-sm font-extrabold text-navy">2500+</span>
+                  <span className="text-sm font-semibold text-black">2500+</span>
                 </div>
                 <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
                   Projects Completed

@@ -134,7 +134,7 @@ export default function LatestBlogs() {
                   <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider block mb-2">
                     {blog.date}
                   </span>
-                  <h3 className="font-serif text-sm font-bold text-navy hover:text-primary transition-colors leading-snug line-clamp-2 min-h-[40px]">
+                  <h3 className="font-serif text-sm font-semibold text-black hover:text-primary transition-colors leading-snug line-clamp-2 min-h-[40px]">
                     <Link href={`/blogs/${blog.slug}`}>
                       {blog.title}
                     </Link>
@@ -145,7 +145,7 @@ export default function LatestBlogs() {
                 <div className="mt-4 pt-4 border-t border-border/40">
                   <Link
                     href={`/blogs/${blog.slug}`}
-                    className="inline-flex items-center gap-1 text-[#E28A3E] hover:text-gold-end text-xs font-bold transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1 text-[#E28A3E] hover:text-gold-end text-xs font-semibold transition-colors cursor-pointer"
                   >
                     <span>Read More</span>
                     <ArrowRight className="w-3.5 h-3.5" />

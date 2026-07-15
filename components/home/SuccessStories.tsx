@@ -102,13 +102,13 @@ export default function SuccessStories() {
               {/* Text Block */}
               <div className="sm:col-span-7 flex flex-col justify-between">
                 <div>
-                  <h3 className="font-serif text-lg font-bold text-navy hover:text-primary transition-colors leading-snug">
+                  <h3 className="font-serif text-lg font-semibold text-black hover:text-primary transition-colors leading-snug">
                     {story.title}
                   </h3>
 
                   <div className="mt-3 flex flex-col gap-2.5 text-xs">
                     <div>
-                      <span className="font-semibold text-navy">The Challenge:</span>
+                      <span className="font-semibold text-black">The Challenge:</span>
                       <p className="text-muted-foreground font-light mt-0.5">{story.problem}</p>
                     </div>
                     <div>
@@ -122,11 +122,11 @@ export default function SuccessStories() {
                 <div className="mt-5 pt-4 border-t border-border flex items-center justify-between">
                   <div className="flex items-center gap-1.5 text-accent">
                     <TrendingUp className="w-4 h-4" />
-                    <span className="text-xs font-bold font-serif">Verified Result</span>
+                    <span className="text-xs font-semibold font-serif">Verified Result</span>
                   </div>
                   <Link
                     href="/services/case-studies"
-                    className="text-xs font-bold text-navy hover:text-primary transition-colors flex items-center gap-1"
+                    className="text-xs font-semibold text-black hover:text-primary transition-colors flex items-center gap-1"
                   >
                     Read Case Study <ArrowUpRight className="w-3.5 h-3.5" />
                   </Link>
