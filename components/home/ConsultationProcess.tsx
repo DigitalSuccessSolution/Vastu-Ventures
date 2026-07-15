@@ -112,13 +112,13 @@ export default function ConsultationProcess() {
                 )}
 
                 {/* Circle Icon Container */}
-                <div className="w-14 h-14 rounded-full bg-[#FAF4E9] border border-[#EDE3D0] flex items-center justify-center flex-shrink-0 text-primary shadow-sm hover:scale-105 active:scale-95 transition-transform duration-300 relative z-10">
-                  <Icon className="w-5.5 h-5.5 text-primary" />
+                <div className="w-14 h-14 rounded-full bg-white border border-black flex items-center justify-center flex-shrink-0 text-black shadow-sm hover:scale-105 active:scale-95 group-hover:border-[#E28A3E] group-hover:bg-[#FEF3E4]/40 transition-all duration-300 relative z-10">
+                  <Icon className="w-5.5 h-5.5 text-black group-hover:scale-110 transition-transform duration-300" />
                 </div>
 
                 {/* Text Block directly below circle */}
                 <div className="mt-5 max-w-[180px]">
-                  <h3 className="font-serif text-sm font-bold text-navy group-hover:text-primary transition-colors">
+                  <h3 className="font-serif text-sm font-semibold text-black group-hover:text-primary transition-colors">
                     {step.title}
                   </h3>
                   <p className="text-[11px] text-muted-foreground mt-2 font-light leading-relaxed">

@@ -97,9 +97,9 @@ export default function WhyChooseUs() {
                 const Icon = point.icon;
                 return (
                   <div key={index} className="flex gap-4 items-start">
-                    <Icon className="w-6 h-6 text-black font flex-shrink-0 mt-0.5" />
+                    <Icon className="w-6 h-6 text-black font-semibold flex-shrink-0 mt-0.5" />
                     <div>
-                      <h3 className="font-serif text-sm font-semibold text-navy leading-snug">
+                      <h3 className="font-serif text-sm font-semibold text-black leading-snug">
                         {point.title}
                       </h3>
                       <p className="text-[11px] text-muted-foreground mt-1.5 font-light leading-relaxed">
