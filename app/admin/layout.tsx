@@ -50,7 +50,7 @@ export default function AdminLayout({
       <aside className="hidden md:flex flex-col w-72 bg-navy text-white h-screen sticky top-0 border-r border-[#1e2d4d] flex-shrink-0 z-30 shadow-premium">
 
         {/* Sidebar Brand Header */}
-        <div className="h-20 flex items-center justify-between px-6 border-b border-[#1e2d4d] bg-[#0b1528]">
+        <div className="h-20 flex items-center justify-between px-6 border-b border-[#1e2d4d] bg-transparent">
           <Link href="/" className="flex items-center gap-2">
             <img src="/logo.png" alt="Vastu Ventures Logo" className="h-14 w-auto object-contain brightness-0 invert" />
           </Link>
@@ -86,7 +86,7 @@ export default function AdminLayout({
         </nav>
 
         {/* Footer actions inside Sidebar */}
-        <div className="p-4 border-t border-[#1e2d4d] bg-[#0b1528] flex flex-col gap-1">
+        <div className="p-4 border-t border-[#1e2d4d] bg-transparent flex flex-col gap-1">
           <Link
             href="/"
             className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
@@ -180,7 +180,7 @@ export default function AdminLayout({
               })}
             </nav>
 
-            <div className="border-t border-[#1e2d4d] pt-4 bg-navy-dark">
+            <div className="border-t border-[#1e2d4d] pt-4 bg-transparent">
               <Link
                 href="/"
                 onClick={() => setSidebarOpen(false)}
