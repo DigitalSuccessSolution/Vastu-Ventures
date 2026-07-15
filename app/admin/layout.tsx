@@ -47,20 +47,20 @@ export default function AdminLayout({
     <div className="min-h-screen bg-[#FDFBF7] flex">
 
       {/* Sidebar for Desktop */}
-      <aside className="hidden md:flex flex-col w-64 bg-navy text-white h-screen sticky top-0 border-r border-navy-light/20 flex-shrink-0 z-30 shadow-premium">
+      <aside className="hidden md:flex flex-col w-72 bg-navy text-white h-screen sticky top-0 border-r border-[#1e2d4d] flex-shrink-0 z-30 shadow-premium">
 
         {/* Sidebar Brand Header */}
-        <div className="h-20 flex items-center justify-between px-6 border-b border-navy-light/15 bg-navy-dark">
+        <div className="h-20 flex items-center justify-between px-6 border-b border-[#1e2d4d] bg-[#0b1528]">
           <Link href="/" className="flex items-center gap-2">
             <img src="/logo.png" alt="Vastu Ventures Logo" className="h-14 w-auto object-contain brightness-0 invert" />
           </Link>
-          <span className="text-[8px] tracking-widest uppercase font-bold text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-md">
+          <span className="text-[8px] tracking-widest uppercase font-bold text-[#E28A3E] bg-[#E28A3E]/10 border border-[#E28A3E]/20 px-2 py-0.5 rounded-md">
             v1.2
           </span>
         </div>
 
         {/* Navigation items list */}
-        <nav className="flex-grow p-4 space-y-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <nav className="flex-grow p-4 space-y-1.5 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {allMenuItems.map((item) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
@@ -68,17 +68,17 @@ export default function AdminLayout({
               <Link
                 key={item.id}
                 href={item.href}
-                className={`group relative flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-300 ${isActive
-                  ? "bg-white/10 text-gold-start shadow-sm"
-                  : "text-slate-200 hover:bg-white/5 hover:text-white"
+                className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium tracking-wide transition-all duration-300 border ${isActive
+                  ? "bg-[#E28A3E]/10 border-[#E28A3E]/20 text-white shadow-sm"
+                  : "border-transparent text-slate-300 hover:bg-white/5 hover:text-white"
                   }`}
               >
                 {/* Left glowing gold indicator card */}
                 {isActive && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-gold-gradient rounded-r-full shadow-md" />
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-[#E28A3E] rounded-r-full shadow-md shadow-[#E28A3E]/50" />
                 )}
 
-                <Icon className={`w-4 h-4 transition-transform duration-300 group-hover:scale-110 ${isActive ? "text-gold-start" : "text-slate-500 group-hover:text-white"}`} />
+                <Icon className={`w-4 h-4 transition-transform duration-300 group-hover:scale-110 ${isActive ? "text-[#E28A3E]" : "text-slate-400 group-hover:text-white"}`} />
                 <span>{item.name}</span>
               </Link>
             );
@@ -86,12 +86,12 @@ export default function AdminLayout({
         </nav>
 
         {/* Footer actions inside Sidebar */}
-        <div className="p-4 border-t border-navy-light/15 bg-navy-dark flex flex-col gap-1">
+        <div className="p-4 border-t border-[#1e2d4d] bg-[#0b1528] flex flex-col gap-1">
           <Link
             href="/"
             className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
           >
-            <ArrowLeft className="w-4 h-4 text-primary" /> Back to Main Site
+            <ArrowLeft className="w-4 h-4 text-[#E28A3E]" /> Back to Main Site
           </Link>
         </div>
       </aside>
@@ -105,19 +105,19 @@ export default function AdminLayout({
               onClick={() => setSidebarOpen(!sidebarOpen)}
               className="md:hidden p-2.5 rounded-xl text-navy hover:bg-background-alt border border-border/80 transition-colors"
             >
-              <LayoutDashboard className="w-5 h-5 text-primary" />
+              <LayoutDashboard className="w-5 h-5 text-[#E28A3E]" />
             </button>
-            <h1 className="font-serif text-lg md:text-xl font-bold text-navy">
+            <h1 className="font-serif text-lg md:text-xl font-semibold text-black">
               {currentTitle}
             </h1>
           </div>
 
           <div className="flex items-center gap-5">
             <div className="flex items-center gap-1">
-              <button className="p-2 text-navy-light hover:text-primary rounded-lg transition-colors">
+              <button className="p-2 text-navy-light hover:text-[#E28A3E] rounded-lg transition-colors cursor-pointer">
                 <Bell className="w-4.5 h-4.5" />
               </button>
-              <button className="p-2 text-navy-light hover:text-primary rounded-lg transition-colors">
+              <button className="p-2 text-navy-light hover:text-[#E28A3E] rounded-lg transition-colors cursor-pointer">
                 <Settings className="w-4.5 h-4.5" />
               </button>
             </div>
@@ -125,11 +125,11 @@ export default function AdminLayout({
             <div className="w-px h-6 bg-border" />
 
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-gold-gradient text-white flex items-center justify-center font-bold text-xs shadow-premium">
+              <div className="w-9 h-9 rounded-xl bg-[#E28A3E] text-white flex items-center justify-center font-semibold text-xs shadow-premium">
                 AR
               </div>
               <div className="hidden sm:block text-left">
-                <p className="text-xs font-bold text-navy leading-none">Acharya Raghavendra</p>
+                <p className="text-xs font-semibold text-black leading-none">Acharya Raghavendra</p>
                 <p className="text-[9px] text-muted-foreground mt-1.5 leading-none">Root Administrator</p>
               </div>
             </div>
@@ -146,17 +146,17 @@ export default function AdminLayout({
       {sidebarOpen && (
         <div className="fixed inset-0 z-40 bg-navy/60 backdrop-blur-sm md:hidden" onClick={() => setSidebarOpen(false)}>
           <div
-            className="w-64 bg-navy text-white h-full flex flex-col p-4 gap-4 animate-fade-in-right"
+            className="w-72 bg-navy text-white h-full flex flex-col p-4 gap-4 animate-fade-in-right"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-navy-light/10 pb-4 mb-2 h-16">
+            <div className="flex items-center justify-between border-b border-[#1e2d4d] pb-4 mb-2 h-16">
               <img src="/logo.png" alt="Vastu Ventures Logo" className="h-12 w-auto object-contain brightness-0 invert" />
-              <button onClick={() => setSidebarOpen(false)} className="text-white hover:text-primary border border-white/10 p-1 rounded-lg">
+              <button onClick={() => setSidebarOpen(false)} className="text-white hover:text-[#E28A3E] border border-white/10 p-1.5 rounded-lg">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <nav className="flex-grow space-y-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            <nav className="flex-grow space-y-1.5 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
               {allMenuItems.map((item) => {
                 const isActive = pathname === item.href;
                 const Icon = item.icon;
@@ -165,28 +165,28 @@ export default function AdminLayout({
                     key={item.id}
                     href={item.href}
                     onClick={() => setSidebarOpen(false)}
-                    className={`group relative flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-300 ${isActive
-                      ? "bg-white/10 text-gold-start shadow-sm"
-                      : "text-slate-400 hover:bg-white/5 hover:text-white"
+                    className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium tracking-wide transition-all duration-300 border ${isActive
+                      ? "bg-[#E28A3E]/10 border-[#E28A3E]/20 text-white shadow-sm"
+                      : "border-transparent text-slate-300 hover:bg-white/5 hover:text-white"
                       }`}
                   >
                     {isActive && (
-                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-gold-gradient rounded-r-full shadow-md" />
+                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-[#E28A3E] rounded-r-full shadow-md shadow-[#E28A3E]/50" />
                     )}
-                    <Icon className={`w-4 h-4 ${isActive ? "text-gold-start" : "text-slate-500"}`} />
+                    <Icon className={`w-4 h-4 ${isActive ? "text-[#E28A3E]" : "text-slate-400 group-hover:text-white"}`} />
                     <span>{item.name}</span>
                   </Link>
                 );
               })}
             </nav>
 
-            <div className="border-t border-navy-light/10 pt-4 bg-navy-dark">
+            <div className="border-t border-[#1e2d4d] pt-4 bg-navy-dark">
               <Link
                 href="/"
                 onClick={() => setSidebarOpen(false)}
                 className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition-colors"
               >
-                <ArrowLeft className="w-4 h-4 text-primary" /> Back to Main Site
+                <ArrowLeft className="w-4 h-4 text-[#E28A3E]" /> Back to Main Site
               </Link>
             </div>
           </div>
