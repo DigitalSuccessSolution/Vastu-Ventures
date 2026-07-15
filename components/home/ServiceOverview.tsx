@@ -98,10 +98,7 @@ export default function ServiceOverview() {
                 variants={cardVariants}
                 className="group bg-white border border-[#EDE3D0]/60 rounded-2xl p-6 shadow-sm hover:shadow-premium hover:-translate-y-1 transition-all duration-300 flex flex-col items-start gap-3"
               >
-                {/* Icon in circular warm bg */}
-                <div className="w-14 h-14 rounded-full bg-[#FEF3E4] flex items-center justify-center mb-1 group-hover:bg-[#E28A3E]/10 transition-colors">
-                  <Icon className="w-7 h-7 text-[#E28A3E]" strokeWidth={1.5} />
-                </div>
+                <Icon className="w-8 h-8 text-black mb-2 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.5} />
 
                 {/* Title */}
                 <h3 className="font-serif text-base font-bold text-navy leading-snug group-hover:text-[#E28A3E] transition-colors">
