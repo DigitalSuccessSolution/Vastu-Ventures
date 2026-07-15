@@ -670,11 +670,11 @@ export default function ServiceDetailsPage({ params }: Props) {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ ...transition, delay: index * 0.05 }}
-                  className="bg-white border border-[#EDE3D0]/60 rounded-2xl p-6 text-left shadow-sm hover:shadow-premium hover:-translate-y-0.5 transition-all duration-300 flex flex-col gap-4"
+                  className="bg-white border border-[#EDE3D0]/60 rounded-2xl p-6 text-left shadow-sm hover:shadow-premium hover:-translate-y-0.5 hover:border-[#E28A3E]/40 transition-all duration-300 flex flex-col gap-4 group"
                 >
-                  <ItemIcon className="w-7 h-7 text-black flex-shrink-0 mb-3" strokeWidth={1.5} />
+                  <ItemIcon className="w-7 h-7 text-black flex-shrink-0 mb-3 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.5} />
                   <div>
-                    <h3 className="font-serif text-sm font-semibold text-black">{item.title}</h3>
+                    <h3 className="font-serif text-sm font-semibold text-black group-hover:text-[#E28A3E] transition-colors">{item.title}</h3>
                     <p className="text-xs text-muted-foreground font-light leading-relaxed mt-2">{item.desc}</p>
                   </div>
                 </motion.div>
@@ -709,13 +709,13 @@ export default function ServiceDetailsPage({ params }: Props) {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ ...transition, delay: idx * 0.05 }}
-                    className="flex flex-col items-center text-center flex-1 min-w-0"
+                    className="flex flex-col items-center text-center flex-1 min-w-0 group cursor-pointer"
                   >
                     {/* Raw Black and White Icon */}
                     <StepIcon className="w-8 h-8 text-black mb-4 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.5} />
                     
                     {/* Content */}
-                    <h4 className="text-xs sm:text-sm font-semibold text-black leading-snug">{step.title}</h4>
+                    <h4 className="text-xs sm:text-sm font-semibold text-black leading-snug group-hover:text-[#E28A3E] transition-colors">{step.title}</h4>
                     <p className="text-[10px] sm:text-xs text-muted-foreground font-light mt-1.5 leading-relaxed max-w-[160px] mx-auto">
                       {step.desc}
                     </p>
@@ -753,7 +753,7 @@ export default function ServiceDetailsPage({ params }: Props) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={transition}
-                className="bg-white border border-[#EDE3D0]/60 rounded-3xl overflow-hidden shadow-sm hover:shadow-premium transition-all duration-300 flex flex-col group"
+                className="bg-white border border-[#EDE3D0]/60 rounded-3xl overflow-hidden shadow-sm hover:shadow-premium hover:border-[#E28A3E]/30 hover:-translate-y-0.5 transition-all duration-300 flex flex-col group"
               >
                 {/* Before & After Split Image Header */}
                 <div className="relative grid grid-cols-2 h-36 sm:h-40 overflow-hidden">
@@ -816,7 +816,7 @@ export default function ServiceDetailsPage({ params }: Props) {
             {service.faqs.map((faq, index) => (
               <div
                 key={index}
-                className="bg-white border border-[#EDE3D0]/60 rounded-2xl overflow-hidden shadow-sm transition-all"
+                className="bg-white border border-[#EDE3D0]/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md hover:border-[#E28A3E]/30 transition-all duration-300"
               >
                 <button
                   onClick={() => setActiveFaq(activeFaq === index ? null : index)}
