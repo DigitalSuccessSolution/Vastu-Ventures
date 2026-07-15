@@ -619,7 +619,7 @@ export default function ServiceDetailsPage({ params }: Props) {
 
             {/* Right Column: Narrative Content & Features Strip */}
             <div className="lg:col-span-7 flex flex-col gap-6">
-              <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-navy">
+              <h2 className="font-serif text-3xl sm:text-4xl font-medium text-navy mt-2.5">
                 {aboutInfo[slug as keyof typeof aboutInfo]?.title}
               </h2>
               <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
@@ -652,7 +652,7 @@ export default function ServiceDetailsPage({ params }: Props) {
         <section id="what-we-analyze" className="mb-20 scroll-mt-24">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <span className="text-xs uppercase font-bold text-[#E28A3E] tracking-widest">Methodical Evaluation</span>
-            <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-navy mt-2">
+            <h2 className="font-serif text-3xl sm:text-4xl font-medium text-navy mt-2.5">
               What We Analyze
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground mt-3 font-light max-w-lg mx-auto">
@@ -688,7 +688,7 @@ export default function ServiceDetailsPage({ params }: Props) {
         {/* 6. CONSULTATION PROCESS */}
         <section className="mb-20">
           <div className="text-center max-w-3xl mx-auto mb-12">
-            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-navy">
+            <h2 className="font-serif text-3xl sm:text-4xl font-medium text-navy mt-2.5">
               Our Consultation Process
             </h2>
           </div>
@@ -740,7 +740,7 @@ export default function ServiceDetailsPage({ params }: Props) {
             <span className="inline-block px-4 py-1.5 rounded-full bg-[#FEF3E4] text-[#A67C37] text-xs font-bold uppercase tracking-wider mb-3">
               Client Stories
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-navy mt-2.5">
+            <h2 className="font-serif text-3xl sm:text-4xl font-medium text-navy mt-2.5">
               Real Transformations
             </h2>
           </div>
@@ -807,7 +807,7 @@ export default function ServiceDetailsPage({ params }: Props) {
         <section className="mb-20">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <span className="text-xs uppercase font-bold text-[#E28A3E] tracking-widest">FAQ</span>
-            <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-navy mt-2">
+            <h2 className="font-serif text-3xl sm:text-4xl font-medium text-navy mt-2.5">
               Frequently Asked Questions
             </h2>
           </div>
