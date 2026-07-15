@@ -63,9 +63,9 @@ export default function AdminLayout({
       {/* Sidebar for Desktop */}
       <aside className="hidden md:flex flex-col w-72 bg-navy text-white h-screen sticky top-0 border-r border-[#1e2d4d] flex-shrink-0 z-30 shadow-premium">
 
-        <div className="py-6 flex items-center justify-between px-6 border-b border-white/10 bg-transparent">
+        <div className="h-20 flex-shrink-0 flex items-center justify-between px-6 border-b border-white/10 bg-transparent">
           <Link href="/admin" className="flex items-center gap-2">
-            <img src="/logo2.png" alt="Vastu Ventures Logo" className="h-14 w-auto object-contain" />
+            <img src="/logo2.png" alt="Vastu Ventures Logo" className="h-12 w-auto object-contain" />
           </Link>
         </div>
 
@@ -92,12 +92,6 @@ export default function AdminLayout({
 
         {/* Footer actions inside Sidebar */}
         <div className="p-4 border-t border-white/10 bg-transparent flex flex-col gap-1">
-          <Link
-            href="/"
-            className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4 text-[#E28A3E]" /> Back to Main Site
-          </Link>
           <button
             onClick={() => {
               localStorage.removeItem("isAdminLoggedIn");
@@ -194,13 +188,6 @@ export default function AdminLayout({
             </nav>
 
             <div className="border-t border-white/10 pt-4 bg-transparent flex flex-col gap-1">
-              <Link
-                href="/"
-                onClick={() => setSidebarOpen(false)}
-                className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition-colors"
-              >
-                <ArrowLeft className="w-4 h-4 text-[#E28A3E]" /> Back to Main Site
-              </Link>
               <button
                 onClick={() => {
                   setSidebarOpen(false);
