@@ -111,7 +111,7 @@ export default function AdminLayout({
       </aside>
 
       {/* Main Admin Controller Panel Container */}
-      <div className="flex-grow flex flex-col min-h-screen overflow-x-hidden">
+      <div className="flex-grow flex flex-col min-h-screen min-w-0">
         {/* Header Bar */}
         <header className="sticky top-0 z-20 h-20 bg-white border-b border-border flex items-center justify-between px-6 md:px-8 shadow-sm">
           <div className="flex items-center gap-4">
