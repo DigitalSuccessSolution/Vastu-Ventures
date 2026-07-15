@@ -1,0 +1,36 @@
+{
+  "name": "vastuventures-backend",
+  "version": "1.0.0",
+  "description": "VastuVentures Backend API — Vastu Consultation & Online Course Platform",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "vastu",
+    "consultation",
+    "courses",
+    "api"
+  ],
+  "author": "VastuVentures",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.10.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^8.5.2",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.7.4",
+    "multer": "^2.2.0",
+    "nodemailer": "^9.0.3",
+    "razorpay": "^2.9.6",
+    "zod": "^4.4.3"
+  }
+}
