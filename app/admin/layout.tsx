@@ -68,17 +68,12 @@ export default function AdminLayout({
               <Link
                 key={item.id}
                 href={item.href}
-                className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium tracking-wide transition-all duration-300 border ${isActive
-                  ? "bg-[#E28A3E]/10 border-[#E28A3E]/20 text-white shadow-sm"
+                className={`group flex items-center gap-3 px-4 py-2.5 rounded-xl text-[13px] font-medium tracking-wide transition-all duration-300 border ${isActive
+                  ? "bg-[#E28A3E] border-[#E28A3E] text-white shadow-md shadow-[#E28A3E]/10"
                   : "border-transparent text-slate-300 hover:bg-white/5 hover:text-white"
                   }`}
               >
-                {/* Left glowing gold indicator card */}
-                {isActive && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-[#E28A3E] rounded-r-full shadow-md shadow-[#E28A3E]/50" />
-                )}
-
-                <Icon className={`w-4 h-4 transition-transform duration-300 group-hover:scale-110 ${isActive ? "text-[#E28A3E]" : "text-slate-400 group-hover:text-white"}`} />
+                <Icon className={`w-4 h-4 transition-transform duration-300 group-hover:scale-110 ${isActive ? "text-white" : "text-slate-400 group-hover:text-white"}`} />
                 <span>{item.name}</span>
               </Link>
             );
@@ -165,15 +160,12 @@ export default function AdminLayout({
                     key={item.id}
                     href={item.href}
                     onClick={() => setSidebarOpen(false)}
-                    className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium tracking-wide transition-all duration-300 border ${isActive
-                      ? "bg-[#E28A3E]/10 border-[#E28A3E]/20 text-white shadow-sm"
+                    className={`group flex items-center gap-3 px-4 py-2.5 rounded-xl text-[13px] font-medium tracking-wide transition-all duration-300 border ${isActive
+                      ? "bg-[#E28A3E] border-[#E28A3E] text-white shadow-md shadow-[#E28A3E]/10"
                       : "border-transparent text-slate-300 hover:bg-white/5 hover:text-white"
                       }`}
                   >
-                    {isActive && (
-                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-[#E28A3E] rounded-r-full shadow-md shadow-[#E28A3E]/50" />
-                    )}
-                    <Icon className={`w-4 h-4 ${isActive ? "text-[#E28A3E]" : "text-slate-400 group-hover:text-white"}`} />
+                    <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-slate-400 group-hover:text-white"}`} />
                     <span>{item.name}</span>
                   </Link>
                 );
