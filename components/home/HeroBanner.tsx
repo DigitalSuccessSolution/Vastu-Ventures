@@ -39,7 +39,7 @@ export default function HeroBanner() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full">
         <div className="max-w-3xl flex flex-col gap-6 text-left">
-          
+
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: animateY }}
