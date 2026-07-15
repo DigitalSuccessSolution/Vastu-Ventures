@@ -61,14 +61,11 @@ export default function HomePage() {
             />
 
             {/* Dark gradient overlay so text is readable */}
-            <div className="absolute inset-0 bg-gradient-to-r from-navy/85 via-navy/70 to-navy/30 pointer-events-none" />
-
-            {/* Subtle warm vignette on right */}
-            <div className="absolute inset-0 bg-gradient-to-t from-navy/40 via-transparent to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-navy/60 pointer-events-none" />
 
             {/* Content on top */}
-            <div className="relative z-10 flex flex-col justify-center h-full min-h-[320px] sm:min-h-[380px] px-8 sm:px-12 lg:px-16 py-12">
-              <div className="max-w-xl flex flex-col gap-5">
+            <div className="relative z-10 flex flex-col justify-center items-center text-center h-full min-h-[320px] sm:min-h-[380px] px-8 sm:px-12 lg:px-16 py-12">
+              <div className="max-w-2xl flex flex-col items-center gap-5 mx-auto">
                 <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight">
                   <span className="text-white">Ready to Transform Your Space </span>
                   <br className="hidden sm:inline" />
@@ -76,12 +73,12 @@ export default function HomePage() {
                   <span className="text-[#E28A3E]">Your Life?</span>
                 </h2>
 
-                <p className="text-xs sm:text-sm text-white/75 font-light leading-relaxed max-w-md">
+                <p className="text-xs sm:text-sm text-white/75 font-light leading-relaxed max-w-md mx-auto">
                   Book a consultation today and take the first step towards positivity and prosperity.
                 </p>
 
                 {/* Key value checkmarks */}
-                <div className="flex flex-wrap gap-x-6 gap-y-2 text-[10px] text-white/80 font-bold uppercase tracking-wider">
+                <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-[10px] text-white/80 font-bold uppercase tracking-wider">
                   <span className="flex items-center gap-1.5">
                     <Check className="w-4 h-4 text-[#E28A3E]" /> No Demolitions
                   </span>
