@@ -97,12 +97,9 @@ export default function WhyChooseUs() {
                 const Icon = point.icon;
                 return (
                   <div key={index} className="flex gap-4 items-start">
-                    {/* Rounded gold bordered icon container */}
-                    <div className="w-11 h-11 rounded-full bg-[#FAF4E9] border border-[#EDE3D0] flex items-center justify-center flex-shrink-0 text-primary shadow-sm">
-                      <Icon className="w-5 h-5" />
-                    </div>
+                    <Icon className="w-6 h-6 text-black font flex-shrink-0 mt-0.5" />
                     <div>
-                      <h3 className="font-serif text-sm font-bold text-navy leading-snug">
+                      <h3 className="font-serif text-sm font-semibold text-navy leading-snug">
                         {point.title}
                       </h3>
                       <p className="text-[11px] text-muted-foreground mt-1.5 font-light leading-relaxed">

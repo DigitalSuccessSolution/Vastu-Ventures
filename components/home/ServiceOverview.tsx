@@ -98,10 +98,10 @@ export default function ServiceOverview() {
                 variants={cardVariants}
                 className="group bg-white border border-[#EDE3D0]/60 rounded-2xl p-6 shadow-sm hover:shadow-premium hover:-translate-y-1 transition-all duration-300 flex flex-col items-start gap-3"
               >
-                <Icon className="w-8 h-8 text-black mb-2 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.5} />
+                <Icon className="w-8 h-8 text-black mb-2 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.2} />
 
                 {/* Title */}
-                <h3 className="font-serif text-base font-bold text-navy leading-snug group-hover:text-[#E28A3E] transition-colors">
+                <h3 className="font-serif text-base font-semibold text-navy leading-snug group-hover:text-[#E28A3E] transition-colors">
                   {service.title}
                 </h3>
 
@@ -113,7 +113,7 @@ export default function ServiceOverview() {
                 {/* Learn More link */}
                 <Link
                   href={service.href}
-                  className="flex items-center gap-1 text-xs font-semibold text-[#E28A3E] hover:gap-2 transition-all mt-1"
+                  className="flex items-center gap-1 text-xs font-semibold text-black hover:gap-2 transition-all mt-1"
                 >
                   Learn More
                   <ArrowRight className="w-3.5 h-3.5" />

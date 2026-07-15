@@ -64,11 +64,10 @@ export default function StatsStrip() {
           {stats.map((stat, i) => (
             <div
               key={i}
-              className={`flex flex-col items-center justify-center p-2 ${
-                i !== stats.length - 1 ? "md:border-r border-navy-light/60" : ""
-              }`}
+              className={`flex flex-col items-center justify-center p-2 ${i !== stats.length - 1 ? "md:border-r border-navy-light/60" : ""
+                }`}
             >
-              <span className="font-serif text-2xl sm:text-3xl font-extrabold text-gold-start tracking-tight">
+              <span className="font-serif text-2xl sm:text-3xl font-semibold text-gold-start tracking-tight">
                 <CountUp to={stat.value} decimals={stat.decimals} />
                 {stat.suffix}
               </span>

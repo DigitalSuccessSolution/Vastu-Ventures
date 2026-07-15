@@ -156,7 +156,7 @@ export default function FeaturedCourses() {
                 {/* Card Body */}
                 <div className="p-5 flex-grow flex flex-col justify-between text-left">
                   <div>
-                    <h3 className="font-serif text-sm font-bold text-navy hover:text-primary transition-colors line-clamp-2 min-h-[40px] leading-snug">
+                    <h3 className="font-serif text-sm font-semibold text-navy hover:text-primary transition-colors line-clamp-2 min-h-[40px] leading-snug">
                       <Link href={`/courses/${course.slug}`}>{course.title}</Link>
                     </h3>
                     <p className="text-[11px] text-muted-foreground mt-2 font-medium">
