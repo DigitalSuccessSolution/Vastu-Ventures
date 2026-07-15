@@ -878,24 +878,24 @@ export default function ServiceDetailsPage({ params }: Props) {
               className="absolute inset-0 w-full h-full object-cover"
             />
             {/* Dark gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-navy/90 via-navy/70 to-navy/35 pointer-events-none" />
+            <div className="absolute inset-0 bg-navy/60 pointer-events-none" />
 
             {/* Content on top */}
-            <div className="relative z-10 flex flex-col justify-center h-full min-h-[320px] sm:min-h-[380px] px-8 sm:px-12 lg:px-16 py-12 text-left">
-              <div className="max-w-xl flex flex-col gap-5">
-                <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight">
+            <div className="relative z-10 flex flex-col justify-center items-center text-center h-full min-h-[320px] sm:min-h-[380px] px-8 sm:px-12 lg:px-16 py-12">
+              <div className="max-w-2xl flex flex-col items-center gap-5 mx-auto">
+                <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold leading-tight">
                   <span className="text-white">Ready to Balance Your Space </span>
                   <br className="hidden sm:inline" />
                   <span className="text-white">and </span>
                   <span className="text-[#E28A3E]">Your Life?</span>
                 </h2>
 
-                <p className="text-xs sm:text-sm text-white/75 font-light leading-relaxed max-w-md">
+                <p className="text-xs sm:text-sm text-white/75 font-light leading-relaxed max-w-md mx-auto">
                   Book a consultation today and take the first step towards direction harmony, sound sleep, and career success.
                 </p>
 
                 {/* Key checkmarks */}
-                <div className="flex flex-wrap gap-x-6 gap-y-2 text-[10px] text-white/80 font-bold uppercase tracking-wider">
+                <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-[10px] text-white/80 font-bold uppercase tracking-wider">
                   <span className="flex items-center gap-1.5">
                     <Check className="w-4 h-4 text-white" strokeWidth={3} /> No Demolitions
                   </span>
@@ -908,7 +908,7 @@ export default function ServiceDetailsPage({ params }: Props) {
                 </div>
 
                 {/* Consultation Fee Badge */}
-                <div className="flex items-center gap-3 mt-1">
+                <div className="flex items-center gap-3 mt-1 justify-center">
                   <Link
                     href="#book-consultation"
                     className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-gold-gradient hover:opacity-95 text-white text-xs font-bold shadow-premium hover:shadow-premium-lg hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
@@ -916,7 +916,7 @@ export default function ServiceDetailsPage({ params }: Props) {
                     <span>Inquire Now</span>
                     <Calendar className="w-4 h-4" />
                   </Link>
-                  <div className="text-white">
+                  <div className="text-white text-left">
                     <span className="text-[9px] uppercase text-white/60 block leading-none">Consultation Fee</span>
                     <span className="text-sm font-extrabold">₹{otherServicesList.find(s => s.slug === slug)?.price || "150"}</span>
                   </div>

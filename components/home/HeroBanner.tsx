@@ -61,7 +61,7 @@ export default function HeroBanner() {
             className="font-serif text-3xl sm:text-4xl md:text-5xl font-normal text-navy leading-tight"
           >
             Align Your Space. <br />
-            <span className="text-gold-gradient">Transform Your Destiny.</span>
+            <span className="text-[#E28A3E]">Transform Your Destiny.</span>
           </motion.h1>
 
           {/* Paragraph */}

@@ -66,7 +66,7 @@ export default function HomePage() {
             {/* Content on top */}
             <div className="relative z-10 flex flex-col justify-center items-center text-center h-full min-h-[320px] sm:min-h-[380px] px-8 sm:px-12 lg:px-16 py-12">
               <div className="max-w-2xl flex flex-col items-center gap-5 mx-auto">
-                <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight">
+                <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold leading-tight">
                   <span className="text-white">Ready to Transform Your Space </span>
                   <br className="hidden sm:inline" />
                   <span className="text-white">and </span>
