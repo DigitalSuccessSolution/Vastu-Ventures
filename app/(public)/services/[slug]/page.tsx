@@ -637,7 +637,7 @@ export default function ServiceDetailsPage({ params }: Props) {
                         <div className="hidden sm:block absolute left-0 top-1/2 -translate-y-1/2 w-[1px] h-10 bg-[#EDE3D0]/60" />
                       )}
                       <FeatIcon className="w-7 h-7 text-black mb-2 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.5} />
-                      <span className="text-[10px] sm:text-xs font-semibold text-navy leading-tight">
+                      <span className="text-[10px] sm:text-xs font-semibold text-black leading-tight">
                         {feat.title}
                       </span>
                     </div>
@@ -674,7 +674,7 @@ export default function ServiceDetailsPage({ params }: Props) {
                 >
                   <ItemIcon className="w-7 h-7 text-black flex-shrink-0 mb-3" strokeWidth={1.5} />
                   <div>
-                    <h3 className="font-serif text-sm font-bold text-navy">{item.title}</h3>
+                    <h3 className="font-serif text-sm font-semibold text-black">{item.title}</h3>
                     <p className="text-xs text-muted-foreground font-light leading-relaxed mt-2">{item.desc}</p>
                   </div>
                 </motion.div>
@@ -715,7 +715,7 @@ export default function ServiceDetailsPage({ params }: Props) {
                     <StepIcon className="w-8 h-8 text-black mb-4 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.5} />
                     
                     {/* Content */}
-                    <h4 className="text-xs sm:text-sm font-bold text-navy leading-snug">{step.title}</h4>
+                    <h4 className="text-xs sm:text-sm font-semibold text-black leading-snug">{step.title}</h4>
                     <p className="text-[10px] sm:text-xs text-muted-foreground font-light mt-1.5 leading-relaxed max-w-[160px] mx-auto">
                       {step.desc}
                     </p>
@@ -785,7 +785,7 @@ export default function ServiceDetailsPage({ params }: Props) {
                 {/* Card Body */}
                 <div className="p-5 text-left flex flex-col justify-between flex-grow gap-3">
                   <div className="flex flex-col gap-1.5">
-                    <h3 className="font-serif text-sm sm:text-base font-bold text-navy leading-snug group-hover:text-[#E28A3E] transition-colors">
+                    <h3 className="font-serif text-sm sm:text-base font-semibold text-black leading-snug group-hover:text-[#E28A3E] transition-colors">
                       {story.title}
                     </h3>
                     <p className="text-[11px] sm:text-xs text-muted-foreground font-light leading-relaxed">
@@ -820,7 +820,7 @@ export default function ServiceDetailsPage({ params }: Props) {
               >
                 <button
                   onClick={() => setActiveFaq(activeFaq === index ? null : index)}
-                  className="w-full flex items-center justify-between p-5 text-navy font-serif text-sm sm:text-base font-bold text-left cursor-pointer hover:text-[#E28A3E] transition-colors"
+                  className="w-full flex items-center justify-between p-5 text-black font-serif text-sm sm:text-base font-semibold text-left cursor-pointer hover:text-[#E28A3E] transition-colors"
                 >
                   <span>{faq.question}</span>
                   <ChevronDown className={`w-4 h-4 text-[#E28A3E] transition-transform duration-300 ${activeFaq === index ? "rotate-180" : ""}`} />
