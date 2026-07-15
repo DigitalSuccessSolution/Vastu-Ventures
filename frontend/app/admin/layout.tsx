@@ -113,7 +113,7 @@ export default function AdminLayout({
       {/* Main Admin Controller Panel Container */}
       <div className="flex-grow flex flex-col min-h-screen overflow-x-hidden">
         {/* Header Bar */}
-        <header className="h-20 bg-white border-b border-border flex items-center justify-between px-6 md:px-8 shadow-sm">
+        <header className="sticky top-0 z-20 h-20 bg-white border-b border-border flex items-center justify-between px-6 md:px-8 shadow-sm">
           <div className="flex items-center gap-4">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
