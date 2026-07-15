@@ -3,7 +3,7 @@ import cloudinary from "../config/cloudinary.js";
 /**
  * Upload a file buffer to Cloudinary.
  * @param {Buffer} fileBuffer - The file buffer from Multer
- * @param {string} folder - Cloudinary folder path (e.g. "vastuvidya/avatars")
+ * @param {string} folder - Cloudinary folder path (e.g. "vastuventures/avatars")
  * @param {string} resourceType - "image", "raw" (for PDFs), or "video"
  * @returns {{ url: string, publicId: string }}
  */

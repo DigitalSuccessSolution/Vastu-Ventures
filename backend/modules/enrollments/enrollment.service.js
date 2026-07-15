@@ -147,7 +147,7 @@ const issueCertificate = async (userId, courseId, enrollmentId) => {
     });
 
     // Upload PDF to Cloudinary raw folder
-    const uploadResult = await uploadToCloudinary(pdfBuffer, "vastuvidya/certificates", "raw");
+    const uploadResult = await uploadToCloudinary(pdfBuffer, "vastuventures/certificates", "raw");
 
     // Create Certificate record
     await Certificate.create({

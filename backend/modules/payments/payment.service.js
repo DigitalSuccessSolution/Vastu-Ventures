@@ -202,7 +202,7 @@ const fulfillPayment = async (payment) => {
   });
 
   // Upload Invoice to Cloudinary raw files
-  const uploadResult = await uploadToCloudinary(pdfBuffer, "vastuvidya/invoices", "raw");
+  const uploadResult = await uploadToCloudinary(pdfBuffer, "vastuventures/invoices", "raw");
 
   await Invoice.create({
     invoiceNumber,

@@ -140,7 +140,7 @@ export default function Footer() {
             </h3>
             <ul className="flex flex-col gap-2.5 text-sm text-background-alt/75 font-light">
               <li>
-                <Link href="/contact" className="hover:text-gold-start hover:pl-1 transition-all">
+                <Link href="/faq" className="hover:text-gold-start hover:pl-1 transition-all">
                   FAQ
                 </Link>
               </li>

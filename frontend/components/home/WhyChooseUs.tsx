@@ -86,8 +86,8 @@ export default function WhyChooseUs() {
               <h2 className="font-serif text-3xl sm:text-4xl font-medium mt-2 leading-tight">
                 <span className="text-navy">Why Thousands Trust </span>
                 <br />
-                <span className="text-navy">Vastu</span>
-                <span className="text-[#E28A3E]">Vidya</span>
+                <span className="text-[#E28A3E]">Vastu</span> 
+                <span className="text-navy">Ventures</span>
               </h2>
             </div>
 

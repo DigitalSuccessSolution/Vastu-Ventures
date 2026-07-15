@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Wrench,
@@ -17,7 +17,8 @@ import {
   X,
   ArrowLeft,
   Settings,
-  Bell
+  Bell,
+  LogOut
 } from "lucide-react";
 
 export default function AdminLayout({
@@ -27,6 +28,8 @@ export default function AdminLayout({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
+  const [authorized, setAuthorized] = useState(true);
+  const router = useRouter();
 
   const allMenuItems = [
     { id: "dashboard", name: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -40,6 +43,17 @@ export default function AdminLayout({
     { id: "reviews", name: "Review Management", href: "/admin/reviews", icon: Star },
     { id: "reports", name: "Reports", href: "/admin/reports", icon: BarChart3 }
   ];
+
+  if (!authorized) {
+    return (
+      <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-10 h-10 border-4 border-[#E28A3E] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-xs text-navy font-semibold">Verifying credentials...</p>
+        </div>
+      </div>
+    );
+  }
 
   const currentTitle = allMenuItems.find(item => item.href === pathname)?.name || "Admin Panel";
 
@@ -78,13 +92,22 @@ export default function AdminLayout({
         </nav>
 
         {/* Footer actions inside Sidebar */}
-        <div className="p-4 border-t border-[#1e2d4d] bg-transparent flex flex-col gap-1">
+        <div className="p-4 border-t border-white/10 bg-transparent flex flex-col gap-1">
           <Link
             href="/"
             className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
           >
             <ArrowLeft className="w-4 h-4 text-[#E28A3E]" /> Back to Main Site
           </Link>
+          <button
+            onClick={() => {
+              localStorage.removeItem("isAdminLoggedIn");
+              router.replace("/login");
+            }}
+            className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-semibold text-red-400 hover:text-red-300 hover:bg-white/5 transition-colors w-full text-left cursor-pointer"
+          >
+            <LogOut className="w-4 h-4 text-red-400" /> Sign Out
+          </button>
         </div>
       </aside>
 
@@ -171,7 +194,7 @@ export default function AdminLayout({
               })}
             </nav>
 
-            <div className="border-t border-[#1e2d4d] pt-4 bg-transparent">
+            <div className="border-t border-white/10 pt-4 bg-transparent flex flex-col gap-1">
               <Link
                 href="/"
                 onClick={() => setSidebarOpen(false)}
@@ -179,6 +202,16 @@ export default function AdminLayout({
               >
                 <ArrowLeft className="w-4 h-4 text-[#E28A3E]" /> Back to Main Site
               </Link>
+              <button
+                onClick={() => {
+                  setSidebarOpen(false);
+                  localStorage.removeItem("isAdminLoggedIn");
+                  router.replace("/login");
+                }}
+                className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-semibold text-red-400 hover:text-red-300 hover:bg-white/5 transition-colors w-full text-left cursor-pointer"
+              >
+                <LogOut className="w-4 h-4 text-red-400" /> Sign Out
+              </button>
             </div>
           </div>
         </div>

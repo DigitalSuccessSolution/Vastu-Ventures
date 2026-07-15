@@ -41,7 +41,7 @@ export const updateAvatar = async (userId, fileBuffer) => {
   }
 
   // Upload new avatar
-  const uploadResult = await uploadToCloudinary(fileBuffer, "vastuvidya/avatars");
+  const uploadResult = await uploadToCloudinary(fileBuffer, "vastuventures/avatars");
   user.avatar = {
     url: uploadResult.url,
     publicId: uploadResult.publicId,

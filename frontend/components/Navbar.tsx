@@ -46,7 +46,6 @@ export default function Navbar() {
 
   const secondaryLinks = [
     { name: "Blog", href: "/blogs", icon: FileText },
-    { name: "FAQ", href: "/faq", icon: HelpCircle },
     { name: "Contact Us", href: "/contact", icon: HelpCircle }
   ];
 
