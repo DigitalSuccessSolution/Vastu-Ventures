@@ -10,6 +10,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -24,11 +25,28 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile drawer on route change
+  // Close mobile drawer on route change, but auto-expand services if active
   useEffect(() => {
     setIsOpen(false);
     setActiveDropdown(null);
+    const isServiceActive = navLinks[0].items.some(item => pathname === item.href);
+    setMobileServicesOpen(isServiceActive);
   }, [pathname]);
+
+  // Prevent background scrolling when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.documentElement.classList.add("lenis-stopped");
+      document.body.style.overflow = "hidden";
+    } else {
+      document.documentElement.classList.remove("lenis-stopped");
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.documentElement.classList.remove("lenis-stopped");
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   const navLinks = [
     {
@@ -51,12 +69,13 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-        ? "bg-background/95 backdrop-blur-md py-3 shadow-premium"
-        : "bg-transparent py-5"
-        }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-[background-color,padding] duration-300 ${
+        scrolled || isOpen
+          ? "bg-[#FDFBF7]/95 backdrop-blur-md py-3 shadow-premium"
+          : "bg-white/95 lg:bg-transparent py-3 lg:py-5 shadow-sm lg:shadow-none"
+      }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-50">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group h-14 relative w-48 shrink-0">
@@ -176,7 +195,7 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 rounded-xl text-navy hover:bg-background-alt transition-colors focus:outline-none"
+            className="lg:hidden p-2 rounded-xl text-navy hover:bg-background-alt transition-colors focus:outline-none cursor-pointer"
             aria-label="Toggle Menu"
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -184,118 +203,130 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Dropdown Menu (Slides down from header, full screen width) */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "100vh" }}
+            animate={{ opacity: 1, height: "calc(100vh - 65px)" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="lg:hidden fixed inset-x-0 top-[65px] bg-background border-t border-border overflow-y-auto"
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+            className="lg:hidden fixed left-0 right-0 top-full bottom-0 bg-[#FDFBF7] border-t border-border z-40 overflow-y-auto"
           >
-            <div className="px-4 py-6 flex flex-col gap-6">
-              {/* Home Link (Mobile) */}
-              <Link
-                href="/"
-                className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-background-alt text-navy"
-              >
-                <Home className="w-5 h-5 text-primary" />
-                <div className="text-sm font-semibold">Home</div>
-              </Link>
+            <div className="px-6 py-8 flex flex-col justify-between min-h-[calc(100vh-80px)]">
+              {/* Menu Navigation Links (Single clean list matching desktop) */}
+              <nav className="flex flex-col gap-5.5 text-left">
+                <Link
+                  href="/"
+                  className={`text-base font-semibold transition-all ${
+                    pathname === "/" ? "text-[#E28A3E]" : "text-navy"
+                  }`}
+                >
+                  Home
+                </Link>
 
-              {/* About Us Link (Mobile) */}
-              <Link
-                href="/about"
-                className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-background-alt text-navy"
-              >
-                <Info className="w-5 h-5 text-primary" />
-                <div className="text-sm font-semibold">About Us</div>
-              </Link>
+                <Link
+                  href="/about"
+                  className={`text-base font-semibold transition-all ${
+                    pathname === "/about" ? "text-[#E28A3E]" : "text-navy"
+                  }`}
+                >
+                  About Us
+                </Link>
 
-              {/* Courses Link (Mobile) */}
-              <Link
-                href="/courses"
-                className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-background-alt text-navy"
-              >
-                <BookOpen className="w-5 h-5 text-primary" />
-                <div className="text-sm font-semibold">Courses</div>
-              </Link>
+                {/* Vastu Services Dropdown Accordion */}
+                <div className="flex flex-col gap-3">
+                  <button
+                    onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
+                    className="w-full flex items-center justify-between text-base font-semibold text-navy transition-all cursor-pointer text-left"
+                  >
+                    <span>Vastu Services</span>
+                    <ChevronDown
+                      className={`w-4.5 h-4.5 text-muted-foreground transition-transform duration-300 ${
+                        mobileServicesOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
 
-              {/* Dropdown Lists */}
-              {navLinks.map((group) => (
-                <div key={group.name} className="flex flex-col gap-2">
-                  <h3 className="text-xs uppercase font-semibold text-muted-foreground tracking-wider px-2">
-                    {group.name}
-                  </h3>
-                  <div className="flex flex-col gap-1 pl-2">
-                    {group.items.map((item) => {
-                      const IconComponent = item.icon;
-                      return (
-                        <Link
-                          key={item.name}
-                          href={item.href}
-                          className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-background-alt text-navy"
-                        >
-                          <IconComponent className="w-5 h-5 text-primary" />
-                          <div className="text-sm font-semibold">{item.name}</div>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
-
-              {/* Other Links */}
-              <div className="flex flex-col gap-2 border-t border-border/60 pt-4">
-                <h3 className="text-xs uppercase font-semibold text-muted-foreground tracking-wider px-2">
-                  More Pages
-                </h3>
-                <div className="flex flex-col gap-1 pl-2">
-                  {secondaryLinks.map((link) => {
-                    const IconComponent = link.icon;
-                    return (
-                      <Link
-                        key={link.name}
-                        href={link.href}
-                        className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-background-alt text-navy"
+                  <AnimatePresence initial={false}>
+                    {mobileServicesOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25, ease: "easeInOut" }}
+                        className="overflow-hidden flex flex-col gap-4 pl-4 border-l border-border/80 ml-1 mt-1"
                       >
-                        <IconComponent className="w-5 h-5 text-primary" />
-                        <div className="text-sm font-semibold">{link.name}</div>
-                      </Link>
-                    );
-                  })}
-                  <Link
-                    href="/dashboard"
-                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-background-alt text-navy"
-                  >
-                    <BookOpen className="w-5 h-5 text-primary" />
-                    <div className="text-sm font-semibold">Student Portal</div>
-                  </Link>
-                  <Link
-                    href="/admin"
-                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-background-alt text-navy"
-                  >
-                    <Compass className="w-5 h-5 text-primary" />
-                    <div className="text-sm font-semibold">Admin Panel</div>
-                  </Link>
+                        {navLinks[0].items.map((item) => {
+                          const isActive = pathname === item.href;
+                          return (
+                            <Link
+                              key={item.name}
+                              href={item.href}
+                              className={`text-sm transition-all ${
+                                isActive ? "text-[#E28A3E] font-bold" : "text-navy-light font-medium hover:text-[#E28A3E]"
+                              }`}
+                            >
+                              {item.name}
+                            </Link>
+                          );
+                        })}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-              </div>
 
-              {/* Action Button */}
-              <div className="flex flex-col gap-3 pt-4 border-t border-border/60">
+                <Link
+                  href="/courses"
+                  className={`text-base font-semibold transition-all ${
+                    pathname === "/courses" ? "text-[#E28A3E]" : "text-navy"
+                  }`}
+                >
+                  Courses
+                </Link>
+
+                <Link
+                  href="/blogs"
+                  className={`text-base font-semibold transition-all ${
+                    pathname === "/blogs" ? "text-[#E28A3E]" : "text-navy"
+                  }`}
+                >
+                  Blog
+                </Link>
+
+                <Link
+                  href="/contact"
+                  className={`text-base font-semibold transition-all ${
+                    pathname === "/contact" ? "text-[#E28A3E]" : "text-navy"
+                  }`}
+                >
+                  Contact Us
+                </Link>
+              </nav>
+
+              {/* Drawer Footer Actions */}
+              <div className="flex flex-col gap-3 pt-6 mt-8 border-t border-border/80">
                 <Link
                   href="/book"
-                  className="w-full py-3 rounded-xl bg-gold-gradient text-white text-center font-semibold shadow-premium text-sm"
+                  className="w-full py-3.5 rounded-xl bg-gold-gradient text-white text-center font-bold shadow-premium text-sm hover:opacity-95 transition-opacity"
                 >
                   Book Consultation
                 </Link>
-                <Link
-                  href="/login"
-                  className="w-full py-3 rounded-xl border border-border text-center font-medium text-navy text-sm hover:bg-background-alt transition-colors"
-                >
-                  Log In
-                </Link>
+
+                <div className="grid grid-cols-2 gap-2 mt-1">
+                  <Link
+                    href="/dashboard"
+                    className="py-2.5 rounded-xl border border-border text-center font-medium text-navy text-xs hover:bg-[#FAF6F0] transition-colors"
+                  >
+                    Student Portal
+                  </Link>
+                  <Link
+                    href="/admin"
+                    className="py-2.5 rounded-xl border border-border text-center font-medium text-navy text-xs hover:bg-[#FAF6F0] transition-colors"
+                  >
+                    Admin Panel
+                  </Link>
+                </div>
               </div>
             </div>
           </motion.div>

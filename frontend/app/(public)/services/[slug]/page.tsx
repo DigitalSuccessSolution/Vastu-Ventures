@@ -660,7 +660,7 @@ export default function ServiceDetailsPage({ params }: Props) {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6">
             {service.analyzeItems.map((item, index) => {
               const ItemIcon = item.icon || Compass;
               return (
@@ -670,12 +670,12 @@ export default function ServiceDetailsPage({ params }: Props) {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ ...transition, delay: index * 0.05 }}
-                  className="bg-white border border-[#EDE3D0]/60 rounded-2xl p-6 text-left shadow-sm hover:shadow-premium hover:-translate-y-0.5 hover:border-[#E28A3E]/40 transition-all duration-300 flex flex-col gap-4 group"
+                  className="bg-white border border-[#EDE3D0]/60 rounded-2xl p-3.5 sm:p-6 text-left shadow-sm hover:shadow-premium hover:-translate-y-0.5 hover:border-[#E28A3E]/40 transition-all duration-300 flex flex-col gap-2.5 sm:gap-4 group"
                 >
-                  <ItemIcon className="w-7 h-7 text-black flex-shrink-0 mb-3 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.5} />
+                  <ItemIcon className="w-5.5 h-5.5 sm:w-7 sm:h-7 text-black flex-shrink-0 mb-1.5 sm:mb-3 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.5} />
                   <div>
-                    <h3 className="font-serif text-sm font-semibold text-black group-hover:text-[#E28A3E] transition-colors">{item.title}</h3>
-                    <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed mt-2">{item.desc}</p>
+                    <h3 className="font-serif text-xs sm:text-sm font-semibold text-black group-hover:text-[#E28A3E] transition-colors">{item.title}</h3>
+                    <p className="text-[10px] sm:text-sm text-muted-foreground font-light leading-relaxed mt-2">{item.desc}</p>
                   </div>
                 </motion.div>
               );
@@ -693,7 +693,7 @@ export default function ServiceDetailsPage({ params }: Props) {
             </h2>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center md:items-stretch justify-between gap-6 md:gap-2 max-w-5xl mx-auto">
+          <div className="grid grid-cols-2 md:flex md:flex-row md:items-stretch md:justify-between gap-x-3.5 gap-y-6 md:gap-2 max-w-5xl mx-auto">
             {[
               { num: 1, title: "1. Book Consultation", desc: "Choose your preferred date and time.", icon: Calendar },
               { num: 2, title: "2. Share Details", desc: "Share floor plan, photos and basic details.", icon: FileText },
@@ -709,14 +709,16 @@ export default function ServiceDetailsPage({ params }: Props) {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ ...transition, delay: idx * 0.05 }}
-                    className="flex flex-col items-center text-center flex-1 min-w-0 group cursor-pointer"
+                    className={`flex flex-col items-center text-center flex-1 min-w-0 group cursor-pointer ${
+                      idx === 4 ? "col-span-2 md:col-span-1" : "col-span-1"
+                    }`}
                   >
                     {/* Raw Black and White Icon */}
-                    <StepIcon className="w-8 h-8 text-black mb-4 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.5} />
+                    <StepIcon className="w-6 h-6 sm:w-8 sm:h-8 text-black mb-2.5 sm:mb-4 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.5} />
                     
                     {/* Content */}
-                    <h4 className="text-xs sm:text-sm font-semibold text-black leading-snug group-hover:text-[#E28A3E] transition-colors">{step.title}</h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground font-light mt-1.5 leading-relaxed max-w-[160px] mx-auto">
+                    <h4 className="text-[11px] sm:text-sm font-semibold text-black leading-snug group-hover:text-[#E28A3E] transition-colors">{step.title}</h4>
+                    <p className="text-[10px] sm:text-sm text-muted-foreground font-light mt-1.5 leading-relaxed max-w-[160px] mx-auto">
                       {step.desc}
                     </p>
                   </motion.div>
