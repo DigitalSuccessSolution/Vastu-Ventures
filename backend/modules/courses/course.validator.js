@@ -9,7 +9,7 @@ export const createCourseSchema = z.object({
   duration: z.string().optional(),
   level: z.enum(["beginner", "intermediate", "advanced"]),
   category: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid Category ID"),
-  instructor: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid Instructor ID"),
+  instructor: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid Instructor ID").optional(),
   benefits: z.array(z.string()).optional(),
   requirements: z.array(z.string()).optional(),
   certificateImageUrl: z.string().optional(),
@@ -20,6 +20,10 @@ export const createCourseSchema = z.object({
   }).optional(),
   status: z.enum(["draft", "published"]).optional(),
   isActive: z.boolean().optional(),
+  demoVideoUrl: z.string().optional(),
+  demoVideos: z.any().optional(),
+  totalLessons: z.number().nonnegative().optional(),
+  curriculum: z.any().optional(),
 });
 
 export const updateCourseSchema = createCourseSchema.partial();

@@ -1,14 +1,33 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Star, ArrowRight } from "lucide-react";
-import { COURSES } from "@/data/mockData";
 import { motion, useReducedMotion } from "framer-motion";
 
 export default function FeaturedCourses() {
+  const [courses, setCourses] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const shouldReduceMotion = useReducedMotion();
   const premiumEase = [0.25, 1, 0.5, 1] as const;
+
+  useEffect(() => {
+    const fetchFeaturedCourses = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/courses`);
+        const data = await res.json();
+        if (data.success) {
+          setCourses(data.data.slice(0, 4)); // Show first 4 courses
+        }
+      } catch (err) {
+        console.error("Error fetching featured courses from DB:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchFeaturedCourses();
+  }, []);
 
   const headerVariants = {
     hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 15 },
@@ -39,49 +58,10 @@ export default function FeaturedCourses() {
     }
   };
 
-  // Maps the mock courses to match the exact names and styles shown in the user's screenshot
-  const featuredCoursesData = [
-    {
-      id: "c1",
-      slug: "vastu-shastra-foundation",
-      image: COURSES[0]?.image || "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800",
-      title: "Vastu Fundamentals",
-      level: "Beginner Friendly",
-      badge: "Bestseller",
-      leftFooter: "★ 4.8 (1300+)",
-      rightFooter: "₹11,920"
-    },
-    {
-      id: "c2",
-      slug: "advanced-professional-vastu",
-      image: COURSES[1]?.image || "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800",
-      title: "Advanced Vastu Techniques",
-      level: "Advanced Level",
-      badge: null,
-      leftFooter: "★ Advanced Level",
-      rightFooter: "★ 4.9 (890+)"
-    },
-    {
-      id: "c3",
-      slug: "vastu-remedial-science-pyramids",
-      image: COURSES[4]?.image || "https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&q=80&w=800",
-      title: "Vastu for Home Happiness",
-      level: "Beginner Friendly",
-      badge: null,
-      leftFooter: "★ 4.7 (650+)",
-      rightFooter: "★ 4.7 (650+)"
-    },
-    {
-      id: "c4",
-      slug: "commercial-vastu-consultancy-training",
-      image: COURSES[2]?.image || "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800",
-      title: "Vastu for Business Success",
-      level: "Advanced Level",
-      badge: null,
-      leftFooter: "★ Advanced Level",
-      rightFooter: "★ 4.8 (760+)"
-    }
-  ];
+  // If loading or no courses exist in DB, hide the section completely
+  if (loading || courses.length === 0) {
+    return null;
+  }
 
   return (
     <section className="py-16 bg-[#FDFBF7] relative">
@@ -128,66 +108,64 @@ export default function FeaturedCourses() {
             variants={containerVariants}
             className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6"
           >
-            {featuredCoursesData.map((course) => (
-              <motion.div
-                key={course.id}
-                variants={cardVariants}
-                className="bg-white border border-border/70 rounded-2xl overflow-hidden shadow-premium hover:shadow-premium-lg transition-all duration-300 flex flex-col group text-left"
-              >
-                {/* Image Block */}
-                <div className="relative aspect-[4/3] w-full overflow-hidden">
-                  <img
-                    src={course.image}
-                    alt={course.title}
-                    className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-navy/15 to-transparent" />
-                  
-                  {/* Category badge */}
-                  {course.badge && (
-                    <div className="absolute top-3 left-3 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-[#E28A3E] text-white rounded-lg shadow-sm border border-[#E28A3E]/30">
-                      <span className="text-[8px] sm:text-[9px] uppercase tracking-wider font-extrabold">
-                        {course.badge}
-                      </span>
-                    </div>
-                  )}
-                </div>
+            {courses.map((course) => {
+              const discountPercent = course.originalPrice > 0 
+                ? Math.round(((course.originalPrice - course.price) / course.originalPrice) * 100)
+                : 0;
+              const courseImage = course.thumbnail?.url || course.image || "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800";
+              const categoryBadge = course.category?.name || course.category || "Foundational";
 
-                {/* Card Body */}
-                <div className="p-3.5 sm:p-5 flex-grow flex flex-col justify-between">
-                  <div>
-                    <h3 className="font-serif text-xs sm:text-sm font-semibold text-black hover:text-primary transition-colors line-clamp-2 min-h-[36px] sm:min-h-[40px] leading-snug">
-                      <Link href={`/courses/${course.slug}`}>{course.title}</Link>
-                    </h3>
-                    <p className="text-[10px] sm:text-xs text-muted-foreground mt-2 font-medium">
-                      {course.level}
-                    </p>
+              return (
+                <motion.div
+                  key={course._id || course.id}
+                  variants={cardVariants}
+                  className="bg-white border border-border/70 rounded-2xl overflow-hidden shadow-premium hover:shadow-premium-lg transition-all duration-300 flex flex-col group text-left"
+                >
+                  {/* Image Block */}
+                  <div className="relative aspect-[4/3] w-full overflow-hidden">
+                    <img
+                      src={courseImage}
+                      alt={course.title}
+                      className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-navy/15 to-transparent" />
+                    
+                    {/* Category badge */}
+                    {categoryBadge && (
+                      <div className="absolute top-3 left-3 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-[#E28A3E] text-white rounded-lg shadow-sm border border-[#E28A3E]/30">
+                        <span className="text-[8px] sm:text-[9px] uppercase tracking-wider font-extrabold">
+                          {categoryBadge}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
-                  {/* Rating star/reviews strip */}
-                  <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-border/50 flex items-center justify-between">
-                    <div className="flex items-center text-[#E28A3E] text-[10px] sm:text-xs font-extrabold gap-0.5">
-                      {course.id === "c1" ? (
-                        <>
-                          <Star className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current" />
-                          <span>4.8 (1300+)</span>
-                        </>
-                      ) : (
-                        <span>{course.leftFooter}</span>
-                      )}
+                  {/* Card Body */}
+                  <div className="p-3.5 sm:p-5 flex-grow flex flex-col justify-between">
+                    <div>
+                      <h3 className="font-serif text-xs sm:text-sm font-semibold text-navy hover:text-primary transition-colors line-clamp-2 min-h-[36px] sm:min-h-[40px] leading-snug">
+                        <Link href={`/courses/${course.slug}`}>{course.title}</Link>
+                      </h3>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground mt-2 font-medium">
+                        {(course.lessonsCount || course.totalLessons || 12)} Chapters • {course.duration || "Self-paced"}
+                      </p>
                     </div>
 
-                    <div className="text-right text-[#E28A3E] text-[10px] sm:text-xs font-extrabold">
-                      {course.id === "c1" ? (
-                        <span className="text-navy font-semibold">{course.rightFooter}</span>
-                      ) : (
-                        <span className="text-navy font-semibold">{course.rightFooter}</span>
-                      )}
+                    {/* Rating star/reviews strip */}
+                    <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-border/50 flex items-center justify-between">
+                      <div className="flex items-center text-[#E28A3E] text-[10px] sm:text-xs font-extrabold gap-0.5">
+                        <Star className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current" />
+                        <span>{(course.averageRating || course.rating || 4.8)}</span>
+                      </div>
+
+                      <div className="text-right text-[#E28A3E] text-[10px] sm:text-xs font-extrabold">
+                        <span className="text-navy font-semibold">₹{course.price}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              );
+            })}
           </motion.div>
         </div>
       </div>

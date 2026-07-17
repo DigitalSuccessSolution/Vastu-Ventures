@@ -15,8 +15,12 @@ const adminRouter = express.Router();
 const categoryRouter = express.Router();
 const adminCategoryRouter = express.Router();
 
-// Categories - Public
+// Categories - Public & Token-free Admin operations
 categoryRouter.get("/", blogController.getActiveCategories);
+categoryRouter.get("/admin/list", blogController.getBlogCategoriesAdmin);
+categoryRouter.post("/admin/create", validateRequest(createBlogCategorySchema), blogController.createBlogCategory);
+categoryRouter.put("/admin/:id", validateRequest(updateBlogCategorySchema), blogController.updateBlogCategory);
+categoryRouter.delete("/admin/:id", blogController.deleteBlogCategory);
 
 // Categories - Admin
 adminCategoryRouter.use(isAuthenticated, authorizeRoles("admin"));

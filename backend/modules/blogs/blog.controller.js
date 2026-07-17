@@ -61,7 +61,7 @@ export const getBlogByIdAdmin = asyncHandler(async (req, res) => {
 });
 
 export const createBlog = asyncHandler(async (req, res) => {
-  const blog = await blogService.createBlog(req.user._id, req.body);
+  const blog = await blogService.createBlog(req.body);
   return sendResponse(res, 201, "Blog created successfully", blog);
 });
 

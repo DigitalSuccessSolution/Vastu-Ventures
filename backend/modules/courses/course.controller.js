@@ -94,3 +94,26 @@ export const reorderCurriculum = asyncHandler(async (req, res) => {
   const curriculum = await courseService.reorderCurriculum(id, req.body);
   return sendResponse(res, 200, "Curriculum reordered successfully", curriculum);
 });
+
+export const uploadFileToCloudinary = asyncHandler(async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ success: false, message: "No file uploaded" });
+  }
+
+  let resourceType = "image";
+  let folder = "vastuventures/images";
+  
+  const mime = req.file.mimetype;
+  if (mime === "application/pdf") {
+    resourceType = "raw";
+    folder = "vastuventures/documents";
+  } else if (mime.startsWith("video/")) {
+    resourceType = "video";
+    folder = "vastuventures/videos";
+  }
+
+  const { uploadToCloudinary } = await import("../../services/cloudinaryService.js");
+  const uploadResult = await uploadToCloudinary(req.file.buffer, folder, resourceType, req.file.originalname);
+
+  return sendResponse(res, 200, "File uploaded successfully to Cloudinary", uploadResult);
+});

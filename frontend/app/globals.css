@@ -120,3 +120,78 @@ html.lenis body {
 .lenis.lenis-stopped {
   overflow: hidden;
 }
+
+/* Scale up all small fonts in the admin panel */
+.admin-panel-container h1,
+.admin-panel-container .text-2xl {
+  font-size: 1.875rem !important; /* ~30px */
+}
+.admin-panel-container h2,
+.admin-panel-container .text-xl {
+  font-size: 1.5rem !important; /* ~24px */
+}
+.admin-panel-container h3,
+.admin-panel-container .text-lg {
+  font-size: 1.25rem !important; /* ~20px */
+}
+.admin-panel-container h4,
+.admin-panel-container .text-base {
+  font-size: 1.125rem !important; /* ~18px */
+}
+.admin-panel-container .text-sm {
+  font-size: 1rem !important; /* ~16px */
+}
+.admin-panel-container p,
+.admin-panel-container td,
+.admin-panel-container input,
+.admin-panel-container select,
+.admin-panel-container textarea,
+.admin-panel-container button,
+.admin-panel-container a,
+.admin-panel-container span:not(.font-serif),
+.admin-panel-container .text-xs,
+.admin-panel-container .text-\[13px\] {
+  font-size: 0.9375rem !important; /* 15px */
+}
+.admin-panel-container label,
+.admin-panel-container th,
+.admin-panel-container .text-\[10px\],
+.admin-panel-container .text-\[11px\],
+.admin-panel-container .text-\[9px\] {
+  font-size: 0.8125rem !important; /* 13px */
+}
+
+/* Adjust form control heights for larger inputs */
+.admin-panel-container input,
+.admin-panel-container select,
+.admin-panel-container textarea {
+  padding-top: 0.65rem !important;
+  padding-bottom: 0.65rem !important;
+}
+
+/* Tiptap editor list and formatting helper overrides */
+.ProseMirror {
+  outline: none;
+}
+.ProseMirror ul {
+  list-style-type: disc !important;
+  padding-left: 1.5rem !important;
+}
+.ProseMirror ol {
+  list-style-type: decimal !important;
+  padding-left: 1.5rem !important;
+}
+.ProseMirror blockquote {
+  border-left: 4px solid var(--border) !important;
+  padding-left: 1rem !important;
+  font-style: italic !important;
+  color: var(--muted-foreground) !important;
+}
+
+/* Force proper word wrapping for rich text editor outputs (prose and html-content) */
+.html-content p, .html-content span, .html-content li, .html-content h1, .html-content h2, .html-content h3, .html-content h4,
+.prose p, .prose span, .prose li, .prose h1, .prose h2, .prose h3, .prose h4 {
+  white-space: normal !important;
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
+}

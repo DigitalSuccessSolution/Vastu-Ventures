@@ -5,7 +5,7 @@ import { COURSES } from "@/data/mockData";
 
 export default function WishlistPage() {
   // Wishlisted course: Advanced Course (index 1)
-  const wishlistCourses = [COURSES[1]];
+  const wishlistCourses = [COURSES[1]].filter(Boolean);
 
   return (
     <div className="flex flex-col gap-8 text-left max-w-4xl">

@@ -7,13 +7,25 @@ import cloudinary from "../config/cloudinary.js";
  * @param {string} resourceType - "image", "raw" (for PDFs), or "video"
  * @returns {{ url: string, publicId: string }}
  */
-export const uploadToCloudinary = (fileBuffer, folder, resourceType = "image") => {
+export const uploadToCloudinary = (fileBuffer, folder, resourceType = "image", originalName = "") => {
   return new Promise((resolve, reject) => {
+    const options = {
+      folder,
+      resource_type: resourceType,
+    };
+
+    if (originalName) {
+      const extIndex = originalName.lastIndexOf(".");
+      const nameWithoutExt = extIndex !== -1 ? originalName.substring(0, extIndex) : originalName;
+      const extension = extIndex !== -1 ? originalName.substring(extIndex) : "";
+      
+      // Sanitize name to contain only alphanumeric characters, underscores, and dashes
+      const sanitizedName = nameWithoutExt.replace(/[^a-zA-Z0-9_-]/g, "_");
+      options.public_id = `${sanitizedName}_${Date.now()}${extension}`;
+    }
+
     const stream = cloudinary.uploader.upload_stream(
-      {
-        folder,
-        resource_type: resourceType,
-      },
+      options,
       (error, result) => {
         if (error) return reject(error);
         resolve({ url: result.secure_url, publicId: result.public_id });

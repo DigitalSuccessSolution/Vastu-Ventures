@@ -32,7 +32,7 @@ export default function AdminInstructorsPage() {
       <div className="bg-white border border-border rounded-2xl overflow-hidden shadow-premium">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-navy-dark text-white uppercase text-[10px] tracking-wider">
+            <thead className="bg-navy text-white uppercase text-[10px] tracking-wider">
               <tr>
                 <th className="p-4 font-semibold">Instructor Name</th>
                 <th className="p-4 font-semibold">Role</th>

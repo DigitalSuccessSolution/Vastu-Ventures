@@ -58,7 +58,7 @@ export default function AdminLayout({
   const currentTitle = allMenuItems.find(item => item.href === pathname)?.name || "Admin Panel";
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] flex">
+    <div className="min-h-screen bg-[#FDFBF7] flex admin-panel-container">
 
       {/* Sidebar for Desktop */}
       <aside className="hidden md:flex flex-col w-72 bg-navy text-white h-screen sticky top-0 border-r border-[#1e2d4d] flex-shrink-0 z-30 shadow-premium">

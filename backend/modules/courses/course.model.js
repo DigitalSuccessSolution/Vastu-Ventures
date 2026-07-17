@@ -15,7 +15,7 @@ const courseSchema = new mongoose.Schema(
     duration: { type: String, default: "" },
     level: { type: String, enum: ["beginner", "intermediate", "advanced"], default: "beginner" },
     category: { type: mongoose.Schema.Types.ObjectId, ref: "CourseCategory", required: true },
-    instructor: { type: mongoose.Schema.Types.ObjectId, ref: "Instructor", required: true },
+    instructor: { type: mongoose.Schema.Types.ObjectId, ref: "Instructor" },
     curriculum: [
       {
         sectionTitle: { type: String },
@@ -30,6 +30,13 @@ const courseSchema = new mongoose.Schema(
     reviewsCount: { type: Number, default: 0 },
     enrollmentCount: { type: Number, default: 0 },
     certificateImageUrl: { type: String, default: "" },
+    demoVideoUrl: { type: String, default: "" },
+    demoVideos: [
+      {
+        title: { type: String, default: "" },
+        videoUrl: { type: String, default: "" }
+      }
+    ],
     seo: {
       metaTitle: { type: String, default: "" },
       metaDescription: { type: String, default: "" },

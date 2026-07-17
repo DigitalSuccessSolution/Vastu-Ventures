@@ -1,11 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 
 export default function LatestBlogs() {
+  const [blogs, setBlogs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const shouldReduceMotion = useReducedMotion();
   const premiumEase = [0.25, 1, 0.5, 1] as const;
 
@@ -38,36 +40,27 @@ export default function LatestBlogs() {
     }
   };
 
-  const blogsData = [
-    {
-      id: "b1",
-      slug: "7-vastu-tips-for-a-happy-and-peaceful-home",
-      date: "May 20, 2024",
-      title: "7 Vastu Tips for a Happy and Peaceful Home",
-      image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800"
-    },
-    {
-      id: "b2",
-      slug: "vastu-for-office-boost-productivity-and-growth",
-      date: "May 15, 2024",
-      title: "Vastu for Office: Boost Productivity & Growth",
-      image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800"
-    },
-    {
-      id: "b3",
-      slug: "vastu-colors-how-colors-impact-your-life",
-      date: "May 10, 2024",
-      title: "Vastu Colors: How Colors Impact Your Life",
-      image: "https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&q=80&w=800"
-    },
-    {
-      id: "b4",
-      slug: "kitchen-vastu-important-tips-for-good-health",
-      date: "May 05, 2024",
-      title: "Kitchen Vastu: Important Tips for Good Health",
-      image: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&q=80&w=800"
-    }
-  ];
+  useEffect(() => {
+    const fetchLatestBlogs = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/blogs`);
+        const data = await res.json();
+        if (data.success) {
+          setBlogs((data.data || []).slice(0, 4));
+        }
+      } catch (err) {
+        console.error("Error fetching latest blogs:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchLatestBlogs();
+  }, []);
+
+  if (loading || blogs.length === 0) {
+    return null;
+  }
+
 
   return (
     <section className="py-16 bg-[#FDFBF7] border-t border-border/40 relative">
@@ -112,9 +105,9 @@ export default function LatestBlogs() {
           variants={containerVariants}
           className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6"
         >
-          {blogsData.map((blog) => (
+          {blogs.map((blog) => (
             <motion.article
-              key={blog.id}
+              key={blog._id || blog.id}
               variants={cardVariants}
               className="group bg-white border border-border/70 rounded-2xl overflow-hidden shadow-premium hover:shadow-premium-lg transition-all duration-300 flex flex-col justify-between"
             >

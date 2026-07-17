@@ -30,7 +30,7 @@ export default function BlogDetailsPage({ params }: Props) {
   useEffect(() => {
     const loadBlogData = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/v1/blogs/${slug}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/blogs/${slug}`);
         const data = await res.json();
         if (data.success && data.data) {
           const blogData = data.data;
@@ -43,7 +43,7 @@ export default function BlogDetailsPage({ params }: Props) {
             setBlog(blogData);
             
             // Fetch related
-            const relRes = await fetch(`http://localhost:5000/api/v1/blogs/${slug}/related`);
+            const relRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/blogs/${slug}/related`);
             const relData = await relRes.json();
             if (relData.success) {
               setRelated(relData.data || []);

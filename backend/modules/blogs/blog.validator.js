@@ -4,18 +4,13 @@ export const createBlogSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters").max(150),
   content: z.string().min(20, "Content must be at least 20 characters"),
   shortDescription: z.string().optional(),
-  featuredImage: z.object({
-    url: z.string(),
-    publicId: z.string(),
-  }).optional(),
-  category: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid Category ID"),
+  image: z.string().optional(),
+  category: z.string().min(2, "Category must be at least 2 characters").optional(),
+  author: z.string().optional(),
   readTime: z.string().optional(),
-  seo: z.object({
-    metaTitle: z.string().optional(),
-    metaDescription: z.string().optional(),
-    keywords: z.array(z.string()).optional(),
-  }).optional(),
-  status: z.enum(["draft", "published"]).optional(),
+  date: z.string().optional(),
+  status: z.enum(["Draft", "Published", "Scheduled"]).optional(),
+  slug: z.string().optional(),
 });
 
 export const updateBlogSchema = createBlogSchema.partial();

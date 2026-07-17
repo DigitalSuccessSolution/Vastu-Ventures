@@ -1,8 +1,44 @@
+import mongoose from "mongoose";
 import Course from "./course.model.js";
 import Lesson from "./lesson.model.js";
 import CourseCategory from "./courseCategory.model.js";
+import Instructor from "../instructors/instructor.model.js";
 import slugify from "../../utils/slugify.js";
 import { ERROR_MESSAGES } from "../../constants/errorMessages.js";
+
+// Helper to resolve category and instructor ObjectIds from name or defaults
+const resolveCourseDeps = async (data) => {
+  const payload = { ...data };
+
+  // Resolve category from name or slug to an ObjectId reference
+  if (payload.category && !mongoose.Types.ObjectId.isValid(payload.category)) {
+    const catName = payload.category;
+    let cat = await CourseCategory.findOne({
+      $or: [
+        { name: catName },
+        { slug: catName.toLowerCase() }
+      ]
+    });
+    if (!cat) {
+      cat = await CourseCategory.create({
+        name: catName,
+        slug: catName.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+        description: `${catName} category`
+      });
+    }
+    payload.category = cat._id;
+  }
+
+  // Resolve instructor to first found or default instructor
+  if (!payload.instructor || !mongoose.Types.ObjectId.isValid(payload.instructor)) {
+    const defaultInst = await Instructor.findOne();
+    if (defaultInst) {
+      payload.instructor = defaultInst._id;
+    }
+  }
+
+  return payload;
+};
 
 // Course Category Services
 export const getActiveCategories = async () => {
@@ -39,18 +75,21 @@ export const updateCourseCategory = async (id, data) => {
 };
 
 export const deleteCourseCategory = async (id) => {
-  const linkedCoursesCount = await Course.countDocuments({ category: id });
-  if (linkedCoursesCount > 0) {
-    const error = new Error("Cannot delete category containing linked courses.");
-    error.statusCode = 400;
-    throw error;
-  }
-  const category = await CourseCategory.findByIdAndDelete(id);
+  const category = await CourseCategory.findById(id);
   if (!category) {
     const error = new Error(ERROR_MESSAGES.NOT_FOUND);
     error.statusCode = 404;
     throw error;
   }
+
+  const linkedCoursesCount = await Course.countDocuments({ category: id });
+  if (linkedCoursesCount > 0) {
+    const error = new Error(`Cannot delete category "${category.name}" because it is currently assigned to ${linkedCoursesCount} course(s). Please delete or reassign those courses first.`);
+    error.statusCode = 400;
+    throw error;
+  }
+
+  await CourseCategory.findByIdAndDelete(id);
   return { message: "Course category deleted successfully" };
 };
 
@@ -73,7 +112,7 @@ export const getCourseBySlug = async (slug) => {
     .populate("instructor")
     .populate({
       path: "curriculum.lessons",
-      select: "title order isPreview videoDuration" // Only public fields, hide videoUrl
+      select: "title order isPreview videoDuration videoUrl contentType fileUrl fileName" // Include public fields for playing/reading/downloading
     });
   if (!course) {
     const error = new Error(ERROR_MESSAGES.COURSE_NOT_FOUND);
@@ -84,7 +123,7 @@ export const getCourseBySlug = async (slug) => {
 };
 
 export const getAllCoursesAdmin = async () => {
-  return Course.find().populate("category").populate("instructor");
+  return Course.find().populate("category").populate("instructor").populate("curriculum.lessons");
 };
 
 export const getCourseByIdAdmin = async (id) => {
@@ -101,27 +140,100 @@ export const getCourseByIdAdmin = async (id) => {
 };
 
 export const createCourse = async (data) => {
-  const slug = slugify(data.title);
+  const resolvedData = await resolveCourseDeps(data);
+  const slug = slugify(resolvedData.title);
   const existing = await Course.findOne({ slug });
   if (existing) {
     const error = new Error("Course with similar title already exists");
     error.statusCode = 409;
     throw error;
   }
-  return Course.create({ ...data, slug });
+
+  const curriculumData = resolvedData.curriculum || [];
+  delete resolvedData.curriculum;
+
+  const course = await Course.create({ ...resolvedData, slug });
+
+  if (curriculumData.length > 0) {
+    let totalLessons = 0;
+    for (const section of curriculumData) {
+      const lessonIds = [];
+      for (const les of section.lessons || []) {
+        const newLesson = await Lesson.create({
+          course: course._id,
+          sectionTitle: section.sectionTitle,
+          title: les.title || "Untitled Lesson",
+          videoDuration: les.videoDuration || les.duration || "45 mins",
+          videoUrl: les.youtubeUrl || les.videoUrl || "",
+          fileUrl: les.fileUrl || les.youtubeUrl || "",
+          fileName: les.fileName || "",
+          contentType: les.contentType || "youtube"
+        });
+        lessonIds.push(newLesson._id);
+        totalLessons++;
+      }
+      course.curriculum.push({
+        sectionTitle: section.sectionTitle,
+        lessons: lessonIds
+      });
+    }
+    if (data.totalLessons === undefined || data.totalLessons === null) {
+      course.totalLessons = totalLessons;
+    }
+    await course.save();
+  }
+
+  return course;
 };
 
 export const updateCourse = async (id, data) => {
-  const updatePayload = { ...data };
-  if (data.title) {
-    updatePayload.slug = slugify(data.title);
+  const resolvedData = await resolveCourseDeps(data);
+  const updatePayload = { ...resolvedData };
+  if (resolvedData.title) {
+    updatePayload.slug = slugify(resolvedData.title);
   }
-  const course = await Course.findByIdAndUpdate(id, { $set: updatePayload }, { new: true, runValidators: true });
+
+  const curriculumData = updatePayload.curriculum;
+  delete updatePayload.curriculum;
+
+  let course = await Course.findByIdAndUpdate(id, { $set: updatePayload }, { new: true, runValidators: true });
   if (!course) {
     const error = new Error(ERROR_MESSAGES.COURSE_NOT_FOUND);
     error.statusCode = 404;
     throw error;
   }
+
+  if (curriculumData) {
+    await Lesson.deleteMany({ course: course._id });
+    course.curriculum = [];
+    let totalLessons = 0;
+    for (const section of curriculumData) {
+      const lessonIds = [];
+      for (const les of section.lessons || []) {
+        const newLesson = await Lesson.create({
+          course: course._id,
+          sectionTitle: section.sectionTitle,
+          title: les.title || "Untitled Lesson",
+          videoDuration: les.videoDuration || les.duration || "45 mins",
+          videoUrl: les.youtubeUrl || les.videoUrl || "",
+          fileUrl: les.fileUrl || les.youtubeUrl || "",
+          fileName: les.fileName || "",
+          contentType: les.contentType || "youtube"
+        });
+        lessonIds.push(newLesson._id);
+        totalLessons++;
+      }
+      course.curriculum.push({
+        sectionTitle: section.sectionTitle,
+        lessons: lessonIds
+      });
+    }
+    if (data.totalLessons === undefined || data.totalLessons === null) {
+      course.totalLessons = totalLessons;
+    }
+    await course.save();
+  }
+
   return course;
 };
 
