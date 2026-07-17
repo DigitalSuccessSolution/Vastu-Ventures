@@ -66,8 +66,8 @@ export default function Footer() {
                   About Us
                 </Link>
               </li>
-              <li>
-                <Link href="/services" className="hover:text-gold-start hover:pl-1 transition-all">
+              <li className="mb-3">
+                <Link href="/services/residential-vastu" className="hover:text-gold-start hover:pl-1 transition-all">
                   Services
                 </Link>
               </li>

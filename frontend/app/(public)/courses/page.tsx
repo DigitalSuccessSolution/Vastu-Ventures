@@ -61,17 +61,6 @@ export default function CoursesPage() {
     }
   };
 
-  const getLikesCount = (id: string) => {
-    switch (id) {
-      case "c1": return "551";
-      case "c2": return "1.9K";
-      case "c3": return "820";
-      case "c4": return "430";
-      case "c5": return "1.2K";
-      default: return "310";
-    }
-  };
-
   return (
     <div className="bg-background vastu-mandala-bg min-h-screen">
       
@@ -199,15 +188,11 @@ export default function CoursesPage() {
                         </span>
                       </div>
 
-                      {/* Title and Likes Counter */}
+                      {/* Title */}
                       <div className="flex items-start justify-between gap-3">
                         <h3 className="font-serif text-base font-semibold text-navy leading-snug group-hover:text-primary transition-colors line-clamp-2">
                           <Link href={`/courses/${course.slug}`}>{course.title}</Link>
                         </h3>
-                        <div className="flex items-center gap-1 text-navy-light font-bold text-[11px] shrink-0 mt-0.5 bg-background-alt px-2 py-0.5 rounded-lg border border-border/40">
-                          <ThumbsUp className="w-3 h-3 text-navy-light" />
-                          <span>{getLikesCount(likesKey) || "350"}</span>
-                        </div>
                       </div>
 
                       <p className="text-sm text-muted-foreground mt-2 line-clamp-2 font-light leading-relaxed">

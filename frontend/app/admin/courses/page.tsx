@@ -3,8 +3,22 @@
 import React, { useState, useEffect } from "react";
 import {
   Plus, Edit, Trash2, Upload, FileText, Video, Play,
-  Image as ImageIcon, Link as LinkIcon, Trash, BookOpen, X, ArrowLeft
+  Image as ImageIcon, Link as LinkIcon, Trash, BookOpen, X, ArrowLeft,
+  Bold, Italic, Underline as UnderlineIcon, AlignLeft, AlignCenter, AlignRight, List, ListOrdered, Link2, Type
+, Heading1, Heading2, Heading3, Quote, Table as TableIcon, PlusSquare, Split, MinusSquare, Minus, Eraser
 } from "lucide-react";
+import { useEditor, EditorContent } from "@tiptap/react";
+import { StarterKit } from "@tiptap/starter-kit";
+import { Underline } from "@tiptap/extension-underline";
+import { Link as LinkExtension } from "@tiptap/extension-link";
+import { Image as ImageExtension } from "@tiptap/extension-image";
+import { Youtube as YoutubeExtension } from "@tiptap/extension-youtube";
+import { Highlight } from "@tiptap/extension-highlight";
+import { TextAlign } from "@tiptap/extension-text-align";
+import { Table } from "@tiptap/extension-table";
+import { TableRow } from "@tiptap/extension-table-row";
+import { TableHeader } from "@tiptap/extension-table-header";
+import { TableCell } from "@tiptap/extension-table-cell";
 import { motion, AnimatePresence } from "framer-motion";
 import DeleteConfirmModal from "@/components/DeleteConfirmModal";
 
@@ -51,6 +65,7 @@ export default function AdminCoursesPage() {
 
   const [courseForm, setCourseForm] = useState({
     title: "",
+    slug: "",
     category: "",
     overview: "",
     lessonsCount: 0,
@@ -66,6 +81,69 @@ export default function AdminCoursesPage() {
     // Curriculum dynamic builder list
     curriculum: [] as CurriculumItem[]
   });
+
+  
+  // Tiptap editor
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Underline,
+      LinkExtension.configure({ openOnClick: false, HTMLAttributes: { class: "text-[#E28A3E] underline cursor-pointer" } }),
+      ImageExtension.configure({ HTMLAttributes: { class: "max-w-full h-auto rounded-lg my-4" } }),
+      YoutubeExtension.configure({ HTMLAttributes: { class: "w-full aspect-video rounded-lg my-4" } }),
+      Highlight.configure({ HTMLAttributes: { class: "bg-[#E28A3E]/20 text-[#E28A3E] px-1 rounded" } }),
+      TextAlign.configure({ types: ["heading", "paragraph"] }),
+      Table.configure({ resizable: true }),
+      TableRow,
+      TableHeader,
+      TableCell,
+    ],
+    content: courseForm.overview,
+    onUpdate: ({ editor }) => {
+      const html = editor.getHTML();
+      setCourseForm(prev => ({ ...prev, overview: html }));
+    },
+    editorProps: {
+      attributes: {
+        class: "prose prose-sm sm:prose-base max-w-none focus:outline-none min-h-[300px] p-4",
+      },
+    },
+  });
+
+  // Load editor content on mode change
+  useEffect(() => {
+    if (editor && courseModal.open) {
+      editor.commands.setContent(courseForm.overview || "");
+    }
+  }, [courseModal.open, courseModal.id, editor]);
+
+  const handleToolbarClick = (e: React.MouseEvent, action: () => void) => {
+    e.preventDefault();
+    action();
+  };
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const titleVal = e.target.value;
+    const generatedSlug = titleVal
+      .toLowerCase()
+      .trim()
+      .replace(/[\s\W-]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    
+    setCourseForm({
+      ...courseForm,
+      title: titleVal,
+      slug: generatedSlug
+    });
+  };
+
+  const handleSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+    setCourseForm({
+      ...courseForm,
+      slug: val
+    });
+  };
 
   // Fetch courses from backend API
   const fetchCourses = async () => {
@@ -91,6 +169,12 @@ export default function AdminCoursesPage() {
       console.error("Error fetching categories:", err);
     }
   };
+
+  useEffect(() => {
+    setMounted(true);
+    fetchCourses();
+    fetchCategories();
+  }, []);
 
   const handleCreateCategory = async () => {
     if (!newCategoryName.trim()) return;
@@ -228,6 +312,7 @@ export default function AdminCoursesPage() {
   const handleOpenAddCourse = () => {
     setCourseForm({
       title: "",
+      slug: "",
       category: "",
       overview: "",
       lessonsCount: 0,
@@ -284,6 +369,7 @@ export default function AdminCoursesPage() {
 
       setCourseForm({
         title: c.title,
+        slug: c.slug || "",
         category: c.category?._id || c.category || "",
         overview: desc,
         lessonsCount: c.lessonsCount || c.totalLessons || 0,
@@ -441,6 +527,7 @@ export default function AdminCoursesPage() {
 
     const payload = {
       title: courseForm.title,
+      slug: courseForm.slug,
       category: courseForm.category,
       description: overviewContent,
       shortDescription: overviewContent.replace(/<[^>]*>/g, "").substring(0, 100) + "...",
@@ -561,8 +648,19 @@ export default function AdminCoursesPage() {
                     type="text"
                     required
                     value={courseForm.title}
-                    onChange={(e) => setCourseForm({ ...courseForm, title: e.target.value })}
+                    onChange={handleTitleChange}
                     placeholder="e.g. Advanced Vastu Consultant Certification"
+                    className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-border bg-background focus:bg-white outline-none focus:border-primary transition-all text-navy"
+                  />
+                </div>
+                <div className="col-span-1 md:col-span-2">
+                  <label className="block text-[10px] font-semibold text-navy uppercase tracking-wider mb-1.5">URL Slug</label>
+                  <input
+                    type="text"
+                    required
+                    value={courseForm.slug}
+                    onChange={handleSlugChange}
+                    placeholder="e.g. advanced-vastu-consultant"
                     className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-border bg-background focus:bg-white outline-none focus:border-primary transition-all text-navy"
                   />
                 </div>
@@ -652,13 +750,306 @@ export default function AdminCoursesPage() {
               {/* Grid 3: Overview Description Textarea */}
               <div className="w-full">
                 <label className="block text-[10px] font-semibold text-navy uppercase tracking-wider mb-1.5">Course Overview Description</label>
-                <textarea
-                  rows={6}
-                  value={courseForm.overview}
-                  onChange={(e) => setCourseForm({ ...courseForm, overview: e.target.value })}
-                  placeholder="Provide a detailed description of the course, key topics, outcomes, etc."
-                  className="w-full text-xs p-3.5 rounded-xl border border-border bg-background focus:bg-white outline-none focus:border-primary transition-all text-navy resize-y min-h-[150px] text-left"
-                />
+                {editor && (
+                    <div className="border border-border rounded-xl overflow-hidden bg-background focus-within:bg-white focus-within:border-primary transition-all shadow-sm w-full">
+                      {/* Tiptap Toolbar */}
+                      <div className="flex flex-wrap gap-1 p-2 bg-[#111e38] border-b border-border text-white select-none">
+                    <button
+                      type="button"
+                      onMouseDown={(e) => handleToolbarClick(e, () => editor.chain().focus().toggleBold().run())}
+                      className={`p-2 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer ${
+                        editor.isActive("bold") ? "bg-white/15 text-[#E28A3E]!" : ""
+                      }`}
+                      title="Bold"
+                    >
+                      <Bold className="w-4.5 h-4.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onMouseDown={(e) => handleToolbarClick(e, () => editor.chain().focus().toggleItalic().run())}
+                      className={`p-2 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer ${
+                        editor.isActive("italic") ? "bg-white/15 text-[#E28A3E]!" : ""
+                      }`}
+                      title="Italic"
+                    >
+                      <Italic className="w-4.5 h-4.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onMouseDown={(e) => handleToolbarClick(e, () => editor.chain().focus().toggleUnderline().run())}
+                      className={`p-2 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer ${
+                        editor.isActive("underline") ? "bg-white/15 text-[#E28A3E]!" : ""
+                      }`}
+                      title="Underline"
+                    >
+                      <UnderlineIcon className="w-4.5 h-4.5" />
+                    </button>
+
+                    <div className="w-[1px] bg-white/20 mx-1.5 self-stretch" />
+
+                    <button
+                      type="button"
+                      onMouseDown={(e) => handleToolbarClick(e, () => editor.chain().focus().toggleHeading({ level: 1 }).run())}
+                      className={`p-2 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer ${
+                        editor.isActive("heading", { level: 1 }) ? "bg-white/15 text-[#E28A3E]!" : ""
+                      }`}
+                      title="H1"
+                    >
+                      <Heading1 className="w-4.5 h-4.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onMouseDown={(e) => handleToolbarClick(e, () => editor.chain().focus().toggleHeading({ level: 2 }).run())}
+                      className={`p-2 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer ${
+                        editor.isActive("heading", { level: 2 }) ? "bg-white/15 text-[#E28A3E]!" : ""
+                      }`}
+                      title="H2"
+                    >
+                      <Heading2 className="w-4.5 h-4.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onMouseDown={(e) => handleToolbarClick(e, () => editor.chain().focus().toggleHeading({ level: 3 }).run())}
+                      className={`p-2 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer ${
+                        editor.isActive("heading", { level: 3 }) ? "bg-white/15 text-[#E28A3E]!" : ""
+                      }`}
+                      title="H3"
+                    >
+                      <Heading3 className="w-4.5 h-4.5" />
+                    </button>
+
+                    <div className="w-[1px] bg-white/20 mx-1.5 self-stretch" />
+
+                    <button
+                      type="button"
+                      onMouseDown={(e) => handleToolbarClick(e, () => editor.chain().focus().toggleBulletList().run())}
+                      className={`p-2 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer ${
+                        editor.isActive("bulletList") ? "bg-white/15 text-[#E28A3E]!" : ""
+                      }`}
+                      title="Bullet List"
+                    >
+                      <List className="w-4.5 h-4.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onMouseDown={(e) => handleToolbarClick(e, () => editor.chain().focus().toggleOrderedList().run())}
+                      className={`p-2 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer ${
+                        editor.isActive("orderedList") ? "bg-white/15 text-[#E28A3E]!" : ""
+                      }`}
+                      title="Numbered List"
+                    >
+                      <ListOrdered className="w-4.5 h-4.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onMouseDown={(e) => handleToolbarClick(e, () => editor.chain().focus().toggleBlockquote().run())}
+                      className={`p-2 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer ${
+                        editor.isActive("blockquote") ? "bg-white/15 text-[#E28A3E]!" : ""
+                      }`}
+                      title="Quote"
+                    >
+                      <Quote className="w-4.5 h-4.5" />
+                    </button>
+
+                    <div className="w-[1px] bg-white/20 mx-1.5 self-stretch" />
+
+                    <button
+                      type="button"
+                      onMouseDown={(e) => handleToolbarClick(e, () => editor.chain().focus().setTextAlign("left").run())}
+                      className={`p-2 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer ${
+                        editor.isActive({ textAlign: "left" }) ? "bg-white/15 text-[#E28A3E]!" : ""
+                      }`}
+                      title="Align Left"
+                    >
+                      <AlignLeft className="w-4.5 h-4.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onMouseDown={(e) => handleToolbarClick(e, () => editor.chain().focus().setTextAlign("center").run())}
+                      className={`p-2 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer ${
+                        editor.isActive({ textAlign: "center" }) ? "bg-white/15 text-[#E28A3E]!" : ""
+                      }`}
+                      title="Align Center"
+                    >
+                      <AlignCenter className="w-4.5 h-4.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onMouseDown={(e) => handleToolbarClick(e, () => editor.chain().focus().setTextAlign("right").run())}
+                      className={`p-2 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer ${
+                        editor.isActive({ textAlign: "right" }) ? "bg-white/15 text-[#E28A3E]!" : ""
+                      }`}
+                      title="Align Right"
+                    >
+                      <AlignRight className="w-4.5 h-4.5" />
+                    </button>
+
+                    <div className="w-[1px] bg-white/20 mx-1.5 self-stretch" />
+
+                    <button
+                      type="button"
+                      onMouseDown={(e) => handleToolbarClick(e, () => editor.chain().focus().toggleHighlight().run())}
+                      className={`p-2 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer ${
+                        editor.isActive("highlight") ? "bg-white/15 text-[#E28A3E]!" : ""
+                      }`}
+                      title="Highlight Text"
+                    >
+                      <span className="font-bold text-sm bg-yellow-300 text-black px-1.5 py-0.5 rounded">A</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onMouseDown={(e) =>
+                        handleToolbarClick(e, () => {
+                          const url = prompt("Enter Link URL:");
+                          if (url === "") {
+                            editor.chain().focus().unsetLink().run();
+                          } else if (url) {
+                            editor.chain().focus().setLink({ href: url }).run();
+                          }
+                        })
+                      }
+                      className={`p-2 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer ${
+                        editor.isActive("link") ? "bg-white/15 text-[#E28A3E]!" : ""
+                      }`}
+                      title="Insert Link"
+                    >
+                      <LinkIcon className="w-4.5 h-4.5" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onMouseDown={(e) =>
+                        handleToolbarClick(e, () => {
+                          const ytUrl = prompt("Enter YouTube Video URL:");
+                          if (ytUrl) {
+                            editor.chain().focus().setYoutubeVideo({ src: ytUrl }).run();
+                          }
+                        })
+                      }
+                      className="p-2 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer"
+                      title="Insert YouTube Video"
+                    >
+                      <Video className="w-4.5 h-4.5" />
+                    </button>
+
+                    <label
+                      className="p-2 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer inline-flex items-center justify-center"
+                      title="Upload & Insert Image"
+                    >
+                      <ImageIcon className="w-4.5 h-4.5" />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          const formData = new FormData();
+                          formData.append("file", file);
+                          try {
+                            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/courses/admin/upload`, {
+                              method: "POST",
+                              body: formData
+                            });
+                            const data = await res.json();
+                            if (data.success && data.data?.url) {
+                              editor.chain().focus().setImage({ src: data.data.url }).run();
+                            } else {
+                              alert("Image insert failed: " + (data.message || "Invalid response structure"));
+                            }
+                          } catch (err: any) {
+                            alert("Error uploading image in editor: " + err.message);
+                          }
+                        }}
+                        className="hidden"
+                      />
+                    </label>
+
+                    <div className="w-[1px] bg-white/20 mx-1.5 self-stretch" />
+
+                    <button
+                      type="button"
+                      onMouseDown={(e) =>
+                        handleToolbarClick(e, () =>
+                          editor
+                            .chain()
+                            .focus()
+                            .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+                            .run
+                        )
+                      }
+                      className={`p-2 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer ${
+                        editor.isActive("table") ? "bg-white/15 text-[#E28A3E]!" : ""
+                      }`}
+                      title="Insert Table (3x3)"
+                    >
+                      <TableIcon className="w-4.5 h-4.5" />
+                    </button>
+
+                    {editor.isActive("table") && (
+                      <>
+                        <button
+                          type="button"
+                          onMouseDown={(e) => handleToolbarClick(e, () => editor.chain().focus().addColumnAfter().run())}
+                          className="p-2 hover:bg-white/10 rounded-lg text-[#E28A3E] hover:text-white transition-colors cursor-pointer"
+                          title="Add Column"
+                        >
+                          <PlusSquare className="w-4.5 h-4.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onMouseDown={(e) => handleToolbarClick(e, () => editor.chain().focus().addRowAfter().run())}
+                          className="p-2 hover:bg-white/10 rounded-lg text-[#E28A3E] hover:text-white transition-colors cursor-pointer"
+                          title="Add Row"
+                        >
+                          <Split className="w-4.5 h-4.5 rotate-90" />
+                        </button>
+                        <button
+                          type="button"
+                          onMouseDown={(e) => handleToolbarClick(e, () => editor.chain().focus().deleteColumn().run())}
+                          className="p-2 hover:bg-white/10 rounded-lg text-red-400 hover:text-red-300 transition-colors cursor-pointer"
+                          title="Delete Column"
+                        >
+                          <MinusSquare className="w-4.5 h-4.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onMouseDown={(e) => handleToolbarClick(e, () => editor.chain().focus().deleteRow().run())}
+                          className="p-2 hover:bg-white/10 rounded-lg text-red-400 hover:text-red-300 transition-colors cursor-pointer"
+                          title="Delete Row"
+                        >
+                          <Trash className="w-4.5 h-4.5" />
+                        </button>
+                      </>
+                    )}
+
+                    <div className="w-[1px] bg-white/20 mx-1.5 self-stretch" />
+
+                    <button
+                      type="button"
+                      onMouseDown={(e) => handleToolbarClick(e, () => editor.chain().focus().setHorizontalRule().run())}
+                      className="p-2 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer"
+                      title="Horizontal Divider"
+                    >
+                      <Minus className="w-4.5 h-4.5" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onMouseDown={(e) => handleToolbarClick(e, () => editor.chain().focus().unsetAllMarks().clearNodes().run())}
+                      className="p-2 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-colors cursor-pointer ml-auto"
+                      title="Clear Format"
+                    >
+                      <Eraser className="w-4.5 h-4.5" />
+                    </button>
+                  </div>
+                      
+                      {/* Editor Content Area */}
+                      <div className="editor-content-area bg-white text-navy max-h-[400px] overflow-y-auto prose-headings:font-serif prose-headings:text-navy prose-a:text-[#E28A3E] prose-a:no-underline hover:prose-a:underline">
+                        <EditorContent editor={editor} />
+                      </div>
+                    </div>
+                  )}
               </div>
 
               {/* Course Thumbnail Image Box (Styled Card) */}

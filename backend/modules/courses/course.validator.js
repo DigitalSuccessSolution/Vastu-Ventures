@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const createCourseSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters").max(150),
+  slug: z.string().optional(),
   description: z.string().min(10, "Description must be at least 10 characters"),
   shortDescription: z.string().optional(),
   price: z.number().nonnegative("Price must be a positive number"),
@@ -9,7 +10,6 @@ export const createCourseSchema = z.object({
   duration: z.string().optional(),
   level: z.enum(["beginner", "intermediate", "advanced"]),
   category: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid Category ID"),
-  instructor: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid Instructor ID").optional(),
   benefits: z.array(z.string()).optional(),
   requirements: z.array(z.string()).optional(),
   certificateImageUrl: z.string().optional(),

@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import Course from "./course.model.js";
 import Lesson from "./lesson.model.js";
 import CourseCategory from "./courseCategory.model.js";
-import Instructor from "../instructors/instructor.model.js";
 import slugify from "../../utils/slugify.js";
 import { ERROR_MESSAGES } from "../../constants/errorMessages.js";
 
@@ -10,32 +9,8 @@ import { ERROR_MESSAGES } from "../../constants/errorMessages.js";
 const resolveCourseDeps = async (data) => {
   const payload = { ...data };
 
-  // Resolve category from name or slug to an ObjectId reference
-  if (payload.category && !mongoose.Types.ObjectId.isValid(payload.category)) {
-    const catName = payload.category;
-    let cat = await CourseCategory.findOne({
-      $or: [
-        { name: catName },
-        { slug: catName.toLowerCase() }
-      ]
-    });
-    if (!cat) {
-      cat = await CourseCategory.create({
-        name: catName,
-        slug: catName.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-        description: `${catName} category`
-      });
-    }
-    payload.category = cat._id;
-  }
 
-  // Resolve instructor to first found or default instructor
-  if (!payload.instructor || !mongoose.Types.ObjectId.isValid(payload.instructor)) {
-    const defaultInst = await Instructor.findOne();
-    if (defaultInst) {
-      payload.instructor = defaultInst._id;
-    }
-  }
+
 
   return payload;
 };
@@ -102,14 +77,12 @@ export const getPublishedCourses = async (categorySlug) => {
   }
   return Course.find(query)
     .populate("category")
-    .populate("instructor")
     .select("-curriculum.lessons"); // Hide lesson details in catalog listing
 };
 
 export const getCourseBySlug = async (slug) => {
   const course = await Course.findOne({ slug, status: "published", isActive: true })
     .populate("category")
-    .populate("instructor")
     .populate({
       path: "curriculum.lessons",
       select: "title order isPreview videoDuration videoUrl contentType fileUrl fileName" // Include public fields for playing/reading/downloading
@@ -123,13 +96,12 @@ export const getCourseBySlug = async (slug) => {
 };
 
 export const getAllCoursesAdmin = async () => {
-  return Course.find().populate("category").populate("instructor").populate("curriculum.lessons");
+  return Course.find().populate("category").populate("curriculum.lessons");
 };
 
 export const getCourseByIdAdmin = async (id) => {
   const course = await Course.findById(id)
     .populate("category")
-    .populate("instructor")
     .populate("curriculum.lessons");
   if (!course) {
     const error = new Error(ERROR_MESSAGES.COURSE_NOT_FOUND);
@@ -141,7 +113,7 @@ export const getCourseByIdAdmin = async (id) => {
 
 export const createCourse = async (data) => {
   const resolvedData = await resolveCourseDeps(data);
-  const slug = slugify(resolvedData.title);
+  const slug = resolvedData.slug && resolvedData.slug.trim() !== "" ? slugify(resolvedData.slug) : slugify(resolvedData.title);
   const existing = await Course.findOne({ slug });
   if (existing) {
     const error = new Error("Course with similar title already exists");
@@ -189,7 +161,9 @@ export const createCourse = async (data) => {
 export const updateCourse = async (id, data) => {
   const resolvedData = await resolveCourseDeps(data);
   const updatePayload = { ...resolvedData };
-  if (resolvedData.title) {
+  if (resolvedData.slug && resolvedData.slug.trim() !== "") {
+    updatePayload.slug = slugify(resolvedData.slug);
+  } else if (resolvedData.title) {
     updatePayload.slug = slugify(resolvedData.title);
   }
 

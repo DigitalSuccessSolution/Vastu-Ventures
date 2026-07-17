@@ -4,7 +4,7 @@ const serviceSchema = new mongoose.Schema(
   {
     title: { type: String, required: [true, "Service title is required"], trim: true },
     slug: { type: String, required: true, unique: true, lowercase: true, trim: true },
-    category: { type: mongoose.Schema.Types.ObjectId, ref: "VastuCategory", required: true },
+    category: { type: String, required: true },
     icon: { type: String, default: "" },
     description: { type: String, required: [true, "Description is required"] },
     longDescription: { type: String, default: "" },

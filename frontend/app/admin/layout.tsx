@@ -35,10 +35,8 @@ export default function AdminLayout({
     { id: "dashboard", name: "Dashboard", href: "/admin", icon: LayoutDashboard },
     { id: "services", name: "Service Management", href: "/admin/services", icon: Wrench },
     { id: "courses", name: "Course Management", href: "/admin/courses", icon: BookOpen },
-    { id: "categories", name: "Vastu Category Management", href: "/admin/categories", icon: Tags },
     { id: "appointments", name: "Appointment Management", href: "/admin/appointments", icon: Calendar },
     { id: "students", name: "Student Management", href: "/admin/students", icon: Users },
-    { id: "instructors", name: "Instructor Management", href: "/admin/instructors", icon: UserCheck },
     { id: "blogs", name: "Blog Management", href: "/admin/blogs", icon: FileText },
     { id: "reviews", name: "Review Management", href: "/admin/reviews", icon: Star },
     { id: "reports", name: "Reports", href: "/admin/reports", icon: BarChart3 }

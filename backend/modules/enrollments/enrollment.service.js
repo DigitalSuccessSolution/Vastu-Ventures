@@ -14,8 +14,7 @@ import Notification from "../notifications/notification.model.js";
 export const getEnrolledCourseData = async (userId, courseId) => {
   const enrollment = await Enrollment.findOne({ user: userId, course: courseId })
     .populate({
-      path: "course",
-      populate: { path: "instructor" }
+      path: "course"
     });
 
   if (!enrollment) {

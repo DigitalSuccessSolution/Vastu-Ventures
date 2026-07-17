@@ -16,7 +16,10 @@ import {
   Menu,
   X,
   LogOut,
-  ArrowLeft
+  ArrowLeft,
+  PlayCircle,
+  TrendingUp,
+  Award
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -29,13 +32,13 @@ export default function StudentLayout({
   const pathname = usePathname();
 
   const menuItems = [
-    { name: "Overview", href: "/dashboard", icon: Home },
+    { name: "Profile", href: "/dashboard/profile", icon: User },
     { name: "My Courses", href: "/dashboard/courses", icon: BookOpen },
-    { name: "Appointments", href: "/dashboard/appointments", icon: Calendar },
-    { name: "Payments", href: "/dashboard/payments", icon: CreditCard },
-    { name: "Wishlist", href: "/dashboard/wishlist", icon: Heart },
-    { name: "My Profile", href: "/dashboard/profile", icon: User },
-    { name: "Settings", href: "/dashboard/settings", icon: Settings }
+    { name: "Continue Learning", href: "/dashboard/continue-learning", icon: PlayCircle },
+    { name: "Course Progress", href: "/dashboard/progress", icon: TrendingUp }, 
+    { name: "Certificates", href: "/dashboard/certificates", icon: Award }, 
+    { name: "Appointment History", href: "/dashboard/appointments", icon: Calendar },
+    { name: "Payment History", href: "/dashboard/payments", icon: CreditCard }
   ];
 
   return (

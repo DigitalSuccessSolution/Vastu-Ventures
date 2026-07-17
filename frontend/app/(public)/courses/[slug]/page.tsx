@@ -95,9 +95,7 @@ export default function CourseDetailsPage({ params }: Props) {
     ? Math.round(((course.originalPrice - course.price) / course.originalPrice) * 100)
     : 0;
 
-  const getLikesCount = (id: string) => {
-    return "1.9K";
-  };
+
 
   // Helper to extract YouTube video ID from URL
   const getYoutubeId = (url: string) => {
@@ -523,11 +521,6 @@ export default function CourseDetailsPage({ params }: Props) {
                   </div>
 
                   <div className="flex flex-col items-end gap-1.5">
-                    {/* Thumbs up count */}
-                    <div className="flex items-center gap-1 text-navy-light font-bold text-xs sm:text-sm bg-background-alt px-2.5 py-1 rounded-lg border border-border/40">
-                      <ThumbsUp className="w-3.5 h-3.5 text-navy-light" />
-                      <span>{getLikesCount(course._id || course.id)} Likes</span>
-                    </div>
                     {/* Discount badge */}
                     {discountPercent > 0 && (
                       <span className="px-2 py-0.5 bg-green-50 text-green-700 border border-green-200/50 rounded-lg text-xs font-bold">

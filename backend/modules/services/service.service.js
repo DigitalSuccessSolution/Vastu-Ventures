@@ -5,20 +5,13 @@ import { ERROR_MESSAGES } from "../../constants/errorMessages.js";
 export const getActiveServices = async (categorySlug) => {
   const query = { isActive: true };
   if (categorySlug) {
-    // Populate or query via VastuCategory reference
-    const services = await Service.find(query).populate({
-      path: "category",
-      match: { slug: categorySlug }
-    });
-    // Filter out services that didn't match the populated category slug
-    return services.filter((s) => s.category !== null);
+    query.category = categorySlug;
   }
-  return Service.find(query).populate("category");
+  return Service.find(query);
 };
 
 export const getServiceBySlug = async (slug) => {
   const service = await Service.findOne({ slug, isActive: true })
-    .populate("category")
     .populate("faqs")
     .populate("relatedServices");
   if (!service) {
@@ -30,11 +23,11 @@ export const getServiceBySlug = async (slug) => {
 };
 
 export const getAllServicesAdmin = async () => {
-  return Service.find().populate("category");
+  return Service.find();
 };
 
 export const getServiceByIdAdmin = async (id) => {
-  const service = await Service.findById(id).populate("category");
+  const service = await Service.findById(id);
   if (!service) {
     const error = new Error(ERROR_MESSAGES.NOT_FOUND);
     error.statusCode = 404;
