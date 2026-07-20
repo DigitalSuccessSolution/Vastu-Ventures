@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as zod from "zod";
 import { Loader2, Key, Mail, ArrowRight, ShieldAlert, GraduationCap } from "lucide-react";
+import { useAuthStore } from "@/lib/store";
 
 const schema = zod.object({
   email: zod.string().email("Please enter a valid email address"),
@@ -15,10 +16,12 @@ const schema = zod.object({
 
 type FormData = zod.infer<typeof schema>;
 
-export default function LoginPage() {
+function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<"student" | "admin">("admin"); // Default to admin for user's convenience
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isRegistered = searchParams.get("registered") === "true";
 
   const {
     register,
@@ -28,33 +31,53 @@ export default function LoginPage() {
   } = useForm<FormData>({ 
     resolver: zodResolver(schema),
     defaultValues: {
-      email: "admin@vastuventures.com",
-      password: "adminpassword"
+      email: "",
+      password: ""
     }
   });
 
   const handleModeChange = (newMode: "student" | "admin") => {
     setMode(newMode);
     reset({
-      email: newMode === "student" ? "student@vastuventures.com" : "admin@vastuventures.com",
-      password: newMode === "student" ? "studentpassword" : "adminpassword"
+      email: "",
+      password: ""
     });
   };
 
-  const onSubmit = (data: FormData) => {
+  const [serverError, setServerError] = useState("");
+  const loginAction = useAuthStore((state: any) => state.login);
+
+  const onSubmit = async (data: FormData) => {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      if (mode === "admin") {
-        console.log("Admin Login success:", data);
-        localStorage.setItem("isAdminLoggedIn", "true");
+    setServerError("");
+    try {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1") + "/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: data.email, password: data.password })
+      });
+      const resData = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(resData.message || "Login failed");
+      }
+      
+      // Store user and token using Zustand
+      loginAction(resData.data.user, resData.data.accessToken);
+
+      const redirectPath = searchParams.get("redirect");
+      if (redirectPath) {
+        router.push(redirectPath);
+      } else if (resData.data.user.role === "admin") {
         router.push("/admin");
       } else {
-        console.log("Student Login success:", data);
-        localStorage.setItem("isStudentLoggedIn", "true");
         router.push("/dashboard");
       }
-    }, 1000);
+    } catch (err: any) {
+      setServerError(err.message || "Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -97,6 +120,16 @@ export default function LoginPage() {
 
       {/* Main Login Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        {isRegistered && !serverError && (
+          <div className="bg-green-50 text-green-700 border border-green-200 text-xs p-3 rounded-lg font-semibold">
+            Registration successful! Please sign in.
+          </div>
+        )}
+        {serverError && (
+          <div className="bg-red-50 text-red-600 border border-red-200 text-xs p-3 rounded-lg">
+            {serverError}
+          </div>
+        )}
         {/* Email */}
         <div>
           <label className="block text-[10px] font-semibold text-navy uppercase tracking-wider mb-1.5">
@@ -107,7 +140,7 @@ export default function LoginPage() {
             <input
               type="email"
               {...register("email")}
-              placeholder={mode === "admin" ? "admin@vastuventures.com" : "student@vastuventures.com"}
+              placeholder="name@example.com"
               className="w-full text-xs pl-10 pr-3.5 py-3 rounded-xl border border-border bg-background focus:bg-white outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary transition-all text-navy"
             />
           </div>
@@ -170,7 +203,7 @@ export default function LoginPage() {
           {mode === "student" ? (
             <>
               Don't have an account?{" "}
-              <Link href="/register" className="font-semibold text-primary hover:text-gold-end">
+              <Link href={searchParams.get("redirect") ? `/register?redirect=${searchParams.get("redirect")}` : "/register"} className="font-semibold text-primary hover:text-gold-end">
                 Register here
               </Link>
             </>
@@ -183,5 +216,13 @@ export default function LoginPage() {
         </Link>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center p-8"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>}>
+      <LoginForm />
+    </Suspense>
   );
 }

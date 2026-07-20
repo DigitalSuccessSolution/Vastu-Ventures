@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as zod from "zod";
@@ -20,23 +20,70 @@ const schema = zod.object({
 
 type FormData = zod.infer<typeof schema>;
 
-export default function RegisterPage() {
+import { Suspense } from "react";
+
+function RegisterForm() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams.get("redirect");
 
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors }
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
-  const onSubmit = (data: FormData) => {
+  const [serverError, setServerError] = useState("");
+
+  const onSubmit = async (data: FormData) => {
     setLoading(true);
-    setTimeout(() => {
-      console.log("Registration success:", data);
+    setServerError("");
+    try {
+      const nameParts = data.name.trim().split(" ");
+      const firstName = nameParts[0];
+      const lastName = nameParts.slice(1).join(" ") || firstName; // Fallback to firstName if no lastName
+
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1") + "/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ firstName, lastName, email: data.email, password: data.password })
+      });
+      const resData = await res.json();
+      
+      if (!res.ok) {
+        if (resData.errors && Array.isArray(resData.errors)) {
+          let mappedField = false;
+          resData.errors.forEach((err: any) => {
+            if (err.field && err.message) {
+              const fieldName = (err.field === "firstName" || err.field === "lastName") ? "name" : err.field;
+              if (["name", "email", "password"].includes(fieldName)) {
+                setError(fieldName as any, { type: "server", message: err.message });
+                mappedField = true;
+              }
+            }
+          });
+          
+          if (mappedField) {
+            setLoading(false);
+            return;
+          }
+          
+          const firstErr = typeof resData.errors[0] === "string" ? resData.errors[0] : resData.errors[0].message;
+          throw new Error(firstErr || resData.message || "Validation failed");
+        }
+        throw new Error(resData.message || "Registration failed");
+      }
+      
+      // Pass email to login page via query param for convenience
+      const url = `/login?email=${encodeURIComponent(data.email)}&registered=true${redirectPath ? `&redirect=${encodeURIComponent(redirectPath)}` : ""}`;
+      router.push(url);
+    } catch (err: any) {
+      setServerError(err.message || "Something went wrong.");
+    } finally {
       setLoading(false);
-      router.push("/verify-otp");
-    }, 1000);
+    }
   };
 
   return (
@@ -47,6 +94,11 @@ export default function RegisterPage() {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        {serverError && (
+          <div className="bg-red-50 text-red-600 border border-red-200 text-xs p-3 rounded-lg">
+            {serverError}
+          </div>
+        )}
         {/* Full Name */}
         <div>
           <label className="block text-[10px] font-semibold text-navy uppercase tracking-wider mb-1.5">
@@ -139,13 +191,21 @@ export default function RegisterPage() {
           )}
         </button>
       </form>
-
-      <div className="border-t border-border/60 pt-4 text-center text-xs font-light text-muted-foreground">
+      {/* Footer link */}
+      <div className="border-t border-border/60 pt-4 text-center text-xs font-light text-muted-foreground mt-2">
         Already have an account?{" "}
-        <Link href="/login" className="font-semibold text-primary hover:text-gold-end">
-          Login here
+        <Link href={redirectPath ? `/login?redirect=${encodeURIComponent(redirectPath)}` : "/login"} className="font-semibold text-primary hover:text-gold-end">
+          Log in
         </Link>
       </div>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center p-8"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>}>
+      <RegisterForm />
+    </Suspense>
   );
 }

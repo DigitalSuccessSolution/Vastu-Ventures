@@ -3,12 +3,23 @@ import { sendResponse } from "../../utils/responseFormatter.js";
 import * as userService from "./user.service.js";
 
 export const getProfile = asyncHandler(async (req, res) => {
-  const profile = await userService.getProfile(req.user._id);
+  const userDoc = await userService.getProfile(req.user._id);
+  const profile = userDoc.toObject();
+  profile.name = `${profile.firstName} ${profile.lastName}`;
   return sendResponse(res, 200, "Profile retrieved successfully", profile);
 });
 
 export const updateProfile = asyncHandler(async (req, res) => {
-  const profile = await userService.updateProfile(req.user._id, req.body);
+  const updateData = { ...req.body };
+  if (updateData.name) {
+    const parts = updateData.name.trim().split(" ");
+    updateData.firstName = parts[0];
+    updateData.lastName = parts.length > 1 ? parts.slice(1).join(" ") : "";
+    delete updateData.name;
+  }
+  const userDoc = await userService.updateProfile(req.user._id, updateData);
+  const profile = userDoc.toObject();
+  profile.name = `${profile.firstName} ${profile.lastName}`.trim();
   return sendResponse(res, 200, "Profile updated successfully", profile);
 });
 

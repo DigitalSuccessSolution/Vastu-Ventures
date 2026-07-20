@@ -11,7 +11,7 @@ import {
 
 export default function Footer() {
   return (
-    <footer className="w-full max-w-full bg-navy text-background-alt pt-16 pb-8 border-t border-navy-light relative overflow-hidden shadow-none rounded-none border-x-0">
+    <footer className="w-full max-w-full bg-navy text-background-alt pt-8 pb-8 border-t border-navy-light relative overflow-hidden shadow-none rounded-none border-x-0">
       {/* Subtle mandala background ring art overlay */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-[radial-gradient(circle_at_center,rgba(240,180,41,0.02)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
 
@@ -21,11 +21,11 @@ export default function Footer() {
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 mb-12">
 
           {/* Column 1: Brand Info (Spans 2 columns on mobile for clean top block) */}
-          <div className="flex flex-col gap-4 text-left col-span-2 sm:col-span-1 lg:col-span-1">
+          <div className="flex flex-col gap-2 text-left col-span-2 sm:col-span-1 lg:col-span-1">
             
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 group h-14 relative w-48 shrink-0">
-              <img src="/logo2.png" alt="Vastu Ventures Logo" className="h-22 max-h-[88px] w-auto object-contain absolute left-0 top-1/2 -translate-y-1/2" />
+            <Link href="/" className="flex items-start shrink-0 -mt-2">
+              <img src="/logo.png" alt="Vastu Ventures Logo" className="h-20 max-h-[72px] w-auto object-contain" />
             </Link>
             <p className="text-sm text-background-alt/75 leading-relaxed font-light mt-1">
               Empowering lives through ancient Vastu wisdom and modern solutions. Creating spaces that attract positivity and prosperity.
@@ -66,11 +66,6 @@ export default function Footer() {
                   About Us
                 </Link>
               </li>
-              <li className="mb-3">
-                <Link href="/services/residential-vastu" className="hover:text-gold-start hover:pl-1 transition-all">
-                  Services
-                </Link>
-              </li>
               <li>
                 <Link href="/courses" className="hover:text-gold-start hover:pl-1 transition-all">
                   Courses
@@ -84,11 +79,6 @@ export default function Footer() {
               <li>
                 <Link href="/blogs" className="hover:text-gold-start hover:pl-1 transition-all">
                   Blogs
-                </Link>
-              </li>
-              <li>
-                <Link href="/faq" className="hover:text-gold-start hover:pl-1 transition-all">
-                  FAQ
                 </Link>
               </li>
               <li>

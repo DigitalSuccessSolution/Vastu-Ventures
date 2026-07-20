@@ -5,8 +5,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, ChevronDown, Compass, Home, Briefcase, Factory, BookOpen, Calendar, HelpCircle, Info, FileText, Monitor, UserRound, MapPin } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuthStore } from "@/lib/store";
 
 export default function Navbar() {
+  const { user } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
@@ -69,17 +71,13 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-[background-color,padding] duration-300 ${
-        scrolled || isOpen
-          ? "bg-[#FDFBF7]/95 backdrop-blur-md py-3 shadow-premium"
-          : "bg-white/95 lg:bg-transparent py-3 lg:py-5 shadow-sm lg:shadow-none"
-      }`}
+      className="fixed top-0 left-0 right-0 z-50 bg-[#FDFBF7]/95 backdrop-blur-md py-3 shadow-premium transition-[background-color,padding] duration-300"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-50">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group h-14 relative w-48 shrink-0">
-            <img src="/logo.png" alt="Vastu Ventures Logo" className="h-22 max-h-[88px] w-auto object-contain absolute left-0 top-1/2 -translate-y-1/2" />
+          <Link href="/" className="flex items-center gap-2 group h-16 relative w-48 shrink-0">
+            <img src="/logo.png" alt="Vastu Ventures Logo" className="h-20 max-h-[72px] w-auto object-contain absolute left-0 top-1/2 -translate-y-1/2" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -184,11 +182,17 @@ export default function Navbar() {
               Book Consultation
             </Link>
             <Link
-              href="/dashboard"
+              href={user ? "/dashboard" : "/login"}
               title="Student Portal"
-              className="w-10 h-10 rounded-full border border-[#EDE3D0]/60 bg-white hover:bg-[#FAF6F0]/30 text-navy hover:text-[#E28A3E] flex items-center justify-center transition-all shadow-sm hover:scale-[1.05]"
+              className="w-10 h-10 rounded-full border border-[#EDE3D0]/60 bg-white hover:bg-[#FAF6F0]/30 text-navy hover:text-[#E28A3E] flex items-center justify-center transition-all shadow-sm hover:scale-[1.05] overflow-hidden"
             >
-              <UserRound className="w-5 h-5" />
+              {user && user.avatar?.url ? (
+                <img src={user.avatar.url} alt={user.name} className="w-full h-full object-cover" />
+              ) : user && user.name ? (
+                <span className="font-bold text-lg">{user.name.charAt(0).toUpperCase()}</span>
+              ) : (
+                <UserRound className="w-5 h-5" />
+              )}
             </Link>
           </div>
 

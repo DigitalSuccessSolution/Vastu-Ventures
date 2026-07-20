@@ -2,8 +2,9 @@
 
 import React, { use, useState, useEffect } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { notFound } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import Link from "next/link";
+import { useAuthStore } from "@/lib/store";
 import {
   Star,
   Clock,
@@ -28,6 +29,126 @@ export default function CourseDetailsPage({ params }: Props) {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
   const [expandedLesson, setExpandedLesson] = useState<string | null>(null);
+  const [showBuyModal, setShowBuyModal] = useState(false);
+  const [purchaseDetails, setPurchaseDetails] = useState({ name: "", email: "", phone: "" });
+  const [isProcessing, setIsProcessing] = useState(false);
+  const router = useRouter();
+  const { user, isAuthenticated, token } = useAuthStore();
+
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const handlePayment = async () => {
+    if (!purchaseDetails.name || !purchaseDetails.email || !purchaseDetails.phone) {
+      alert("Please fill all details to proceed.");
+      return;
+    }
+    
+    setIsProcessing(true);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+      
+      if (!token) {
+        alert("Authentication required. Please log in.");
+        router.push(`/login?redirect=/courses/${slug}`);
+        return;
+      }
+
+      // 2. Create Razorpay Order
+      const orderRes = await fetch(`${apiUrl}/payments/create-order`, {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          orderType: "course",
+          courseId: course._id
+        })
+      });
+      const orderData = await orderRes.json();
+      
+      if (!orderData.success) {
+        throw new Error(orderData.message || "Failed to create order");
+      }
+      
+      const { razorpayOrderId, amount, currency, keyId } = orderData.data;
+
+      // 3. Load script
+      const res = await loadRazorpayScript();
+      if (!res) {
+        alert("Razorpay SDK failed to load. Are you online?");
+        setIsProcessing(false);
+        return;
+      }
+
+      // 4. Open Razorpay UI
+      const options = {
+        key: keyId || "test_key", // Will fail gracefully if no real key is set yet
+        amount: amount,
+        currency: currency,
+        name: "Vastu Ventures",
+        description: `Enroll in ${course.title}`,
+        image: "/logo.png", // Path to our logo
+        order_id: razorpayOrderId,
+        handler: async function (response: any) {
+          try {
+            // 5. Verify payment
+            const verifyRes = await fetch(`${apiUrl}/payments/verify`, {
+              method: "POST",
+              headers: { 
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+              },
+              body: JSON.stringify({
+                razorpayOrderId: response.razorpay_order_id,
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpaySignature: response.razorpay_signature
+              })
+            });
+            const verifyData = await verifyRes.json();
+            
+            if (verifyData.success) {
+              alert("Payment successful! You are now enrolled in the course.");
+              setShowBuyModal(false);
+            } else {
+              alert("Payment verification failed. Please contact support.");
+            }
+          } catch (err) {
+            console.error(err);
+            alert("An error occurred during verification.");
+          }
+        },
+        prefill: {
+          name: purchaseDetails.name,
+          email: purchaseDetails.email,
+          contact: purchaseDetails.phone,
+        },
+        theme: {
+          color: "#0F1A2C", // Navy color matching our theme
+        },
+      };
+
+      const paymentObject = new (window as any).Razorpay(options);
+      paymentObject.on('payment.failed', function (response: any) {
+        alert("Payment failed: " + response.error.description);
+      });
+      paymentObject.open();
+
+    } catch (error: any) {
+      console.error(error);
+      alert(error.message || "An unexpected error occurred");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   const handleDownloadPdf = async (url: string, filename: string) => {
     // Get the clean original file URL by removing fl_attachment if present
@@ -53,6 +174,20 @@ export default function CourseDetailsPage({ params }: Props) {
   const premiumEase = [0.16, 1, 0.3, 1] as const;
 
   useEffect(() => {
+    if (showBuyModal) {
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+    };
+  }, [showBuyModal]);
+
+  useEffect(() => {
     const fetchCourseDetails = async () => {
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/courses/${slug}`);
@@ -68,6 +203,23 @@ export default function CourseDetailsPage({ params }: Props) {
     };
     fetchCourseDetails();
   }, [slug]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && isAuthenticated && user) {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('checkout') === 'true') {
+        setPurchaseDetails({
+          name: user.name || "",
+          email: user.email || "",
+          phone: user.phone || ""
+        });
+        setShowBuyModal(true);
+        // Remove checkout param from URL without reloading
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, '', newUrl);
+      }
+    }
+  }, [isAuthenticated, user]);
 
   const fadeUpVariants = {
     hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 40 },
@@ -529,10 +681,20 @@ export default function CourseDetailsPage({ params }: Props) {
                     )}
                   </div>
                 </div>
-                {/* Purchase CTA Buttons */}
                 <div className="flex flex-col gap-2.5 mt-4">
                   <button
-                    onClick={() => alert("Redirecting to secure payment portal...")}
+                    onClick={() => {
+                      if (isAuthenticated && user) {
+                        setPurchaseDetails({
+                          name: user.name || "",
+                          email: user.email || "",
+                          phone: user.phone || ""
+                        });
+                        setShowBuyModal(true);
+                      } else {
+                        router.push(`/login?redirect=${encodeURIComponent(`/courses/${slug}?checkout=true`)}`);
+                      }
+                    }}
                     className="w-full py-3.5 bg-navy hover:bg-navy-light text-white text-xs sm:text-sm font-bold rounded-xl shadow-premium hover:shadow-premium-lg transition-all cursor-pointer text-center"
                   >
                     Buy Now
@@ -546,6 +708,97 @@ export default function CourseDetailsPage({ params }: Props) {
 
         </div>
       </motion.div>
+
+      {/* Purchase Modal */}
+      {showBuyModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy/80 backdrop-blur-sm">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-[2rem] p-6 sm:p-8 max-w-md w-full shadow-2xl relative"
+          >
+            <button
+              onClick={() => setShowBuyModal(false)}
+              className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-700 transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <h2 className="text-2xl font-serif font-bold text-navy mb-1">Enroll in Course</h2>
+            <p className="text-sm text-navy-light mb-6">Enter your details to secure your spot.</p>
+            
+            <div className="bg-[#FAF6F0] p-5 rounded-2xl mb-6 border border-[#E5E0D8]">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm text-navy-light font-medium">Course</span>
+                <span className="text-sm font-bold text-navy max-w-[200px] truncate" title={course.title}>{course.title}</span>
+              </div>
+              <div className="flex justify-between items-center pt-2 border-t border-[#E5E0D8]/60 mt-2">
+                <span className="text-sm text-navy-light font-medium">Total Price</span>
+                <div className="flex items-center gap-2">
+                  {course.originalPrice > course.price && (
+                    <span className="text-xs text-muted-foreground line-through">₹{course.originalPrice}</span>
+                  )}
+                  <span className="text-lg font-bold text-[#E28A3E]">₹{course.price}</span>
+                  {discountPercent > 0 && (
+                    <span className="px-2 py-0.5 bg-green-50 text-green-700 border border-green-200/50 rounded-lg text-xs font-bold ml-1">
+                      {discountPercent}% off
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+             <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-navy-light/70 mb-1.5 tracking-wider uppercase">Full Name</label>
+                <input
+                  type="text"
+                  value={purchaseDetails.name}
+                  onChange={(e) => setPurchaseDetails({...purchaseDetails, name: e.target.value})}
+                  className="w-full px-4 py-3 bg-white border border-[#E5E0D8] rounded-xl text-sm focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors placeholder:text-gray-400"
+                  placeholder="E.g. Dheeraj Patidar"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-navy-light/70 mb-1.5 tracking-wider uppercase">Email Address</label>
+                <input
+                  type="email"
+                  value={purchaseDetails.email}
+                  disabled
+                  className="w-full px-4 py-3 bg-gray-50 text-gray-500 border border-[#E5E0D8] rounded-xl text-sm cursor-not-allowed"
+                  placeholder="E.g. dheeraj@example.com"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-navy-light/70 mb-1.5 tracking-wider uppercase">Phone Number</label>
+                <input
+                  type="tel"
+                  value={purchaseDetails.phone}
+                  onChange={(e) => setPurchaseDetails({...purchaseDetails, phone: e.target.value})}
+                  className="w-full px-4 py-3 bg-white border border-[#E5E0D8] rounded-xl text-sm focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors placeholder:text-gray-400"
+                  placeholder="+91 98765 43210"
+                />
+              </div>
+            </div>
+              
+              <button
+                onClick={handlePayment}
+                disabled={isProcessing}
+                className={`w-full py-3.5 mt-2 bg-navy hover:bg-navy-light text-white text-sm font-bold rounded-xl shadow-premium transition-all flex justify-center items-center gap-2 group ${isProcessing ? 'opacity-75 cursor-not-allowed' : ''}`}
+              >
+                {isProcessing ? (
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <ShieldCheck className="w-5 h-5 group-hover:scale-110 transition-transform" /> 
+                )}
+                {isProcessing ? "Processing..." : "Proceed to Pay"}
+              </button>
+          </motion.div>
+        </div>
+      )}
 
     </div>
   );

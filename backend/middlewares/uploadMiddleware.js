@@ -6,11 +6,11 @@ const storage = multer.memoryStorage();
 
 // File filter: allowed MIME types
 const imageFilter = (req, file, cb) => {
-  const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+  const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif", "image/avif"];
   if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error("Invalid file type. Only JPEG, PNG, WebP, and GIF are allowed."), false);
+    cb(new Error("Invalid file type. Only JPEG, JPG, PNG, WebP, AVIF, and GIF are allowed."), false);
   }
 };
 

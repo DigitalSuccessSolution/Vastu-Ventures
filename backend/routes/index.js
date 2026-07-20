@@ -17,7 +17,7 @@ const router = express.Router();
 
 // Public / Student endpoints
 router.use("/auth", authRoutes);
-router.use("/user", userRoutes);
+router.use("/users", userRoutes);
 router.use("/notifications", notificationRoutes);
 router.use("/services", publicServiceRoutes);
 router.use("/consultations", publicConsultationRoutes);

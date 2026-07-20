@@ -6,18 +6,19 @@ export const register = asyncHandler(async (req, res) => {
   const result = await authService.registerUser(req.body);
   return sendResponse(res, 201, result.message, { userId: result.userId });
 });
+export const guestLogin = asyncHandler(async (req, res) => {
+  const { accessToken, refreshToken, user } = await authService.guestLoginUser(req.body);
 
-export const verify = asyncHandler(async (req, res) => {
-  const { email, otp } = req.body;
-  const result = await authService.verifyEmail(email, otp);
-  return sendResponse(res, 200, result.message);
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  });
+
+  return sendResponse(res, 200, "Guest login successful", { accessToken, user });
 });
 
-export const resendOtpCode = asyncHandler(async (req, res) => {
-  const { email } = req.body;
-  const result = await authService.resendOTP(email);
-  return sendResponse(res, 200, result.message);
-});
 
 export const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;

@@ -6,7 +6,15 @@ import env from "../config/env.js";
  */
 const errorHandler = (err, req, res, _next) => {
   let statusCode = err.statusCode || 500;
+  
+  console.error("Backend Error:", err);
+
+  // Extract Razorpay error message if present
   let message = err.message || "Internal Server Error";
+  if (err.error && err.error.description) {
+    message = `Razorpay Error: ${err.error.description} (Check your .env API keys)`;
+  }
+  
   let errors = null;
 
   // Mongoose validation error
@@ -37,6 +45,12 @@ const errorHandler = (err, req, res, _next) => {
   if (err.name === "TokenExpiredError") {
     statusCode = 401;
     message = "Token expired";
+  }
+
+  // Multer errors
+  if (err.name === "MulterError") {
+    statusCode = 400;
+    message = err.message;
   }
 
   const response = { success: false, message };

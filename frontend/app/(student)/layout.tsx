@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Compass,
   Home,
@@ -19,9 +19,11 @@ import {
   ArrowLeft,
   PlayCircle,
   TrendingUp,
-  Award
+  Award,
+  LayoutDashboard
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuthStore } from "@/lib/store";
 
 export default function StudentLayout({
   children,
@@ -30,8 +32,22 @@ export default function StudentLayout({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, logout } = useAuthStore();
+
+  const handleLogout = async () => {
+    try {
+      // Optional: Call backend to invalidate token if necessary
+      // await fetch("http://localhost:5000/api/v1/auth/logout", { method: "POST", ... });
+    } catch (e) {
+      console.error(e);
+    }
+    logout();
+    router.push("/login");
+  };
 
   const menuItems = [
+    { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
     { name: "Profile", href: "/dashboard/profile", icon: User },
     { name: "My Courses", href: "/dashboard/courses", icon: BookOpen },
     { name: "Continue Learning", href: "/dashboard/continue-learning", icon: PlayCircle },
@@ -44,11 +60,11 @@ export default function StudentLayout({
   return (
     <div className="min-h-screen bg-[#FDFBF7] flex">
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex flex-col w-64 bg-white border-r border-border h-screen sticky top-0">
+      <aside className="hidden md:flex flex-col w-72 bg-navy text-white h-screen sticky top-0 border-r border-[#1e2d4d] flex-shrink-0 z-30 shadow-premium">
         {/* Sidebar Header */}
-        <div className="h-16 flex items-center px-6 border-b border-border bg-white">
-          <Link href="/" className="flex items-center gap-2 group">
-            <img src="/logo.png" alt="Vastu Ventures Logo" className="h-12 w-auto object-contain" />
+        <div className="h-20 flex-shrink-0 flex items-center justify-center px-6 border-b border-white/10 bg-transparent">
+          <Link href="/dashboard" className="flex items-center gap-2">
+            <img src="/logo.png" alt="Vastu Ventures Logo" className="h-16 w-auto object-contain" />
           </Link>
         </div>
 
@@ -62,11 +78,11 @@ export default function StudentLayout({
                 key={item.name}
                 href={item.href}
                 className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${isActive
-                    ? "bg-gold-gradient text-white shadow-premium"
-                    : "text-navy-light hover:bg-background-alt hover:text-primary"
+                    ? "bg-[#E28A3E] text-white shadow-premium"
+                    : "text-white/70 hover:bg-white/5 hover:text-white"
                   }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-primary"}`} />
+                <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-white/70"}`} />
                 {item.name}
               </Link>
             );
@@ -74,17 +90,17 @@ export default function StudentLayout({
         </nav>
 
         {/* Sidebar Footer */}
-        <div className="p-4 border-t border-border bg-white">
+        <div className="p-4 border-t border-white/10 bg-transparent">
           <Link
             href="/"
-            className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-navy-light hover:bg-background-alt hover:text-primary transition-all mb-1"
+            className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-white/70 hover:bg-white/5 hover:text-white transition-all mb-1"
           >
-            <ArrowLeft className="w-4 h-4 text-primary" />
+            <ArrowLeft className="w-4 h-4" />
             Back to Site
           </Link>
           <button
-            onClick={() => console.log("Logout clicked")}
-            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-destructive hover:bg-red-50 transition-all cursor-pointer"
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-red-400 hover:bg-red-400/10 transition-all cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
             Log Out
@@ -110,20 +126,15 @@ export default function StudentLayout({
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", bounce: 0, duration: 0.3 }}
-              className="md:hidden fixed inset-y-0 left-0 w-64 bg-white z-50 flex flex-col h-full shadow-2xl"
+              className="md:hidden fixed inset-y-0 left-0 w-72 bg-navy text-white z-50 flex flex-col h-full shadow-2xl"
             >
-              <div className="h-16 flex items-center justify-between px-6 border-b border-border bg-white">
-                <Link href="/" className="flex items-center gap-2">
-                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gold-gradient text-white">
-                    <Compass className="w-5 h-5" />
-                  </div>
-                  <span className="font-serif text-base font-bold tracking-tight text-navy">
-                    Vastu<span className="text-gold-end">Vidya</span>
-                  </span>
+              <div className="h-20 flex-shrink-0 flex items-center justify-between px-6 border-b border-white/10 bg-transparent">
+                <Link href="/dashboard" onClick={() => setSidebarOpen(false)} className="flex items-center gap-2">
+                  <img src="/logo.png" alt="Vastu Ventures Logo" className="h-12 w-auto object-contain" />
                 </Link>
                 <button
                   onClick={() => setSidebarOpen(false)}
-                  className="p-1 rounded-lg hover:bg-background-alt text-navy"
+                  className="p-1 rounded-lg text-white hover:text-[#E28A3E] transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -139,28 +150,28 @@ export default function StudentLayout({
                       href={item.href}
                       onClick={() => setSidebarOpen(false)}
                       className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${isActive
-                          ? "bg-gold-gradient text-white shadow-premium"
-                          : "text-navy-light hover:bg-background-alt hover:text-primary"
+                          ? "bg-[#E28A3E] text-white shadow-premium"
+                          : "text-white/70 hover:bg-white/5 hover:text-white"
                         }`}
                     >
-                      <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-primary"}`} />
+                      <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-white/70"}`} />
                       {item.name}
                     </Link>
                   );
                 })}
               </nav>
 
-              <div className="p-4 border-t border-border bg-white">
+              <div className="p-4 border-t border-white/10 bg-transparent">
                 <Link
                   href="/"
-                  className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-navy-light hover:bg-background-alt hover:text-primary transition-all mb-1"
+                  className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-white/70 hover:bg-white/5 hover:text-white transition-all mb-1"
                 >
-                  <ArrowLeft className="w-4 h-4 text-primary" />
+                  <ArrowLeft className="w-4 h-4" />
                   Back to Site
                 </Link>
                 <button
-                  onClick={() => console.log("Logout clicked")}
-                  className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-destructive hover:bg-red-50 transition-all cursor-pointer"
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-red-400 hover:bg-red-400/10 transition-all cursor-pointer"
                 >
                   <LogOut className="w-4 h-4" />
                   Log Out
@@ -198,13 +209,13 @@ export default function StudentLayout({
             <Link href="/dashboard/profile" className="flex items-center gap-2 group">
               <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-border group-hover:border-primary transition-colors">
                 <img
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150"
-                  alt="Student Profile"
+                  src={user?.avatar?.url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || "Student")}`}
+                  alt={user?.name || "Student"}
                   className="w-full h-full object-cover"
                 />
               </div>
               <span className="hidden sm:inline text-xs font-semibold text-navy group-hover:text-primary transition-colors">
-                Priya Sharma
+                {user?.name || "Student"}
               </span>
             </Link>
           </div>

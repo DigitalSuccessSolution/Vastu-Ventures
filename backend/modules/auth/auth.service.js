@@ -16,82 +16,55 @@ export const registerUser = async (data) => {
     throw error;
   }
 
-  // Generate 6-digit OTP
-  const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  const hashedOTP = await bcrypt.hash(otp, 10);
-
   const user = await User.create({
     firstName,
     lastName,
     email,
     password,
     phone,
-    emailVerificationOTP: hashedOTP,
-    emailVerificationExpiry: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
+    isEmailVerified: true,
   });
 
   // Send emails (non-blocking)
   sendWelcomeEmail(email, firstName);
-  sendOTPEmail(email, firstName, otp);
 
-  return { userId: user._id, message: "Registration successful. Please verify your email." };
+  return { userId: user._id, message: "Registration successful. Please login." };
 };
 
-export const verifyEmail = async (email, otp) => {
-  const user = await User.findOne({ email }).select("+emailVerificationOTP +emailVerificationExpiry");
+export const guestLoginUser = async (data) => {
+  const { name, email, phone } = data;
+  
+  let user = await User.findOne({ email }).select("+refreshToken");
+  
   if (!user) {
-    const error = new Error(ERROR_MESSAGES.USER_NOT_FOUND);
-    error.statusCode = 404;
+    const randomPassword = crypto.randomBytes(8).toString("hex") + "Aa1!";
+    user = await User.create({
+      firstName: name.split(" ")[0] || "Guest",
+      lastName: name.split(" ").slice(1).join(" ") || "",
+      email,
+      phone,
+      password: randomPassword,
+      isEmailVerified: true,
+    });
+  }
+  
+  if (user.isBlocked) {
+    const error = new Error(ERROR_MESSAGES.ACCOUNT_BLOCKED);
+    error.statusCode = 403;
     throw error;
   }
-
-  if (!user.emailVerificationOTP || user.emailVerificationExpiry < Date.now()) {
-    const error = new Error(ERROR_MESSAGES.INVALID_OTP);
-    error.statusCode = 400;
-    throw error;
-  }
-
-  const isMatch = await bcrypt.compare(otp, user.emailVerificationOTP);
-  if (!isMatch) {
-    const error = new Error(ERROR_MESSAGES.INVALID_OTP);
-    error.statusCode = 400;
-    throw error;
-  }
-
-  user.isEmailVerified = true;
-  user.emailVerificationOTP = undefined;
-  user.emailVerificationExpiry = undefined;
+  
+  const accessToken = generateAccessToken(user._id);
+  const refreshToken = generateRefreshToken(user._id);
+  
+  user.refreshToken = refreshToken;
   await user.save();
-
-  return { message: "Email verified successfully" };
+  
+  user.password = undefined; // hide password
+  user.refreshToken = undefined;
+  
+  return { accessToken, refreshToken, user };
 };
-
-export const resendOTP = async (email) => {
-  const user = await User.findOne({ email });
-  if (!user) {
-    const error = new Error(ERROR_MESSAGES.USER_NOT_FOUND);
-    error.statusCode = 404;
-    throw error;
-  }
-
-  if (user.isEmailVerified) {
-    const error = new Error("Email is already verified");
-    error.statusCode = 400;
-    throw error;
-  }
-
-  const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  const hashedOTP = await bcrypt.hash(otp, 10);
-
-  user.emailVerificationOTP = hashedOTP;
-  user.emailVerificationExpiry = new Date(Date.now() + 10 * 60 * 1000);
-  await user.save();
-
-  sendOTPEmail(email, user.firstName, otp);
-
-  return { message: "OTP resent to your email" };
-};
-
 export const loginUser = async (email, password) => {
   const user = await User.findOne({ email }).select("+password +refreshToken");
   if (!user) {
@@ -106,11 +79,6 @@ export const loginUser = async (email, password) => {
     throw error;
   }
 
-  if (!user.isEmailVerified) {
-    const error = new Error(ERROR_MESSAGES.EMAIL_NOT_VERIFIED);
-    error.statusCode = 403;
-    throw error;
-  }
 
   // Check lockout
   if (user.isLocked()) {
@@ -145,7 +113,9 @@ export const loginUser = async (email, password) => {
     _id: user._id,
     firstName: user.firstName,
     lastName: user.lastName,
+    name: `${user.firstName} ${user.lastName}`,
     email: user.email,
+    phone: user.phone,
     role: user.role,
     avatar: user.avatar,
   };

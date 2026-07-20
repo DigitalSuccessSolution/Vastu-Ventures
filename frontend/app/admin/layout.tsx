@@ -61,9 +61,9 @@ export default function AdminLayout({
       {/* Sidebar for Desktop */}
       <aside className="hidden md:flex flex-col w-72 bg-navy text-white h-screen sticky top-0 border-r border-[#1e2d4d] flex-shrink-0 z-30 shadow-premium">
 
-        <div className="h-20 flex-shrink-0 flex items-center justify-between px-6 border-b border-white/10 bg-transparent">
+        <div className="h-20 flex-shrink-0 flex items-center justify-center px-6 border-b border-white/10 bg-transparent">
           <Link href="/admin" className="flex items-center gap-2">
-            <img src="/logo2.png" alt="Vastu Ventures Logo" className="h-12 w-auto object-contain" />
+            <img src="/logo.png" alt="Vastu Ventures Logo" className="h-18 w-auto object-contain" />
           </Link>
         </div>
 
@@ -157,7 +157,7 @@ export default function AdminLayout({
           >
             <div className="flex items-center justify-between border-b border-white/10 py-5 px-2 mb-2">
               <Link href="/admin" onClick={() => setSidebarOpen(false)} className="flex items-center">
-                <img src="/logo2.png" alt="Vastu Ventures Logo" className="h-12 w-auto object-contain" />
+                <img src="/logo.png" alt="Vastu Ventures Logo" className="h-12 w-auto object-contain" />
               </Link>
               <button onClick={() => setSidebarOpen(false)} className="text-white hover:text-[#E28A3E] border border-white/10 p-1.5 rounded-lg">
                 <X className="w-5 h-5" />

@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema(
       trim: true,
       match: [/^\S+@\S+\.\S+$/, "Please provide a valid email"],
     },
-    password: { type: String, required: [true, "Password is required"], minlength: 8, select: false },
+    password: { type: String, required: [true, "Password is required"], minlength: 6, select: false },
     phone: { type: String, trim: true },
     avatar: {
       url: { type: String, default: "" },
@@ -25,8 +25,6 @@ const userSchema = new mongoose.Schema(
       default: "student",
     },
     isEmailVerified: { type: Boolean, default: false },
-    emailVerificationOTP: { type: String, select: false },
-    emailVerificationExpiry: { type: Date, select: false },
     resetPasswordToken: { type: String, select: false },
     resetPasswordExpiry: { type: Date, select: false },
     refreshToken: { type: String, select: false },
