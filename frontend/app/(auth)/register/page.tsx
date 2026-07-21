@@ -15,7 +15,7 @@ const schema = zod.object({
   password: zod.string().min(6, "Password must be at least 6 characters"),
   confirmPassword: zod.string(),
   terms: zod.literal(true, {
-    errorMap: () => ({ message: "You must accept terms & conditions" }),
+    message: "You must accept terms & conditions",
   })
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",

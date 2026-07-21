@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronDown, Compass, Home, Briefcase, Factory, BookOpen, Calendar, HelpCircle, Info, FileText, Monitor, UserRound, MapPin } from "lucide-react";
+import { Menu, X, ChevronDown, Compass, Home, Briefcase, Factory, BookOpen, Calendar, HelpCircle, Info, FileText, Monitor, UserRound, MapPin, Building2, PencilRuler } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuthStore } from "@/lib/store";
 
@@ -12,7 +12,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
-  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const [activeMobileDropdown, setActiveMobileDropdown] = useState<string | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -27,12 +27,16 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile drawer on route change, but auto-expand services if active
+  // Close mobile drawer on route change, but auto-expand active service
   useEffect(() => {
     setIsOpen(false);
     setActiveDropdown(null);
-    const isServiceActive = navLinks[0].items.some(item => pathname === item.href);
-    setMobileServicesOpen(isServiceActive);
+    const activeLink = navLinks.find(link => link.items.some(item => pathname === item.href));
+    if (activeLink) {
+      setActiveMobileDropdown(activeLink.trigger);
+    } else {
+      setActiveMobileDropdown(null);
+    }
   }, [pathname]);
 
   // Prevent background scrolling when mobile menu is open
@@ -60,6 +64,16 @@ export default function Navbar() {
         { name: "Industrial Vastu", href: "/services/industrial-vastu", icon: Factory, desc: "For Factories & Industries", iconColor: "text-[#3D523A]" },
         { name: "Online Consultation", href: "/book", icon: Monitor, desc: "Consult from Anywhere", iconColor: "text-[#3D523A]" },
         { name: "Offline Consultation", href: "/contact", icon: MapPin, desc: "Expert Visit to Your Place", iconColor: "text-[#3D523A]" }
+      ]
+    },
+    {
+      name: "Architecture Planning",
+      trigger: "architecture",
+      items: [
+        { name: "House Planning with Vastu", href: "/architecture-planning/house-planning-with-vastu", icon: Home, desc: "Residential Layouts", iconColor: "text-[#E28A3E]" },
+        { name: "Commercial Planning with Vastu", href: "/architecture-planning/commercial-planning-with-vastu", icon: Building2, desc: "Commercial & Office Spaces", iconColor: "text-[#E28A3E]" },
+        { name: "Plot Planning & Analysis", href: "/architecture-planning/plot-planning-analysis", icon: MapPin, desc: "Site & Plot Evaluation", iconColor: "text-[#E28A3E]" },
+        { name: "Architecture Consultation", href: "/architecture-planning/architecture-consultation", icon: PencilRuler, desc: "Expert Architecture Guidance", iconColor: "text-[#E28A3E]" }
       ]
     }
   ];
@@ -230,47 +244,52 @@ export default function Navbar() {
                   About Us
                 </Link>
 
-                {/* Vastu Services Dropdown Accordion */}
-                <div className="flex flex-col gap-3">
-                  <button
-                    onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
-                    className="w-full flex items-center justify-between text-base font-semibold text-navy transition-all cursor-pointer text-left"
-                  >
-                    <span>Vastu Services</span>
-                    <ChevronDown
-                      className={`w-4.5 h-4.5 text-muted-foreground transition-transform duration-300 ${
-                        mobileServicesOpen ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
-
-                  <AnimatePresence initial={false}>
-                    {mobileServicesOpen && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.25, ease: "easeInOut" }}
-                        className="overflow-hidden flex flex-col gap-4 pl-4 border-l border-border/80 ml-1 mt-1"
+                {/* Dropdown Accordions */}
+                {navLinks.map((dropdown) => {
+                  const isMobileOpen = activeMobileDropdown === dropdown.trigger;
+                  return (
+                    <div key={dropdown.trigger} className="flex flex-col gap-3">
+                      <button
+                        onClick={() => setActiveMobileDropdown(isMobileOpen ? null : dropdown.trigger)}
+                        className="w-full flex items-center justify-between text-base font-semibold text-navy transition-all cursor-pointer text-left"
                       >
-                        {navLinks[0].items.map((item) => {
-                          const isActive = pathname === item.href;
-                          return (
-                            <Link
-                              key={item.name}
-                              href={item.href}
-                              className={`text-sm transition-all ${
-                                isActive ? "text-[#E28A3E] font-bold" : "text-navy-light font-medium hover:text-[#E28A3E]"
-                              }`}
-                            >
-                              {item.name}
-                            </Link>
-                          );
-                        })}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
+                        <span>{dropdown.name}</span>
+                        <ChevronDown
+                          className={`w-4.5 h-4.5 text-muted-foreground transition-transform duration-300 ${
+                            isMobileOpen ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
+
+                      <AnimatePresence initial={false}>
+                        {isMobileOpen && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.25, ease: "easeInOut" }}
+                            className="overflow-hidden flex flex-col gap-4 pl-4 border-l border-border/80 ml-1 mt-1"
+                          >
+                            {dropdown.items.map((item) => {
+                              const isActive = pathname === item.href;
+                              return (
+                                <Link
+                                  key={item.name}
+                                  href={item.href}
+                                  className={`text-sm transition-all ${
+                                    isActive ? "text-[#E28A3E] font-bold" : "text-navy-light font-medium hover:text-[#E28A3E]"
+                                  }`}
+                                >
+                                  {item.name}
+                                </Link>
+                              );
+                            })}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                })}
 
                 <Link
                   href="/courses"

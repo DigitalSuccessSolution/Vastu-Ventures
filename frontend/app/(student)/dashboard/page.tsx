@@ -84,7 +84,7 @@ export default function StudentDashboardRoot() {
           </div>
           <div>
             <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white mb-2">
-              Welcome back, <span className="text-primary">{user?.firstName || user?.name?.split(' ')[0] || 'Student'}</span>!
+              Welcome back, <span className="text-primary">{(user as any)?.firstName || user?.name?.split(' ')[0] || 'Student'}</span>!
             </h2>
             <p className="text-sm text-white/70 font-light max-w-md">
               Here is an overview of your learning journey and upcoming consultations. Keep up the great work!
