@@ -42,6 +42,10 @@ export default function AdminLayout({
     { id: "reports", name: "Reports", href: "/admin/reports", icon: BarChart3 }
   ];
 
+  if (pathname === "/admin/login") {
+    return <>{children}</>;
+  }
+
   if (!authorized) {
     return (
       <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center">

@@ -167,14 +167,6 @@ export default function Navbar() {
           {/* Right Action & Account Button */}
           <div className="hidden lg:flex items-center gap-4">
             <Link
-              href="/admin"
-              className="text-sm font-medium text-black hover:text-primary transition-colors flex items-center gap-1.5"
-            >
-              <Compass className="w-4 h-4 text-primary" />
-              Admin Panel
-            </Link>
-            <span className="text-border/60">|</span>
-            <Link
               href="/book"
               className="px-5 py-2.5 rounded-xl bg-gold-gradient text-white text-sm font-semibold shadow-premium hover:shadow-premium-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2"
             >
@@ -317,18 +309,12 @@ export default function Navbar() {
                   Book Consultation
                 </Link>
 
-                <div className="grid grid-cols-2 gap-2 mt-1">
+                <div className="mt-1">
                   <Link
                     href="/dashboard"
-                    className="py-2.5 rounded-xl border border-border text-center font-medium text-navy text-xs hover:bg-[#FAF6F0] transition-colors"
+                    className="block w-full py-2.5 rounded-xl border border-border text-center font-medium text-navy text-xs hover:bg-[#FAF6F0] transition-colors"
                   >
                     Student Portal
-                  </Link>
-                  <Link
-                    href="/admin"
-                    className="py-2.5 rounded-xl border border-border text-center font-medium text-navy text-xs hover:bg-[#FAF6F0] transition-colors"
-                  >
-                    Admin Panel
                   </Link>
                 </div>
               </div>

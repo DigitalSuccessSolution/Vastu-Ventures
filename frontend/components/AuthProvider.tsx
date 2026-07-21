@@ -19,16 +19,23 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     if (isInitializing) return;
 
     // Route protection logic
-    const isDashboardRoute = pathname.startsWith("/dashboard") || pathname.startsWith("/admin");
-    const isAuthRoute = pathname.startsWith("/login") || pathname.startsWith("/register") || pathname.startsWith("/verify-otp");
+    const isAdminRoute = pathname.startsWith("/admin");
+    const isDashboardRoute = pathname.startsWith("/dashboard");
+    const isAuthRoute = pathname === "/login" || pathname.startsWith("/register") || pathname.startsWith("/verify-otp") || pathname === "/admin/login";
 
-    if (isDashboardRoute && !isAuthenticated) {
-      router.replace("/login");
-    } else if (isAuthRoute && isAuthenticated) {
+    if (!isAuthenticated) {
+      if (isAdminRoute && pathname !== "/admin/login") {
+        router.replace("/admin/login");
+      } else if (isDashboardRoute) {
+        router.replace("/login");
+      }
+    } else if (isAuthRoute) {
       const searchParams = new URLSearchParams(window.location.search);
       const redirectParam = searchParams.get("redirect");
       if (redirectParam) {
         router.replace(redirectParam);
+      } else if (pathname === "/admin/login") {
+        router.replace("/admin");
       } else {
         router.replace("/dashboard");
       }
