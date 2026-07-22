@@ -21,14 +21,17 @@ export default function DeleteConfirmModal({
   isLoading = false
 }: DeleteConfirmModalProps) {
   
-  // Disable body scroll when modal is open
+  // Disable body & html scroll when modal is open
   useEffect(() => {
     if (isOpen) {
+      document.documentElement.style.overflow = "hidden";
       document.body.style.overflow = "hidden";
     } else {
+      document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
     }
     return () => {
+      document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
     };
   }, [isOpen]);
@@ -36,8 +39,8 @@ export default function DeleteConfirmModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-navy/40 backdrop-blur-sm animate-fade-in p-4">
-      <div className="bg-white border border-border rounded-2xl w-full max-w-sm p-6 shadow-2xl flex flex-col gap-4 animate-scale-up text-left max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-navy/50 backdrop-blur-sm animate-fade-in p-4 overflow-hidden">
+      <div className="bg-white border border-border rounded-2xl w-full max-w-sm p-6 shadow-2xl flex flex-col gap-4 animate-scale-up text-left max-h-[90vh] overflow-y-auto relative z-10">
         
         {/* Warning Icon Banner */}
         <div className="flex gap-4 items-start">

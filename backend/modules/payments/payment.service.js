@@ -7,6 +7,7 @@ import Consultation from "../consultations/consultation.model.js";
 import Enrollment from "../enrollments/enrollment.model.js";
 import User from "../users/user.model.js";
 import Notification from "../notifications/notification.model.js";
+import ArchitecturePlan from "../architecture/architecturePlan.model.js";
 import { ERROR_MESSAGES } from "../../constants/errorMessages.js";
 import { sendPaymentSuccessEmail } from "../../services/emailService.js";
 import { generateInvoicePDF } from "../../services/pdfService.js";
@@ -14,7 +15,7 @@ import { uploadToCloudinary } from "../../services/cloudinaryService.js";
 import env from "../../config/env.js";
 
 export const createOrder = async (userId, data) => {
-  const { orderType, courseId, consultationId } = data;
+  const { orderType, courseId, consultationId, architecturePlanId } = data;
   let amount = 0;
   let receipt = "";
 
@@ -40,6 +41,21 @@ export const createOrder = async (userId, data) => {
 
     amount = consultation.service.price * 100; // in paise
     receipt = `rcpt_consult_${consultationId.slice(-6)}_${Date.now().toString().slice(-4)}`;
+  } else if (orderType === "architecture-plan") {
+    if (!architecturePlanId) throw new Error("Architecture Plan ID is required");
+    const plan = await ArchitecturePlan.findById(architecturePlanId);
+    if (!plan) throw new Error("Architecture plan not found");
+
+    // Check if already purchased
+    const existing = await Payment.findOne({ user: userId, architecturePlan: architecturePlanId, status: "paid" });
+    if (existing) {
+      const error = new Error("You have already purchased this architecture plan.");
+      error.statusCode = 400;
+      throw error;
+    }
+
+    amount = plan.buyPrice * 100; // in paise
+    receipt = `rcpt_arch_${architecturePlanId.slice(-6)}_${Date.now().toString().slice(-4)}`;
   }
 
   // Call Razorpay API
@@ -57,6 +73,7 @@ export const createOrder = async (userId, data) => {
     orderType,
     course: courseId || undefined,
     consultation: consultationId || undefined,
+    architecturePlan: architecturePlanId || undefined,
     amount,
     razorpayOrderId: razorpayOrder.id,
     status: "created"
@@ -183,6 +200,17 @@ const fulfillPayment = async (payment) => {
       message: `Your payment for ${consultation.service.title} was processed. View details in history.`,
       link: "/dashboard/appointments"
     });
+  } else if (payment.orderType === "architecture-plan") {
+    const plan = await ArchitecturePlan.findByIdAndUpdate(payment.architecturePlan, { $inc: { totalSales: 1 } });
+    itemName = plan.title;
+
+    await Notification.create({
+      user: payment.user,
+      type: "payment_success",
+      title: "Plan Purchased Confirmed!",
+      message: `Your payment for "${plan.title}" layout blueprint was confirmed. You can now download files!`,
+      link: `/architecture-planning/${plan.categorySlug}/${plan.slug}`
+    });
   }
 
   // Generate Invoice PDF
@@ -221,11 +249,11 @@ const fulfillPayment = async (payment) => {
 };
 
 export const getMyPayments = async (userId) => {
-  return Payment.find({ user: userId }).populate("course").populate("consultation").sort({ createdAt: -1 });
+  return Payment.find({ user: userId }).populate("course").populate("consultation").populate("architecturePlan").sort({ createdAt: -1 });
 };
 
 export const getPaymentDetail = async (userId, id) => {
-  const payment = await Payment.findOne({ _id: id, user: userId }).populate("course").populate("consultation");
+  const payment = await Payment.findOne({ _id: id, user: userId }).populate("course").populate("consultation").populate("architecturePlan");
   if (!payment) {
     const error = new Error(ERROR_MESSAGES.PAYMENT_NOT_FOUND);
     error.statusCode = 404;
@@ -246,7 +274,7 @@ export const downloadInvoice = async (userId, id) => {
 };
 
 export const getAllPaymentsAdmin = async () => {
-  return Payment.find().populate("user").populate("course").populate("consultation").sort({ createdAt: -1 });
+  return Payment.find().populate("user").populate("course").populate("consultation").populate("architecturePlan").sort({ createdAt: -1 });
 };
 
 export const refundPayment = async (id, refundReason) => {
@@ -270,3 +298,4 @@ export const refundPayment = async (id, refundReason) => {
 
   return payment;
 };
+

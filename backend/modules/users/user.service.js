@@ -70,7 +70,7 @@ export const getAppointments = async (userId) => {
 };
 
 export const getPayments = async (userId) => {
-  const payments = await Payment.find({ user: userId }).populate("course").populate("consultation");
+  const payments = await Payment.find({ user: userId }).populate("course").populate("consultation").populate("architecturePlan");
   return payments;
 };
 

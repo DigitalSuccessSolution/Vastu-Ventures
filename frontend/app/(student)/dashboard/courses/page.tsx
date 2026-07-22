@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { BookOpen, Clock, ChevronRight, Loader2 } from "lucide-react";
+import { BookOpen, ChevronRight, Loader2, PlayCircle, CheckCircle2 } from "lucide-react";
 import api from "@/lib/axios";
 
 export default function MyCoursesPage() {
@@ -14,7 +14,7 @@ export default function MyCoursesPage() {
       try {
         const { data } = await api.get("/users/purchased-courses");
         if (data.success) {
-          setCourses(data.data);
+          setCourses(data.data || []);
         }
       } catch (err) {
         console.error("Failed to fetch courses", err);
@@ -26,75 +26,112 @@ export default function MyCoursesPage() {
   }, []);
 
   if (loading) {
-    return <div className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-primary" /></div>;
+    return (
+      <div className="py-16 text-center flex flex-col items-center justify-center gap-3">
+        <Loader2 className="w-7 h-7 animate-spin text-primary" />
+        <p className="text-xs text-navy font-medium">Loading Courses...</p>
+      </div>
+    );
   }
 
+  const completedCount = courses.filter(e => (e.progressPercentage || 0) >= 100).length;
+
   return (
-    <div className="flex flex-col gap-8 text-left">
-      <div>
-        <h2 className="font-serif text-2xl font-bold text-navy">My Learning Academy</h2>
-        <p className="text-xs text-muted-foreground mt-1 font-light">
-          Access your courses, watch lesson videos, and track your certification progress.
-        </p>
+    <div className="flex flex-col w-full">
+      {/* Clean Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div>
+          <h1 className="font-serif text-2xl sm:text-3xl font-semibold text-navy">My Courses</h1>
+          <p className="text-xs sm:text-sm text-muted-foreground font-normal mt-1">
+            Access your enrolled Vastu learning modules and continue video lessons.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-4 text-xs text-navy font-medium bg-white px-4 py-2 rounded-xl border border-border/80 shrink-0">
+          <span><strong className="text-primary font-semibold">{courses.length}</strong> Enrolled</span>
+          <span>•</span>
+          <span><strong className="text-emerald-600 font-semibold">{completedCount}</strong> Completed</span>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
+      {/* Courses Grid */}
+      <div className="w-full">
         {courses.length === 0 ? (
-          <div className="col-span-2 py-12 text-center border border-dashed border-border rounded-2xl bg-white">
-            <p className="text-xs text-muted-foreground font-light">You are not enrolled in any courses yet.</p>
-            <Link href="/courses" className="text-xs text-primary font-bold hover:underline mt-2 inline-block">
+          <div className="py-16 text-center border border-dashed border-border rounded-2xl bg-white flex flex-col items-center justify-center p-8 shadow-sm">
+            <BookOpen className="w-8 h-8 text-muted-foreground/30 mb-3" />
+            <h2 className="text-sm font-semibold text-navy mb-1">No courses enrolled yet</h2>
+            <p className="text-xs text-muted-foreground font-normal mb-5 max-w-sm">
+              Discover our certified Vastu modules and start learning.
+            </p>
+            <Link
+              href="/courses"
+              className="px-5 py-2.5 rounded-xl bg-gold-gradient text-white text-xs font-semibold shadow-sm hover:opacity-95 transition-all"
+            >
               Browse Academy Courses &rarr;
             </Link>
           </div>
         ) : (
-          courses.map((enrollment: any) => {
-            const course = enrollment.course;
-            const progress = enrollment.progressPercentage || 0;
-            return (
-              <div
-                key={enrollment._id}
-                className="bg-white border border-border rounded-2xl p-5 shadow-premium flex flex-col justify-between"
-              >
-                <div>
-                  <div className="relative w-full h-40 rounded-xl overflow-hidden mb-4">
-                    <img
-                      src={course.image?.url || "https://placehold.co/600x400"}
-                      alt={course.title}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-navy/30 to-transparent" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 w-full">
+            {courses.map((enrollment: any) => {
+              const course = enrollment.course;
+              const progress = enrollment.progressPercentage || 0;
+              const isCompleted = progress >= 100;
+              return (
+                <div
+                  key={enrollment._id}
+                  className="bg-white border border-border/80 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group"
+                >
+                  <div>
+                    <div className="relative w-full h-40 rounded-xl overflow-hidden mb-3">
+                      <img
+                        src={course?.image?.url || "https://placehold.co/600x400"}
+                        alt={course?.title || "Course Title"}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-navy/50 via-navy/10 to-transparent" />
+                      
+                      <div className="absolute top-2.5 left-2.5">
+                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider uppercase shadow-sm ${
+                          isCompleted ? "bg-emerald-600 text-white" : "bg-white/90 text-navy"
+                        }`}>
+                          {isCompleted ? "Completed" : "In Progress"}
+                        </span>
+                      </div>
+                    </div>
+
+                    <h2 className="font-serif text-sm font-semibold text-navy leading-snug group-hover:text-primary transition-colors line-clamp-2">
+                      {course?.title || "Untitled Course"}
+                    </h2>
+                    
+                    {/* Progress Bar */}
+                    <div className="mt-3 pt-2.5 border-t border-border/40">
+                      <div className="flex justify-between items-center text-[10px] font-semibold mb-1">
+                        <span className="text-muted-foreground">Progress</span>
+                        <span className="text-primary">{Math.round(progress)}%</span>
+                      </div>
+                      <div className="w-full h-1.5 bg-[#FAF6F0] rounded-full overflow-hidden">
+                        <div className="h-full bg-gold-gradient rounded-full" style={{ width: `${progress}%` }} />
+                      </div>
+                    </div>
                   </div>
 
-                  <h3 className="font-serif text-base font-bold text-navy leading-snug">
-                    {course.title}
-                  </h3>
-                  
-                  {/* Progress bar */}
-                  <div className="mt-4">
-                    <div className="flex justify-between items-center text-[10px] text-muted-foreground font-semibold mb-1">
-                      <span>Progress</span>
-                      <span>{Math.round(progress)}% Completed</span>
-                    </div>
-                    <div className="w-full h-2 bg-background border border-border rounded-full overflow-hidden">
-                      <div className="h-full bg-gold-gradient" style={{ width: `${progress}%` }} />
-                    </div>
+                  <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between">
+                    <span className="text-[11px] text-muted-foreground font-normal flex items-center gap-1">
+                      <PlayCircle className="w-3.5 h-3.5 text-primary" />
+                      {isCompleted ? "Review" : "Continue"}
+                    </span>
+                    <Link
+                      href={`/courses/${course?.slug}`}
+                      className="flex items-center gap-1 text-xs font-semibold text-white bg-navy hover:bg-navy-light px-3.5 py-1.5 rounded-xl transition-all shadow-sm"
+                    >
+                      <span>{isCompleted ? "Review" : "Watch Now"}</span>
+                      <ChevronRight className="w-3 h-3 text-primary" />
+                    </Link>
                   </div>
                 </div>
-
-                <div className="mt-6 pt-4 border-t border-border flex items-center justify-between">
-                  <span className="text-[10px] text-muted-foreground font-light flex items-center gap-1">
-                    <BookOpen className="w-3 h-3" /> Resume Learning
-                  </span>
-                  <Link
-                    href={`/courses/${course.slug}`}
-                    className="flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold text-white bg-navy hover:bg-navy-light px-3 py-1.5 rounded-lg transition-all"
-                  >
-                    Watch Now <ChevronRight className="w-3 h-3" />
-                  </Link>
-                </div>
-              </div>
-            );
-          })
+              );
+            })}
+          </div>
         )}
       </div>
     </div>

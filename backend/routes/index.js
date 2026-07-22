@@ -11,6 +11,7 @@ import { publicPaymentRoutes } from "../modules/payments/payment.routes.js";
 import { publicReviewRoutes } from "../modules/reviews/review.routes.js";
 import { publicBlogRoutes, publicBlogCategoryRoutes } from "../modules/blogs/blog.routes.js";
 import { publicFaqRoutes } from "../modules/faqs/faq.routes.js";
+import { publicArchitectureRoutes, publicArchitectureCategoryRoutes } from "../modules/architecture/architecture.routes.js";
 import adminRoutes from "../modules/admin/admin.routes.js";
 
 const router = express.Router();
@@ -30,6 +31,8 @@ router.use("/reviews", publicReviewRoutes);
 router.use("/blogs", publicBlogRoutes);
 router.use("/blog-categories", publicBlogCategoryRoutes);
 router.use("/faqs", publicFaqRoutes);
+router.use("/architecture", publicArchitectureRoutes);
+router.use("/architecture-categories", publicArchitectureCategoryRoutes);
 
 // Admin aggregated endpoints
 router.use("/admin", adminRoutes);

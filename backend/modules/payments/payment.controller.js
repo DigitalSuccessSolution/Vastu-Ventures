@@ -46,3 +46,4 @@ export const refundPayment = asyncHandler(async (req, res) => {
   const refunded = await paymentService.refundPayment(id, refundReason);
   return sendResponse(res, 200, "Refund processed successfully", refunded);
 });
+

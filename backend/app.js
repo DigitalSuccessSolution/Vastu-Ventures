@@ -33,10 +33,11 @@ app.use(
 app.use(
   express.json({
     verify: webhookRawBody,
+    limit: "50mb",
   })
 );
 
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cookieParser());
 
 // Redefine req.query to be writable for Express 5 + express-mongo-sanitize compatibility

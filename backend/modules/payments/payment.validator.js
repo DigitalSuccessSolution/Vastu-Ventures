@@ -1,9 +1,10 @@
 import { z } from "zod";
 
 export const createOrderSchema = z.object({
-  orderType: z.enum(["course", "consultation"]),
+  orderType: z.enum(["course", "consultation", "architecture-plan"]),
   courseId: z.string().regex(/^[0-9a-fA-F]{24}$/).optional(),
   consultationId: z.string().regex(/^[0-9a-fA-F]{24}$/).optional(),
+  architecturePlanId: z.string().regex(/^[0-9a-fA-F]{24}$/).optional(),
 });
 
 export const verifyPaymentSchema = z.object({

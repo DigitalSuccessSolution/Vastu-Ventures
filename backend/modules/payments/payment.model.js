@@ -3,9 +3,10 @@ import mongoose from "mongoose";
 const paymentSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    orderType: { type: String, enum: ["course", "consultation"], required: true },
+    orderType: { type: String, enum: ["course", "consultation", "architecture-plan"], required: true },
     course: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },
     consultation: { type: mongoose.Schema.Types.ObjectId, ref: "Consultation" },
+    architecturePlan: { type: mongoose.Schema.Types.ObjectId, ref: "ArchitecturePlan" },
     amount: { type: Number, required: [true, "Amount is required"], min: 0 },
     currency: { type: String, default: "INR" },
     razorpayOrderId: { type: String, required: true },

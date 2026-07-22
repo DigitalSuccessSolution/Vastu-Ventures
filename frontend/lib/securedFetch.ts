@@ -37,6 +37,7 @@ export default async function securedFetch(input: RequestInfo | URL, init?: Requ
         const refreshRes = await fetch(`${apiUrl}/auth/refresh-token`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          credentials: "include", // Send HttpOnly refresh-token cookie
         });
         const refreshData = await refreshRes.json();
         

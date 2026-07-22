@@ -7,6 +7,7 @@ import { adminPaymentRoutes } from "../payments/payment.routes.js";
 import { adminReviewRoutes } from "../reviews/review.routes.js";
 import { adminBlogRoutes, adminBlogCategoryRoutes } from "../blogs/blog.routes.js";
 import { adminFaqRoutes } from "../faqs/faq.routes.js";
+import { adminArchitectureRoutes, adminArchitectureCategoryRoutes } from "../architecture/architecture.routes.js";
 import analyticsRoutes from "../analytics/analytics.routes.js";
 import isAuthenticated from "../../middlewares/authMiddleware.js";
 import authorizeRoles from "../../middlewares/authorizeRoles.js";
@@ -41,6 +42,10 @@ router.use("/blog-categories", adminBlogCategoryRoutes);
 
 // 9. FAQ Management
 router.use("/faqs", adminFaqRoutes);
+
+// 10. Architecture Management
+router.use("/architecture", adminArchitectureRoutes);
+router.use("/architecture-categories", adminArchitectureCategoryRoutes);
 
 
 // 11. Student Management

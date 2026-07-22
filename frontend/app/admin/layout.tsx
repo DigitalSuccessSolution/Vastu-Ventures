@@ -16,6 +16,7 @@ import {
   BarChart3,
   X,
   ArrowLeft,
+  PencilRuler,
   Settings,
   Bell,
   LogOut
@@ -53,6 +54,7 @@ export default function AdminLayout({
 
   const allMenuItems = [
     { id: "dashboard", name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+    { id: "architecture", name: "Architecture Management", href: "/admin/architecture", icon: PencilRuler },
     { id: "services", name: "Service Management", href: "/admin/services", icon: Wrench },
     { id: "courses", name: "Course Management", href: "/admin/courses", icon: BookOpen },
     { id: "appointments", name: "Appointment Management", href: "/admin/appointments", icon: Calendar },

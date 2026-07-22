@@ -2,18 +2,35 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Menu, X, ChevronDown, Compass, Home, Briefcase, Factory, BookOpen, Calendar, HelpCircle, Info, FileText, Monitor, UserRound, MapPin, Building2, PencilRuler } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { Menu, X, ChevronDown, Compass, Home, Briefcase, Factory, BookOpen, Calendar, HelpCircle, Info, FileText, Monitor, UserRound, MapPin, Building2, PencilRuler, LayoutDashboard, User, PlayCircle, TrendingUp, Award, CreditCard, LogOut, ChevronRight, ShieldCheck } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuthStore } from "@/lib/store";
 
+const studentMenuItems = [
+  { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Profile", href: "/dashboard/profile", icon: User },
+  { name: "My Courses", href: "/dashboard/courses", icon: BookOpen },
+  { name: "Continue Learning", href: "/dashboard/continue-learning", icon: PlayCircle },
+  { name: "Course Progress", href: "/dashboard/progress", icon: TrendingUp },
+  { name: "Certificates", href: "/dashboard/certificates", icon: Award },
+  { name: "Appointment History", href: "/dashboard/appointments", icon: Calendar },
+  { name: "Payment History", href: "/dashboard/payments", icon: CreditCard }
+];
+
 export default function Navbar() {
-  const { user } = useAuthStore();
+  const { user, logout } = useAuthStore();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const [activeMobileDropdown, setActiveMobileDropdown] = useState<string | null>(null);
   const pathname = usePathname();
+
+  const handleLogout = () => {
+    logout();
+    router.push("/login");
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,6 +71,31 @@ export default function Navbar() {
     };
   }, [isOpen]);
 
+  const [archCategories, setArchCategories] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchNavbarCategories = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+        const res = await fetch(`${apiUrl}/architecture-categories`);
+        const data = await res.json();
+        if (data.success && Array.isArray(data.data)) {
+          const formatted = data.data.map((cat: any) => ({
+            name: cat.name,
+            href: `/architecture-planning/${cat.slug}`,
+            icon: cat.name.includes("Commercial") ? Building2 : cat.name.includes("Plot") ? MapPin : cat.name.includes("Consultation") ? PencilRuler : Home,
+            desc: cat.description || "Vastu Compliant Blueprint",
+            iconColor: "text-[#3D523A]"
+          }));
+          setArchCategories(formatted);
+        }
+      } catch (err) {
+        console.error("Failed to fetch navbar architecture categories:", err);
+      }
+    };
+    fetchNavbarCategories();
+  }, []);
+
   const navLinks = [
     {
       name: "Vastu Services",
@@ -69,12 +111,7 @@ export default function Navbar() {
     {
       name: "Architecture Planning",
       trigger: "architecture",
-      items: [
-        { name: "House Planning with Vastu", href: "/architecture-planning/house-planning-with-vastu", icon: Home, desc: "Residential Layouts", iconColor: "text-[#3D523A]" },
-        { name: "Commercial Planning with Vastu", href: "/architecture-planning/commercial-planning-with-vastu", icon: Building2, desc: "Commercial & Office Spaces", iconColor: "text-[#3D523A]" },
-        { name: "Plot Planning & Analysis", href: "/architecture-planning/plot-planning-analysis", icon: MapPin, desc: "Site & Plot Evaluation", iconColor: "text-[#3D523A]" },
-        { name: "Architecture Consultation", href: "/architecture-planning/architecture-consultation", icon: PencilRuler, desc: "Expert Architecture Guidance", iconColor: "text-[#3D523A]" }
-      ]
+      items: archCategories
     }
   ];
 
@@ -206,24 +243,120 @@ export default function Navbar() {
               <Calendar className="w-4 h-4" />
               Book Consultation
             </Link>
-            {(() => {
-              const isStudent = Boolean(user && user.role === "student");
-              return (
-                <Link
-                  href={isStudent ? "/dashboard" : "/login"}
-                  title={isStudent ? "Student Portal" : "Student Login"}
-                  className="w-10 h-10 rounded-full border border-[#EDE3D0]/60 bg-white hover:bg-[#FAF6F0]/30 text-navy hover:text-[#E28A3E] flex items-center justify-center transition-all shadow-sm hover:scale-[1.05] overflow-hidden"
+
+            {/* Profile Dropdown */}
+            {user ? (
+              <div
+                className="relative"
+                onMouseEnter={() => setActiveDropdown("profile")}
+                onMouseLeave={() => setActiveDropdown(null)}
+              >
+                <button
+                  type="button"
+                  onClick={() => setActiveDropdown(activeDropdown === "profile" ? null : "profile")}
+                  className="flex items-center gap-2 p-1 rounded-full border border-[#EDE3D0] bg-white hover:bg-[#FAF6F0] transition-all shadow-sm cursor-pointer group"
                 >
-                  {isStudent && user?.avatar?.url ? (
-                    <img src={user.avatar.url} alt={user.name} className="w-full h-full object-cover" />
-                  ) : isStudent && user?.name ? (
-                    <span className="font-bold text-lg">{user.name.charAt(0).toUpperCase()}</span>
-                  ) : (
-                    <UserRound className="w-5 h-5" />
+                  <div className="w-8 h-8 rounded-full bg-navy text-white font-bold flex items-center justify-center text-xs overflow-hidden border border-primary/40 shrink-0">
+                    {user?.avatar?.url ? (
+                      <img src={user.avatar.url} alt={user.name || "User"} className="w-full h-full object-cover" />
+                    ) : (
+                      <span>{(user?.name || user?.email || "U").charAt(0).toUpperCase()}</span>
+                    )}
+                  </div>
+                  <ChevronDown className={`w-3.5 h-3.5 text-navy pr-0.5 transition-transform duration-200 ${activeDropdown === "profile" ? "rotate-180" : ""}`} />
+                </button>
+
+                <AnimatePresence>
+                  {activeDropdown === "profile" && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 mt-2 w-72 rounded-2xl bg-white border border-border p-3 shadow-premium-lg z-50 overflow-hidden"
+                    >
+                      {/* User Header */}
+                      <div className="p-3 bg-[#FAF6F0] rounded-xl mb-2 flex items-center gap-3 border border-[#EDE3D0]/60">
+                        <div className="w-10 h-10 rounded-full bg-navy text-white font-bold flex items-center justify-center text-sm overflow-hidden border-2 border-primary shrink-0 shadow-sm">
+                          {user?.avatar?.url ? (
+                            <img src={user.avatar.url} alt={user.name || "User"} className="w-full h-full object-cover" />
+                          ) : (
+                            <span>{(user?.name || user?.email || "U").charAt(0).toUpperCase()}</span>
+                          )}
+                        </div>
+                        <div className="overflow-hidden text-left">
+                          <h4 className="text-xs font-bold text-navy truncate leading-tight">{user?.name || "Student"}</h4>
+                          <p className="text-[11px] text-muted-foreground truncate mt-0.5">{user?.email}</p>
+                          <span className="inline-block mt-1 px-2 py-0.5 bg-primary/10 text-primary text-[9px] font-bold rounded-full uppercase tracking-wider">
+                            {user?.role === "admin" ? "Admin Portal" : "Student Portal"}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Navigation Items */}
+                      <div className="flex flex-col gap-0.5">
+                        {user?.role === "admin" ? (
+                          <Link
+                            href="/admin"
+                            onClick={() => setActiveDropdown(null)}
+                            className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-[#FAF6F0] text-navy text-xs font-semibold transition-all group"
+                          >
+                            <ShieldCheck className="w-4 h-4 text-primary group-hover:scale-110 transition-transform" />
+                            <span>Admin Dashboard</span>
+                          </Link>
+                        ) : (
+                          studentMenuItems.map((item) => {
+                            const Icon = item.icon;
+                            const isActive = pathname === item.href;
+                            return (
+                              <Link
+                                key={item.href}
+                                href={item.href}
+                                onClick={() => setActiveDropdown(null)}
+                                className={`flex items-center justify-between px-3 py-2 rounded-xl transition-all text-xs font-semibold ${
+                                  isActive 
+                                    ? "bg-primary text-white shadow-sm" 
+                                    : "text-navy hover:bg-[#FAF6F0] hover:text-primary"
+                                }`}
+                              >
+                                <div className="flex items-center gap-2.5">
+                                  <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-navy-light"}`} />
+                                  <span>{item.name}</span>
+                                </div>
+                                <ChevronRight className={`w-3.5 h-3.5 opacity-60 ${isActive ? "text-white" : "text-navy-light"}`} />
+                              </Link>
+                            );
+                          })
+                        )}
+                      </div>
+
+                      <div className="my-2 border-t border-border/80" />
+
+                      {/* Log Out */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setActiveDropdown(null);
+                          handleLogout();
+                        }}
+                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-red-600 hover:bg-red-50 transition-colors cursor-pointer text-left"
+                      >
+                        <LogOut className="w-4 h-4 text-red-600" />
+                        <span>Log Out</span>
+                      </button>
+                    </motion.div>
                   )}
-                </Link>
-              );
-            })()}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                className="px-4 py-2.5 rounded-xl border border-border bg-white text-navy text-xs font-semibold shadow-sm hover:bg-[#FAF6F0] transition-all flex items-center gap-1.5"
+              >
+                <UserRound className="w-4 h-4" />
+                Student Login
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -237,7 +370,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Dropdown Menu (Slides down from header, full screen width) */}
+      {/* Mobile Dropdown Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -248,20 +381,18 @@ export default function Navbar() {
             className="lg:hidden fixed left-0 right-0 top-full bottom-0 bg-[#FDFBF7] border-t border-border z-40 overflow-y-auto"
           >
             <div className="px-6 py-8 flex flex-col justify-between min-h-[calc(100vh-80px)]">
-              {/* Menu Navigation Links (Single clean list matching desktop) */}
+              {/* Menu Navigation Links */}
               <nav className="flex flex-col gap-5.5 text-left">
                 <Link
                   href="/"
-                  className={`text-base font-semibold transition-all ${pathname === "/" ? "text-[#E28A3E]" : "text-navy"
-                    }`}
+                  className={`text-base font-semibold transition-all ${pathname === "/" ? "text-[#E28A3E]" : "text-navy"}`}
                 >
                   Home
                 </Link>
 
                 <Link
                   href="/about"
-                  className={`text-base font-semibold transition-all ${pathname === "/about" ? "text-[#E28A3E]" : "text-navy"
-                    }`}
+                  className={`text-base font-semibold transition-all ${pathname === "/about" ? "text-[#E28A3E]" : "text-navy"}`}
                 >
                   About Us
                 </Link>
@@ -277,8 +408,7 @@ export default function Navbar() {
                       >
                         <span>{dropdown.name}</span>
                         <ChevronDown
-                          className={`w-4.5 h-4.5 text-muted-foreground transition-transform duration-300 ${isMobileOpen ? "rotate-180" : ""
-                            }`}
+                          className={`w-4.5 h-4.5 text-muted-foreground transition-transform duration-300 ${isMobileOpen ? "rotate-180" : ""}`}
                         />
                       </button>
 
@@ -297,8 +427,7 @@ export default function Navbar() {
                                 <Link
                                   key={item.name}
                                   href={item.href}
-                                  className={`text-sm transition-all ${isActive ? "text-[#E28A3E] font-bold" : "text-navy-light font-medium hover:text-[#E28A3E]"
-                                    }`}
+                                  className={`text-sm transition-all ${isActive ? "text-[#E28A3E] font-bold" : "text-navy-light font-medium hover:text-[#E28A3E]"}`}
                                 >
                                   {item.name}
                                 </Link>
@@ -313,27 +442,50 @@ export default function Navbar() {
 
                 <Link
                   href="/courses"
-                  className={`text-base font-semibold transition-all ${pathname === "/courses" ? "text-[#E28A3E]" : "text-navy"
-                    }`}
+                  className={`text-base font-semibold transition-all ${pathname === "/courses" ? "text-[#E28A3E]" : "text-navy"}`}
                 >
                   Courses
                 </Link>
 
                 <Link
                   href="/blogs"
-                  className={`text-base font-semibold transition-all ${pathname === "/blogs" ? "text-[#E28A3E]" : "text-navy"
-                    }`}
+                  className={`text-base font-semibold transition-all ${pathname === "/blogs" ? "text-[#E28A3E]" : "text-navy"}`}
                 >
                   Blog
                 </Link>
 
                 <Link
                   href="/contact"
-                  className={`text-base font-semibold transition-all ${pathname === "/contact" ? "text-[#E28A3E]" : "text-navy"
-                    }`}
+                  className={`text-base font-semibold transition-all ${pathname === "/contact" ? "text-[#E28A3E]" : "text-navy"}`}
                 >
                   Contact Us
                 </Link>
+
+                {/* Logged-in Student Account Section in Mobile Menu */}
+                {user && user.role === "student" && (
+                  <div className="pt-4 border-t border-border flex flex-col gap-3">
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Student Portal</p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {studentMenuItems.map((item) => {
+                        const Icon = item.icon;
+                        const isActive = pathname === item.href;
+                        return (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            onClick={() => setIsOpen(false)}
+                            className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs font-semibold transition-all ${
+                              isActive ? "bg-primary text-white border-primary" : "bg-white text-navy border-border hover:bg-[#FAF6F0]"
+                            }`}
+                          >
+                            <Icon className="w-3.5 h-3.5" />
+                            <span className="truncate">{item.name}</span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </nav>
 
               {/* Drawer Footer Actions */}
@@ -346,17 +498,25 @@ export default function Navbar() {
                 </Link>
 
                 <div className="mt-1">
-                  {(() => {
-                    const isStudent = Boolean(user && user.role === "student");
-                    return (
-                      <Link
-                        href={isStudent ? "/dashboard" : "/login"}
-                        className="block w-full py-2.5 rounded-xl border border-border text-center font-medium text-navy text-xs hover:bg-[#FAF6F0] transition-colors"
-                      >
-                        {isStudent ? "Student Portal" : "Student Login"}
-                      </Link>
-                    );
-                  })()}
+                  {user ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsOpen(false);
+                        handleLogout();
+                      }}
+                      className="w-full py-2.5 rounded-xl border border-red-200 bg-red-50 text-center font-bold text-red-600 text-xs hover:bg-red-100 transition-colors flex items-center justify-center gap-2"
+                    >
+                      <LogOut className="w-4 h-4" /> Log Out ({user.name || user.email})
+                    </button>
+                  ) : (
+                    <Link
+                      href="/login"
+                      className="block w-full py-2.5 rounded-xl border border-border text-center font-medium text-navy text-xs hover:bg-[#FAF6F0] transition-colors"
+                    >
+                      Student Login
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
