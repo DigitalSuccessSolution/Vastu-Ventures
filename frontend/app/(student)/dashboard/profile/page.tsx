@@ -51,8 +51,12 @@ export default function ProfileSettingsPage() {
         setFetching(false);
       }
     };
-    fetchProfile();
-  }, [reset, updateUser]);
+    if (user && user.role === "student") {
+      fetchProfile();
+    } else {
+      setFetching(false);
+    }
+  }, [user, reset, updateUser]);
 
   const onSubmit = async (data: FormData) => {
     setLoading(true);

@@ -35,10 +35,14 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
       const currentUser = useAuthStore.getState().user;
       if (redirectParam) {
         router.replace(redirectParam);
-      } else if (currentUser && currentUser.role === "admin") {
-        router.replace("/admin");
-      } else {
-        router.replace("/dashboard");
+      } else if (pathname === "/admin/login") {
+        if (currentUser && currentUser.role === "admin") {
+          router.replace("/admin");
+        }
+      } else if (pathname === "/login" || pathname.startsWith("/register")) {
+        if (currentUser && currentUser.role === "student") {
+          router.replace("/dashboard");
+        }
       }
     }
   }, [isInitializing, isAuthenticated, pathname, router]);

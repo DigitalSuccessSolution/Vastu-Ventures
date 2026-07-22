@@ -126,7 +126,7 @@ export const markNotificationRead = async (userId, notificationId) => {
   const notification = await Notification.findOneAndUpdate(
     { _id: notificationId, user: userId },
     { $set: { isRead: true } },
-    { new: true }
+    { returnDocument: "after" }
   );
   if (!notification) {
     const error = new Error(ERROR_MESSAGES.NOT_FOUND);

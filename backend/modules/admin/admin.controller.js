@@ -40,7 +40,7 @@ export const toggleBlockStatus = asyncHandler(async (req, res) => {
   const student = await User.findOneAndUpdate(
     { _id: id, role: "student" },
     { $set: { isBlocked: block } },
-    { new: true }
+    { returnDocument: "after" }
   );
 
   if (!student) {

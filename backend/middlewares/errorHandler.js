@@ -7,7 +7,11 @@ import env from "../config/env.js";
 const errorHandler = (err, req, res, _next) => {
   let statusCode = err.statusCode || 500;
   
-  console.error("Backend Error:", err);
+  if (statusCode >= 500) {
+    console.error("Backend Error:", err);
+  } else {
+    console.warn(`[${statusCode}] ${err.message}`);
+  }
 
   // Extract Razorpay error message if present
   let message = err.message || "Internal Server Error";

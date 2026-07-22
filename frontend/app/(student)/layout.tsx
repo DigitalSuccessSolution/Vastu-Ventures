@@ -41,10 +41,8 @@ export default function StudentLayout({
     const userStr = typeof window !== "undefined" ? localStorage.getItem("user") : null;
     const currentUser = user || (userStr ? JSON.parse(userStr) : null);
 
-    if (!token) {
+    if (!token || !currentUser || currentUser.role !== "student") {
       router.replace("/login");
-    } else if (currentUser && currentUser.role === "admin") {
-      router.replace("/admin");
     } else {
       setCheckingAuth(false);
     }

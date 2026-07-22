@@ -25,16 +25,16 @@ export default function StudentDashboardRoot() {
   useEffect(() => {
     const fetchOverviewData = async () => {
       try {
-        const [coursesRes, appointmentsRes] = await Promise.all([
+        const [coursesRes, appointmentsRes] = await Promise.allSettled([
           api.get("/users/purchased-courses"),
           api.get("/users/appointments")
         ]);
         
-        if (coursesRes.data.success) {
-          setCourses(coursesRes.data.data);
+        if (coursesRes.status === "fulfilled" && coursesRes.value.data?.success) {
+          setCourses(coursesRes.value.data.data || []);
         }
-        if (appointmentsRes.data.success) {
-          setAppointments(appointmentsRes.data.data);
+        if (appointmentsRes.status === "fulfilled" && appointmentsRes.value.data?.success) {
+          setAppointments(appointmentsRes.value.data.data || []);
         }
       } catch (err) {
         console.error("Failed to fetch dashboard overview data", err);
@@ -43,8 +43,10 @@ export default function StudentDashboardRoot() {
       }
     };
     
-    if (user) {
+    if (user && user.role === "student") {
       fetchOverviewData();
+    } else {
+      setLoading(false);
     }
   }, [user]);
 
