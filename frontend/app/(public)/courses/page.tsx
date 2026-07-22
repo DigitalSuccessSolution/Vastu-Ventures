@@ -48,16 +48,29 @@ export default function CoursesPage() {
   const filteredCourses = selectedCategory === "all"
     ? courses
     : courses.filter(course => {
-        const catId = course.category?._id || course.category;
-        return catId === selectedCategory || course.category?.name === selectedCategory;
+        if (!course) return false;
+        const cat = course.category;
+        if (!cat) return false;
+
+        const catId = typeof cat === "object" ? String(cat._id || cat.id || "") : String(cat);
+        const catName = typeof cat === "object" ? String(cat.name || "").toLowerCase() : String(cat).toLowerCase();
+        const catSlug = typeof cat === "object" ? String(cat.slug || "").toLowerCase() : String(cat).toLowerCase();
+        
+        const selectedStr = String(selectedCategory).toLowerCase();
+
+        return (
+          catId === selectedCategory ||
+          catName === selectedStr ||
+          catSlug === selectedStr
+        );
       });
 
   const fadeUpVariants = {
-    hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 40 },
+    hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 20 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 1.2, ease: premiumEase }
+      transition: { duration: 0.5, ease: premiumEase }
     }
   };
 
@@ -135,13 +148,13 @@ export default function CoursesPage() {
             ) : (
               /* Course Grid - 3 Columns on desktop for smaller, compact cards */
               <motion.div 
+                key={selectedCategory}
                 initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-100px" }}
+                animate="visible"
                 variants={{
                   visible: {
                     transition: {
-                      staggerChildren: 0.1
+                      staggerChildren: 0.08
                     }
                   }
                 }}

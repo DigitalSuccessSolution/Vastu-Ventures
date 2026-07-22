@@ -79,14 +79,14 @@ export default function StudentDashboardRoot() {
         <div className="relative z-10 flex items-center gap-6 text-center sm:text-left">
           <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-primary/40 shadow-premium">
             <img 
-              src={user?.avatar?.url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || "Student")}&background=E28A3E&color=fff`} 
-              alt={user?.name || "Student"}
+              src={user?.avatar?.url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || user?.email || "User")}&background=E28A3E&color=fff`} 
+              alt={user?.name || "User"}
               className="w-full h-full object-cover"
             />
           </div>
           <div>
             <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white mb-2">
-              Welcome back, <span className="text-primary">{(user as any)?.firstName || user?.name?.split(' ')[0] || 'Student'}</span>!
+              Welcome back, <span className="text-primary">{(user as any)?.firstName || user?.name?.split(' ')[0] || user?.email?.split('@')[0] || 'User'}</span>!
             </h2>
             <p className="text-sm text-white/70 font-light max-w-md">
               Here is an overview of your learning journey and upcoming consultations. Keep up the great work!

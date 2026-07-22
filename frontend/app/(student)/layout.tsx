@@ -39,14 +39,22 @@ export default function StudentLayout({
   React.useEffect(() => {
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
     const userStr = typeof window !== "undefined" ? localStorage.getItem("user") : null;
-    const currentUser = user || (userStr ? JSON.parse(userStr) : null);
+    let currentUser = user;
+    if (!currentUser && userStr) {
+      try {
+        currentUser = JSON.parse(userStr);
+      } catch (e) {
+        currentUser = null;
+      }
+    }
 
     if (!token || !currentUser || currentUser.role !== "student") {
+      logout();
       router.replace("/login");
     } else {
       setCheckingAuth(false);
     }
-  }, [user, isAuthenticated, router]);
+  }, [user, isAuthenticated, router, logout]);
 
   const handleLogout = async () => {
     try {
@@ -232,13 +240,13 @@ export default function StudentLayout({
             <Link href="/dashboard/profile" className="flex items-center gap-2 group">
               <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-border group-hover:border-primary transition-colors">
                 <img
-                  src={user?.avatar?.url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || "Student")}`}
-                  alt={user?.name || "Student"}
+                  src={user?.avatar?.url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || user?.email || "User")}`}
+                  alt={user?.name || "User"}
                   className="w-full h-full object-cover"
                 />
               </div>
               <span className="hidden sm:inline text-xs font-semibold text-navy group-hover:text-primary transition-colors">
-                {user?.name || "Student"}
+                {user?.name || user?.email?.split('@')[0] || "User"}
               </span>
             </Link>
           </div>

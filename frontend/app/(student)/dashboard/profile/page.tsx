@@ -126,14 +126,14 @@ export default function ProfileSettingsPage() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-8 pb-6 border-b border-border/60">
           <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-primary/20 shadow-premium flex-shrink-0">
             <img
-              src={user?.avatar?.url || "https://ui-avatars.com/api/?name=" + (user?.name || "Student")}
-              alt={user?.name || "Student"}
+              src={user?.avatar?.url || "https://ui-avatars.com/api/?name=" + encodeURIComponent(user?.name || user?.email || "User")}
+              alt={user?.name || "User"}
               className="w-full h-full object-cover"
             />
           </div>
           <div>
-            <h4 className="text-sm font-semibold text-navy">{user?.name || "Student"}</h4>
-            <span className="text-[10px] text-muted-foreground font-light capitalize">{user?.role || "Student"}</span>
+            <h4 className="text-sm font-semibold text-navy">{user?.name || user?.email || "User"}</h4>
+            <span className="text-[10px] text-muted-foreground font-light capitalize">{user?.role || "student"}</span>
             <input
               type="file"
               accept="image/*"

@@ -99,17 +99,15 @@ export default function Navbar() {
             <nav className="hidden lg:flex items-center gap-6">
               <Link
                 href="/"
-                className={`text-sm font-medium transition-colors ${
-                  pathname === "/" ? "text-primary" : "text-black hover:text-primary"
-                }`}
+                className={`text-sm font-medium transition-colors ${pathname === "/" ? "text-primary" : "text-black hover:text-primary"
+                  }`}
               >
                 Home
               </Link>
               <Link
                 href="/about"
-                className={`text-sm font-medium transition-colors ${
-                  pathname === "/about" ? "text-primary" : "text-black hover:text-primary"
-                }`}
+                className={`text-sm font-medium transition-colors ${pathname === "/about" ? "text-primary" : "text-black hover:text-primary"
+                  }`}
               >
                 About Us
               </Link>
@@ -125,9 +123,8 @@ export default function Navbar() {
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
                     <button
-                      className={`flex items-center gap-1.5 py-2 text-sm font-medium transition-colors cursor-pointer ${
-                        isDropdownActive ? "text-primary" : "text-black hover:text-primary"
-                      }`}
+                      className={`flex items-center gap-1.5 py-2 text-sm font-medium transition-colors cursor-pointer ${isDropdownActive ? "text-primary" : "text-black hover:text-primary"
+                        }`}
                     >
                       {dropdown.name}
                       <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${activeDropdown === dropdown.trigger ? "rotate-180" : ""}`} />
@@ -157,9 +154,8 @@ export default function Navbar() {
                                     <IconComponent className="w-6 h-6" strokeWidth={1.5} />
                                   </div>
                                   <div className="text-left">
-                                    <h4 className={`text-sm font-semibold group-hover/item:text-primary transition-colors leading-none ${
-                                      isItemActive ? "text-primary" : "text-black"
-                                    }`}>
+                                    <h4 className={`text-sm font-semibold group-hover/item:text-primary transition-colors leading-none ${isItemActive ? "text-primary" : "text-black"
+                                      }`}>
                                       {item.name}
                                     </h4>
                                     <p className="text-xs text-muted-foreground mt-1.5 font-light">
@@ -179,9 +175,8 @@ export default function Navbar() {
 
               <Link
                 href="/courses"
-                className={`text-sm font-medium transition-colors ${
-                  pathname === "/courses" ? "text-primary" : "text-black hover:text-primary"
-                }`}
+                className={`text-sm font-medium transition-colors ${pathname === "/courses" ? "text-primary" : "text-black hover:text-primary"
+                  }`}
               >
                 Courses
               </Link>
@@ -192,9 +187,8 @@ export default function Navbar() {
                   <Link
                     key={link.name}
                     href={link.href}
-                    className={`text-sm font-medium transition-colors ${
-                      isLinkActive ? "text-primary" : "text-black hover:text-primary"
-                    }`}
+                    className={`text-sm font-medium transition-colors ${isLinkActive ? "text-primary" : "text-black hover:text-primary"
+                      }`}
                   >
                     {link.name}
                   </Link>
@@ -258,18 +252,16 @@ export default function Navbar() {
               <nav className="flex flex-col gap-5.5 text-left">
                 <Link
                   href="/"
-                  className={`text-base font-semibold transition-all ${
-                    pathname === "/" ? "text-[#E28A3E]" : "text-navy"
-                  }`}
+                  className={`text-base font-semibold transition-all ${pathname === "/" ? "text-[#E28A3E]" : "text-navy"
+                    }`}
                 >
                   Home
                 </Link>
 
                 <Link
                   href="/about"
-                  className={`text-base font-semibold transition-all ${
-                    pathname === "/about" ? "text-[#E28A3E]" : "text-navy"
-                  }`}
+                  className={`text-base font-semibold transition-all ${pathname === "/about" ? "text-[#E28A3E]" : "text-navy"
+                    }`}
                 >
                   About Us
                 </Link>
@@ -285,9 +277,8 @@ export default function Navbar() {
                       >
                         <span>{dropdown.name}</span>
                         <ChevronDown
-                          className={`w-4.5 h-4.5 text-muted-foreground transition-transform duration-300 ${
-                            isMobileOpen ? "rotate-180" : ""
-                          }`}
+                          className={`w-4.5 h-4.5 text-muted-foreground transition-transform duration-300 ${isMobileOpen ? "rotate-180" : ""
+                            }`}
                         />
                       </button>
 
@@ -306,9 +297,8 @@ export default function Navbar() {
                                 <Link
                                   key={item.name}
                                   href={item.href}
-                                  className={`text-sm transition-all ${
-                                    isActive ? "text-[#E28A3E] font-bold" : "text-navy-light font-medium hover:text-[#E28A3E]"
-                                  }`}
+                                  className={`text-sm transition-all ${isActive ? "text-[#E28A3E] font-bold" : "text-navy-light font-medium hover:text-[#E28A3E]"
+                                    }`}
                                 >
                                   {item.name}
                                 </Link>
@@ -323,27 +313,24 @@ export default function Navbar() {
 
                 <Link
                   href="/courses"
-                  className={`text-base font-semibold transition-all ${
-                    pathname === "/courses" ? "text-[#E28A3E]" : "text-navy"
-                  }`}
+                  className={`text-base font-semibold transition-all ${pathname === "/courses" ? "text-[#E28A3E]" : "text-navy"
+                    }`}
                 >
                   Courses
                 </Link>
 
                 <Link
                   href="/blogs"
-                  className={`text-base font-semibold transition-all ${
-                    pathname === "/blogs" ? "text-[#E28A3E]" : "text-navy"
-                  }`}
+                  className={`text-base font-semibold transition-all ${pathname === "/blogs" ? "text-[#E28A3E]" : "text-navy"
+                    }`}
                 >
                   Blog
                 </Link>
 
                 <Link
                   href="/contact"
-                  className={`text-base font-semibold transition-all ${
-                    pathname === "/contact" ? "text-[#E28A3E]" : "text-navy"
-                  }`}
+                  className={`text-base font-semibold transition-all ${pathname === "/contact" ? "text-[#E28A3E]" : "text-navy"
+                    }`}
                 >
                   Contact Us
                 </Link>
