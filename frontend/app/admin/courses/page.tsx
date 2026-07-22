@@ -21,6 +21,7 @@ import { TableHeader } from "@tiptap/extension-table-header";
 import { TableCell } from "@tiptap/extension-table-cell";
 import { motion, AnimatePresence } from "framer-motion";
 import DeleteConfirmModal from "@/components/DeleteConfirmModal";
+import securedFetch from "@/lib/securedFetch";
 
 interface CurriculumItem {
   id: string;
@@ -148,7 +149,7 @@ export default function AdminCoursesPage() {
   // Fetch courses from backend API
   const fetchCourses = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/courses/admin/list`);
+      const res = await securedFetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/admin/courses`);
       const data = await res.json();
       if (data.success) {
         setCourses(data.data);
@@ -160,7 +161,7 @@ export default function AdminCoursesPage() {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/courses/admin/categories/list`);
+      const res = await securedFetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/admin/course-categories`);
       const data = await res.json();
       if (data.success) {
         setCategories(data.data);
@@ -179,7 +180,7 @@ export default function AdminCoursesPage() {
   const handleCreateCategory = async () => {
     if (!newCategoryName.trim()) return;
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/courses/admin/categories/create`, {
+      const res = await securedFetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/admin/course-categories`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: newCategoryName.trim(), description: `${newCategoryName.trim()} category` })
@@ -250,7 +251,7 @@ export default function AdminCoursesPage() {
     setDeleteModal(prev => ({ ...prev, isLoading: true, error: null }));
     try {
       if (type === "course") {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/courses/admin/${id}`, {
+        const res = await securedFetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/admin/courses/${id}`, {
           method: "DELETE"
         });
         const data = await res.json();
@@ -261,7 +262,7 @@ export default function AdminCoursesPage() {
           setDeleteModal(prev => ({ ...prev, error: data.message, isLoading: false }));
         }
       } else if (type === "category") {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/courses/admin/categories/${id}`, {
+        const res = await securedFetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/admin/course-categories/${id}`, {
           method: "DELETE"
         });
         const data = await res.json();
@@ -397,7 +398,7 @@ export default function AdminCoursesPage() {
       try {
         const formData = new FormData();
         formData.append("file", file);
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/courses/admin/upload`, {
+        const res = await securedFetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/admin/courses/upload`, {
           method: "POST",
           body: formData
         });
@@ -483,7 +484,7 @@ export default function AdminCoursesPage() {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/courses/admin/upload`, {
+      const res = await securedFetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/admin/courses/upload`, {
         method: "POST",
         body: formData
       });
@@ -550,13 +551,13 @@ export default function AdminCoursesPage() {
     try {
       let res;
       if (courseModal.mode === "add") {
-        res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/courses/admin/create`, {
+        res = await securedFetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/admin/courses`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         });
       } else {
-        res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/courses/admin/${courseModal.id}`, {
+        res = await securedFetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/admin/courses/${courseModal.id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
@@ -947,7 +948,7 @@ export default function AdminCoursesPage() {
                           const formData = new FormData();
                           formData.append("file", file);
                           try {
-                            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/courses/admin/upload`, {
+                            const res = await securedFetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/admin/courses/upload`, {
                               method: "POST",
                               body: formData
                             });

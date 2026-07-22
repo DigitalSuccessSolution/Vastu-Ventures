@@ -172,7 +172,7 @@ export default function ArchitecturePlanningPage({ params }: { params: Promise<{
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={staggerContainer}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 gap-y-10 lg:px-12"
+          className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 gap-y-6 md:gap-y-10 lg:px-12"
         >
           {data.cards.map((card: any, idx: number) => (
             <motion.div 
@@ -181,7 +181,7 @@ export default function ArchitecturePlanningPage({ params }: { params: Promise<{
               className="group rounded-2xl overflow-hidden flex flex-col bg-white border border-[#EBEBEB] shadow-sm hover:shadow-xl transition-all duration-300"
             >
               {/* Card Image */}
-              <div className="relative h-48 w-full overflow-hidden">
+              <div className="relative h-32 sm:h-48 w-full overflow-hidden">
                 <img 
                   src={card.image} 
                   alt={card.title} 
@@ -190,24 +190,24 @@ export default function ArchitecturePlanningPage({ params }: { params: Promise<{
               </div>
 
               {/* Card Content */}
-              <div className="pt-6 pb-6 px-5 flex flex-col flex-grow text-center items-center bg-[#FCFCFA]">
-                <h3 className="font-serif text-lg font-bold text-navy mb-2">
+              <div className="pt-4 pb-4 px-2.5 sm:pt-6 sm:pb-6 sm:px-5 flex flex-col flex-grow text-center items-center bg-[#FCFCFA]">
+                <h3 className="font-serif text-sm sm:text-lg font-bold text-navy mb-1 sm:mb-2 line-clamp-1 sm:line-clamp-none">
                   {card.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-navy/70 mb-4 leading-relaxed max-w-xs">
+                <p className="text-[10px] sm:text-sm text-navy/70 mb-3 sm:mb-4 leading-relaxed max-w-xs line-clamp-2 sm:line-clamp-none">
                   {card.desc}
                 </p>
                 
-                <div className="text-[#B58B54] font-bold text-lg mb-6">
+                <div className="text-[#B58B54] font-bold text-sm sm:text-lg mb-3 sm:mb-6">
                   {card.price || "₹4,999"}
                 </div>
                 
                 <div className="mt-auto flex w-full">
                   <Link 
                     href="/book" 
-                    className="w-full py-2.5 px-4 bg-[#B58B54] hover:bg-[#A37946] text-white text-sm font-semibold rounded-full text-center transition-colors shadow-sm flex items-center justify-center gap-1 group/btn2"
+                    className="w-full py-1.5 sm:py-2.5 px-2 sm:px-4 bg-[#B58B54] hover:bg-[#A37946] text-white text-[10px] sm:text-sm font-semibold rounded-full text-center transition-colors shadow-sm flex items-center justify-center gap-1 group/btn2"
                   >
-                    Book Consultation <ArrowRight className="w-4 h-4" />
+                    Consult <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4" />
                   </Link>
                 </div>
               </div>

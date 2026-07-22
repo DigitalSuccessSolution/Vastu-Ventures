@@ -14,10 +14,16 @@ const app = express();
 // Security HTTP headers
 app.use(helmet());
 
-// CORS configuration
+const allowedOrigins = [
+  env.FRONTEND_URL,
+  "http://localhost:3000",
+  "https://vastuventures.in",
+  "https://www.vastuventures.in"
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: env.FRONTEND_URL,
+    origin: allowedOrigins,
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   })

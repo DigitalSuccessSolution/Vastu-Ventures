@@ -9,17 +9,21 @@ const connectDB = async () => {
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
 
     // 1. Seed default admin user if none exists
-    const adminExists = await User.findOne({ email: "admin@vastuventures.com" });
-    if (!adminExists) {
+    let admin = await User.findOne({ email: "admin@vastuventures.com" });
+    if (!admin) {
       await User.create({
-        firstName: "Root",
-        lastName: "Admin",
+        firstName: "Admin",
+        lastName: "User",
         email: "admin@vastuventures.com",
         password: "adminpassword", // Will be hashed by userSchema.pre('save')
         role: "admin",
         isEmailVerified: true
       });
       console.log("👤 Default admin user seeded: admin@vastuventures.com / adminpassword");
+    } else if (admin.firstName === "Root" && admin.lastName === "Admin") {
+      admin.firstName = "Admin";
+      admin.lastName = "User";
+      await admin.save();
     }
 
 

@@ -70,10 +70,10 @@ export default function Navbar() {
       name: "Architecture Planning",
       trigger: "architecture",
       items: [
-        { name: "House Planning with Vastu", href: "/architecture-planning/house-planning-with-vastu", icon: Home, desc: "Residential Layouts", iconColor: "text-[#E28A3E]" },
-        { name: "Commercial Planning with Vastu", href: "/architecture-planning/commercial-planning-with-vastu", icon: Building2, desc: "Commercial & Office Spaces", iconColor: "text-[#E28A3E]" },
-        { name: "Plot Planning & Analysis", href: "/architecture-planning/plot-planning-analysis", icon: MapPin, desc: "Site & Plot Evaluation", iconColor: "text-[#E28A3E]" },
-        { name: "Architecture Consultation", href: "/architecture-planning/architecture-consultation", icon: PencilRuler, desc: "Expert Architecture Guidance", iconColor: "text-[#E28A3E]" }
+        { name: "House Planning with Vastu", href: "/architecture-planning/house-planning-with-vastu", icon: Home, desc: "Residential Layouts", iconColor: "text-[#3D523A]" },
+        { name: "Commercial Planning with Vastu", href: "/architecture-planning/commercial-planning-with-vastu", icon: Building2, desc: "Commercial & Office Spaces", iconColor: "text-[#3D523A]" },
+        { name: "Plot Planning & Analysis", href: "/architecture-planning/plot-planning-analysis", icon: MapPin, desc: "Site & Plot Evaluation", iconColor: "text-[#3D523A]" },
+        { name: "Architecture Consultation", href: "/architecture-planning/architecture-consultation", icon: PencilRuler, desc: "Expert Architecture Guidance", iconColor: "text-[#3D523A]" }
       ]
     }
   ];
@@ -89,94 +89,119 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-50">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group h-16 relative w-48 shrink-0">
-            <img src="/logo.png" alt="Vastu Ventures Logo" className="h-20 max-h-[72px] w-auto object-contain absolute left-0 top-1/2 -translate-y-1/2" />
-          </Link>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-6">
-            <Link
-              href="/"
-              className="text-sm font-medium text-black hover:text-primary transition-colors"
-            >
-              Home
-            </Link>
-            <Link
-              href="/about"
-              className="text-sm font-medium text-black hover:text-primary transition-colors"
-            >
-              About Us
-            </Link>
-            {navLinks.map((dropdown) => (
-              <div
-                key={dropdown.trigger}
-                className="relative"
-                onMouseEnter={() => setActiveDropdown(dropdown.trigger)}
-                onMouseLeave={() => setActiveDropdown(null)}
-              >
-                <button className="flex items-center gap-1.5 py-2 text-sm font-medium text-black hover:text-primary transition-colors cursor-pointer">
-                  {dropdown.name}
-                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${activeDropdown === dropdown.trigger ? "rotate-180" : ""}`} />
-                </button>
-
-                {/* Dropdown Menu */}
-                <AnimatePresence>
-                  {activeDropdown === dropdown.trigger && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      transition={{ duration: 0.15 }}
-                      className="absolute left-0 mt-2 w-80 rounded-2xl bg-white border border-border p-4 shadow-premium-lg"
-                    >
-                      <div className="flex flex-col gap-1">
-                        {dropdown.items.map((item) => {
-                          const IconComponent = item.icon;
-                          return (
-                            <Link
-                              key={item.name}
-                              href={item.href}
-                              className="flex items-center gap-4.5 p-3 rounded-xl hover:bg-[#FAF6F0]/65 transition-all group/item"
-                            >
-                              <div className={`flex-shrink-0 flex items-center justify-center ${item.iconColor}`}>
-                                <IconComponent className="w-6 h-6" strokeWidth={1.5} />
-                              </div>
-                              <div className="text-left">
-                                <h4 className="text-sm font-semibold text-black group-hover/item:text-primary transition-colors leading-none">
-                                  {item.name}
-                                </h4>
-                                <p className="text-xs text-muted-foreground mt-1.5 font-light">
-                                  {item.desc}
-                                </p>
-                              </div>
-                            </Link>
-                          );
-                        })}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            ))}
-
-            <Link
-              href="/courses"
-              className="text-sm font-medium text-black hover:text-primary transition-colors"
-            >
-              Courses
+          <div className="flex items-center gap-4 xl:gap-6">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2 group h-16 relative w-40 shrink-0">
+              <img src="/logo.png" alt="Vastu Ventures Logo" className="h-20 max-h-[72px] w-auto object-contain absolute left-0 top-1/2 -translate-y-1/2" />
             </Link>
 
-            {secondaryLinks.map((link) => (
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center gap-6">
               <Link
-                key={link.name}
-                href={link.href}
-                className="text-sm font-medium text-black hover:text-primary transition-colors"
+                href="/"
+                className={`text-sm font-medium transition-colors ${
+                  pathname === "/" ? "text-primary" : "text-black hover:text-primary"
+                }`}
               >
-                {link.name}
+                Home
               </Link>
-            ))}
-          </nav>
+              <Link
+                href="/about"
+                className={`text-sm font-medium transition-colors ${
+                  pathname === "/about" ? "text-primary" : "text-black hover:text-primary"
+                }`}
+              >
+                About Us
+              </Link>
+              {navLinks.map((dropdown) => {
+                const isDropdownActive = dropdown.items.some(
+                  (item) => pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))
+                );
+                return (
+                  <div
+                    key={dropdown.trigger}
+                    className="relative"
+                    onMouseEnter={() => setActiveDropdown(dropdown.trigger)}
+                    onMouseLeave={() => setActiveDropdown(null)}
+                  >
+                    <button
+                      className={`flex items-center gap-1.5 py-2 text-sm font-medium transition-colors cursor-pointer ${
+                        isDropdownActive ? "text-primary" : "text-black hover:text-primary"
+                      }`}
+                    >
+                      {dropdown.name}
+                      <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${activeDropdown === dropdown.trigger ? "rotate-180" : ""}`} />
+                    </button>
+
+                    {/* Dropdown Menu */}
+                    <AnimatePresence>
+                      {activeDropdown === dropdown.trigger && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 10 }}
+                          transition={{ duration: 0.15 }}
+                          className="absolute left-0 mt-2 w-80 rounded-2xl bg-white border border-border p-4 shadow-premium-lg"
+                        >
+                          <div className="flex flex-col gap-1">
+                            {dropdown.items.map((item) => {
+                              const IconComponent = item.icon;
+                              const isItemActive = pathname === item.href;
+                              return (
+                                <Link
+                                  key={item.name}
+                                  href={item.href}
+                                  className="flex items-center gap-4.5 p-3 rounded-xl hover:bg-[#FAF6F0]/65 transition-all group/item"
+                                >
+                                  <div className={`flex-shrink-0 flex items-center justify-center ${isItemActive ? "text-primary" : item.iconColor}`}>
+                                    <IconComponent className="w-6 h-6" strokeWidth={1.5} />
+                                  </div>
+                                  <div className="text-left">
+                                    <h4 className={`text-sm font-semibold group-hover/item:text-primary transition-colors leading-none ${
+                                      isItemActive ? "text-primary" : "text-black"
+                                    }`}>
+                                      {item.name}
+                                    </h4>
+                                    <p className="text-xs text-muted-foreground mt-1.5 font-light">
+                                      {item.desc}
+                                    </p>
+                                  </div>
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
+
+              <Link
+                href="/courses"
+                className={`text-sm font-medium transition-colors ${
+                  pathname === "/courses" ? "text-primary" : "text-black hover:text-primary"
+                }`}
+              >
+                Courses
+              </Link>
+
+              {secondaryLinks.map((link) => {
+                const isLinkActive = pathname === link.href;
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    className={`text-sm font-medium transition-colors ${
+                      isLinkActive ? "text-primary" : "text-black hover:text-primary"
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
 
           {/* Right Action & Account Button */}
           <div className="hidden lg:flex items-center gap-4">
@@ -187,19 +212,24 @@ export default function Navbar() {
               <Calendar className="w-4 h-4" />
               Book Consultation
             </Link>
-            <Link
-              href={user ? "/dashboard" : "/login"}
-              title="Student Portal"
-              className="w-10 h-10 rounded-full border border-[#EDE3D0]/60 bg-white hover:bg-[#FAF6F0]/30 text-navy hover:text-[#E28A3E] flex items-center justify-center transition-all shadow-sm hover:scale-[1.05] overflow-hidden"
-            >
-              {user && user.avatar?.url ? (
-                <img src={user.avatar.url} alt={user.name} className="w-full h-full object-cover" />
-              ) : user && user.name ? (
-                <span className="font-bold text-lg">{user.name.charAt(0).toUpperCase()}</span>
-              ) : (
-                <UserRound className="w-5 h-5" />
-              )}
-            </Link>
+            {(() => {
+              const isStudent = Boolean(user && user.role === "student");
+              return (
+                <Link
+                  href={isStudent ? "/dashboard" : "/login"}
+                  title={isStudent ? "Student Portal" : "Student Login"}
+                  className="w-10 h-10 rounded-full border border-[#EDE3D0]/60 bg-white hover:bg-[#FAF6F0]/30 text-navy hover:text-[#E28A3E] flex items-center justify-center transition-all shadow-sm hover:scale-[1.05] overflow-hidden"
+                >
+                  {isStudent && user?.avatar?.url ? (
+                    <img src={user.avatar.url} alt={user.name} className="w-full h-full object-cover" />
+                  ) : isStudent && user?.name ? (
+                    <span className="font-bold text-lg">{user.name.charAt(0).toUpperCase()}</span>
+                  ) : (
+                    <UserRound className="w-5 h-5" />
+                  )}
+                </Link>
+              );
+            })()}
           </div>
 
           {/* Mobile Menu Button */}
@@ -329,12 +359,17 @@ export default function Navbar() {
                 </Link>
 
                 <div className="mt-1">
-                  <Link
-                    href="/dashboard"
-                    className="block w-full py-2.5 rounded-xl border border-border text-center font-medium text-navy text-xs hover:bg-[#FAF6F0] transition-colors"
-                  >
-                    Student Portal
-                  </Link>
+                  {(() => {
+                    const isStudent = Boolean(user && user.role === "student");
+                    return (
+                      <Link
+                        href={isStudent ? "/dashboard" : "/login"}
+                        className="block w-full py-2.5 rounded-xl border border-border text-center font-medium text-navy text-xs hover:bg-[#FAF6F0] transition-colors"
+                      >
+                        {isStudent ? "Student Portal" : "Student Login"}
+                      </Link>
+                    );
+                  })()}
                 </div>
               </div>
             </div>

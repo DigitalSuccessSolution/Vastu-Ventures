@@ -35,17 +35,6 @@ adminCategoryRouter.delete("/:id", courseController.deleteCourseCategory);
 router.get("/", courseController.getPublishedCourses);
 router.get("/:slug", courseController.getCourseBySlug);
 
-// Token-free Admin operations mounted under public route to bypass authentication checks
-router.get("/admin/list", courseController.getAllCoursesAdmin);
-router.post("/admin/create", courseController.createCourse);
-router.get("/admin/:id", courseController.getCourseByIdAdmin);
-router.put("/admin/:id", courseController.updateCourse);
-router.delete("/admin/:id", courseController.deleteCourse);
-router.post("/admin/upload", upload.single("file"), courseController.uploadFileToCloudinary);
-router.get("/admin/categories/list", courseController.getCourseCategoriesAdmin);
-router.post("/admin/categories/create", courseController.createCourseCategory);
-router.delete("/admin/categories/:id", courseController.deleteCourseCategory);
-
 // Courses - Admin (securing subpages)
 adminRouter.use(isAuthenticated, authorizeRoles("admin", "instructor"));
 adminRouter.get("/", courseController.getAllCoursesAdmin);
@@ -53,6 +42,7 @@ adminRouter.post("/", validateRequest(createCourseSchema), courseController.crea
 adminRouter.get("/:id", courseController.getCourseByIdAdmin);
 adminRouter.put("/:id", validateRequest(updateCourseSchema), courseController.updateCourse);
 adminRouter.delete("/:id", courseController.deleteCourse);
+adminRouter.post("/upload", upload.single("file"), courseController.uploadFileToCloudinary);
 
 // Curriculum/Lessons - Admin
 adminRouter.post("/:id/lessons", validateRequest(createLessonSchema), courseController.addLesson);

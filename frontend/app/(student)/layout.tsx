@@ -33,12 +33,26 @@ export default function StudentLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const { user, logout } = useAuthStore();
+  const { user, isAuthenticated, logout } = useAuthStore();
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  React.useEffect(() => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const userStr = typeof window !== "undefined" ? localStorage.getItem("user") : null;
+    const currentUser = user || (userStr ? JSON.parse(userStr) : null);
+
+    if (!token) {
+      router.replace("/login");
+    } else if (currentUser && currentUser.role === "admin") {
+      router.replace("/admin");
+    } else {
+      setCheckingAuth(false);
+    }
+  }, [user, isAuthenticated, router]);
 
   const handleLogout = async () => {
     try {
       // Optional: Call backend to invalidate token if necessary
-      // await fetch("http://localhost:5000/api/v1/auth/logout", { method: "POST", ... });
     } catch (e) {
       console.error(e);
     }
@@ -56,6 +70,17 @@ export default function StudentLayout({
     { name: "Appointment History", href: "/dashboard/appointments", icon: Calendar },
     { name: "Payment History", href: "/dashboard/payments", icon: CreditCard }
   ];
+
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-xs text-navy font-semibold">Verifying credentials...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FDFBF7] flex">

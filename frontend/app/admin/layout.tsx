@@ -21,6 +21,8 @@ import {
   LogOut
 } from "lucide-react";
 
+import { useAuthStore } from "@/lib/store";
+
 export default function AdminLayout({
   children,
 }: {
@@ -28,8 +30,26 @@ export default function AdminLayout({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
-  const [authorized, setAuthorized] = useState(true);
   const router = useRouter();
+  const { user, isAuthenticated, logout } = useAuthStore();
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    if (pathname === "/admin/login") {
+      setCheckingAuth(false);
+      return;
+    }
+
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const userStr = typeof window !== "undefined" ? localStorage.getItem("user") : null;
+    const currentUser = user || (userStr ? JSON.parse(userStr) : null);
+
+    if (!token || (currentUser && currentUser.role !== "admin")) {
+      router.replace("/admin/login");
+    } else {
+      setCheckingAuth(false);
+    }
+  }, [user, isAuthenticated, pathname, router]);
 
   const allMenuItems = [
     { id: "dashboard", name: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -42,11 +62,16 @@ export default function AdminLayout({
     { id: "reports", name: "Reports", href: "/admin/reports", icon: BarChart3 }
   ];
 
+  const handleSignOut = () => {
+    logout();
+    router.replace("/admin/login");
+  };
+
   if (pathname === "/admin/login") {
     return <>{children}</>;
   }
 
-  if (!authorized) {
+  if (checkingAuth) {
     return (
       <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center">
         <div className="text-center">
@@ -95,10 +120,7 @@ export default function AdminLayout({
         {/* Footer actions inside Sidebar */}
         <div className="p-4 border-t border-white/10 bg-transparent flex flex-col gap-1">
           <button
-            onClick={() => {
-              localStorage.removeItem("isAdminLoggedIn");
-              router.replace("/login");
-            }}
+            onClick={handleSignOut}
             className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-semibold text-red-400 hover:text-red-300 hover:bg-white/5 transition-colors w-full text-left cursor-pointer"
           >
             <LogOut className="w-4 h-4 text-red-400" /> Sign Out
@@ -136,11 +158,11 @@ export default function AdminLayout({
 
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-[#E28A3E] text-white flex items-center justify-center font-semibold text-xs shadow-premium">
-                AR
+                {user?.name ? user.name.slice(0, 2).toUpperCase() : "AD"}
               </div>
               <div className="hidden sm:block text-left">
-                <p className="text-xs font-semibold text-black leading-none">Acharya Raghavendra</p>
-                <p className="text-[9px] text-muted-foreground mt-1.5 leading-none">Root Administrator</p>
+                <p className="text-xs font-semibold text-black leading-none">{user?.name || "Admin User"}</p>
+                <p className="text-[9px] text-muted-foreground mt-1.5 leading-none">Administrator</p>
               </div>
             </div>
           </div>
@@ -193,8 +215,7 @@ export default function AdminLayout({
               <button
                 onClick={() => {
                   setSidebarOpen(false);
-                  localStorage.removeItem("isAdminLoggedIn");
-                  router.replace("/login");
+                  handleSignOut();
                 }}
                 className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-semibold text-red-400 hover:text-red-300 hover:bg-white/5 transition-colors w-full text-left cursor-pointer"
               >

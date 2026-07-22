@@ -32,7 +32,7 @@ api.interceptors.response.use(
         // Attempt to refresh the token using the refresh endpoint
         // This endpoint will automatically send the HttpOnly refreshToken cookie
         const res = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/auth/refresh`,
+          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/auth/refresh-token`,
           {},
           { withCredentials: true }
         );

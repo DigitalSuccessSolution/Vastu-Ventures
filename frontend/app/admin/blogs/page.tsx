@@ -48,6 +48,7 @@ import {
 } from "lucide-react";
 
 import DeleteConfirmModal from "@/components/DeleteConfirmModal";
+import securedFetch from "@/lib/securedFetch";
 
 export default function AdminBlogsPage() {
   const [mounted, setMounted] = useState(false);
@@ -94,7 +95,7 @@ export default function AdminBlogsPage() {
   // Fetch categories from DB
   const fetchCategories = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/blog-categories/admin/list`);
+      const res = await securedFetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/admin/blog-categories`);
       const data = await res.json();
       if (data.success) {
         setCategories(data.data || []);
@@ -107,7 +108,7 @@ export default function AdminBlogsPage() {
   // Fetch blogs from DB
   const fetchBlogs = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/blogs/admin/list`);
+      const res = await securedFetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/admin/blogs`);
       const data = await res.json();
       if (data.success) {
         setBlogs(data.data);
@@ -273,7 +274,7 @@ export default function AdminBlogsPage() {
     formData.append("file", file);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/courses/admin/upload`, {
+      const response = await securedFetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/admin/courses/upload`, {
         method: "POST",
         body: formData
       });
@@ -332,15 +333,15 @@ export default function AdminBlogsPage() {
     };
 
     try {
-      let url = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/blogs/admin/create`;
+      let url = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/admin/blogs`;
       let method = "POST";
 
       if (viewMode === "edit" && selectedBlogId) {
-        url = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/blogs/admin/${selectedBlogId}`;
+        url = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/admin/blogs/${selectedBlogId}`;
         method = "PUT";
       }
 
-      const res = await fetch(url, {
+      const res = await securedFetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
@@ -377,7 +378,7 @@ export default function AdminBlogsPage() {
     const { id, type } = deleteModal;
     try {
       if (type === "blog") {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/blogs/admin/${id}`, {
+        const res = await securedFetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/admin/blogs/${id}`, {
           method: "DELETE"
         });
         const data = await res.json();
@@ -388,7 +389,7 @@ export default function AdminBlogsPage() {
           setDeleteModal(prev => ({ ...prev, error: data.message, isLoading: false }));
         }
       } else {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/blog-categories/admin/${id}`, {
+        const res = await securedFetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/admin/blog-categories/${id}`, {
           method: "DELETE"
         });
         const data = await res.json();
@@ -412,7 +413,7 @@ export default function AdminBlogsPage() {
   const handleCreateCategory = async () => {
     if (!newCategoryName.trim()) return;
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/blog-categories/admin/create`, {
+      const res = await securedFetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/admin/blog-categories`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: newCategoryName.trim() })
@@ -1013,7 +1014,7 @@ export default function AdminBlogsPage() {
                           const formData = new FormData();
                           formData.append("file", file);
                           try {
-                            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/courses/admin/upload`, {
+                            const res = await securedFetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/admin/courses/upload`, {
                               method: "POST",
                               body: formData
                             });

@@ -32,9 +32,10 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     } else if (isAuthRoute) {
       const searchParams = new URLSearchParams(window.location.search);
       const redirectParam = searchParams.get("redirect");
+      const currentUser = useAuthStore.getState().user;
       if (redirectParam) {
         router.replace(redirectParam);
-      } else if (pathname === "/admin/login") {
+      } else if (currentUser && currentUser.role === "admin") {
         router.replace("/admin");
       } else {
         router.replace("/dashboard");

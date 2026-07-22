@@ -7,8 +7,8 @@ const startServer = async () => {
   await connectDB();
 
   // Start Express Server
-  const server = app.listen(env.PORT, () => {
-    console.log(`🚀 Server running in ${env.NODE_ENV} mode on port ${env.PORT}`);
+  const server = app.listen(env.PORT, env.HOST, () => {
+    console.log(`🚀 Server running in ${env.NODE_ENV} mode on http://${env.HOST}:${env.PORT}`);
   });
 
   // Handle unhandled promise rejections
