@@ -4,6 +4,7 @@ import Course from "../courses/course.model.js";
 import Lesson from "../courses/lesson.model.js";
 import Certificate from "../certificates/certificate.model.js";
 import User from "../users/user.model.js";
+import Payment from "../payments/payment.model.js";
 import { ERROR_MESSAGES } from "../../constants/errorMessages.js";
 import generateCertificateId from "../../utils/generateCertificateId.js";
 import { generateCertificatePDF } from "../../services/pdfService.js";
@@ -12,10 +13,20 @@ import { sendCertificateEmail } from "../../services/emailService.js";
 import Notification from "../notifications/notification.model.js";
 
 export const getEnrolledCourseData = async (userId, courseId) => {
-  const enrollment = await Enrollment.findOne({ user: userId, course: courseId })
-    .populate({
-      path: "course"
-    });
+  let enrollment = await Enrollment.findOne({ user: userId, course: courseId }).populate("course");
+
+  if (!enrollment) {
+    const paidPayment = await Payment.findOne({ user: userId, course: courseId, status: "paid", orderType: "course" });
+    if (paidPayment) {
+      enrollment = await Enrollment.create({
+        user: userId,
+        course: courseId,
+        payment: paidPayment._id,
+        enrolledAt: paidPayment.paidAt || paidPayment.createdAt || new Date()
+      });
+      enrollment = await Enrollment.findById(enrollment._id).populate("course");
+    }
+  }
 
   if (!enrollment) {
     const error = new Error(ERROR_MESSAGES.NOT_ENROLLED);
@@ -74,7 +85,19 @@ export const updateWatchProgress = async (userId, courseId, lessonId, watchPerce
 };
 
 export const markLessonCompleted = async (userId, courseId, lessonId) => {
-  const enrollment = await Enrollment.findOne({ user: userId, course: courseId });
+  let enrollment = await Enrollment.findOne({ user: userId, course: courseId });
+  if (!enrollment) {
+    const paidPayment = await Payment.findOne({ user: userId, course: courseId, status: "paid", orderType: "course" });
+    if (paidPayment) {
+      enrollment = await Enrollment.create({
+        user: userId,
+        course: courseId,
+        payment: paidPayment._id,
+        enrolledAt: paidPayment.paidAt || paidPayment.createdAt || new Date()
+      });
+    }
+  }
+
   if (!enrollment) {
     const error = new Error(ERROR_MESSAGES.NOT_ENROLLED);
     error.statusCode = 403;
@@ -93,8 +116,16 @@ export const markLessonCompleted = async (userId, courseId, lessonId) => {
     { upsert: true }
   );
 
-  // Recalculate enrollment completion percentage
-  const totalLessons = await Lesson.countDocuments({ course: courseId });
+  // Recalculate enrollment completion percentage accurately from course.curriculum
+  const courseDoc = await Course.findById(courseId);
+  let totalLessons = 0;
+  if (courseDoc && Array.isArray(courseDoc.curriculum)) {
+    totalLessons = courseDoc.curriculum.reduce(
+      (acc, sec) => acc + (sec.lessons || []).length,
+      0
+    );
+  }
+
   const completedLessons = await CourseProgress.countDocuments({
     user: userId,
     course: courseId,

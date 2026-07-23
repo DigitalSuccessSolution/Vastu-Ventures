@@ -247,7 +247,7 @@ export default function Navbar() {
             </Link>
 
             {/* Profile Dropdown / Login Button (Both Desktop & Mobile) */}
-            {user ? (
+            {user && user.role !== "admin" ? (
               <div
                 className="relative"
                 onMouseEnter={() => setActiveDropdown("profile")}
@@ -290,46 +290,35 @@ export default function Navbar() {
                           <h4 className="text-xs font-bold text-navy truncate leading-tight">{user?.name || "Student"}</h4>
                           <p className="text-[11px] text-muted-foreground truncate mt-0.5">{user?.email}</p>
                           <span className="inline-block mt-1 px-2 py-0.5 bg-primary/10 text-primary text-[9px] font-bold rounded-full uppercase tracking-wider">
-                            {user?.role === "admin" ? "Admin Portal" : "Student Portal"}
+                            Student Portal
                           </span>
                         </div>
                       </div>
 
                       {/* Navigation Items */}
                       <div className="flex flex-col gap-0.5">
-                        {user?.role === "admin" ? (
-                          <Link
-                            href="/admin"
-                            onClick={() => setActiveDropdown(null)}
-                            className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-[#FAF6F0] text-navy text-xs font-semibold transition-all group"
-                          >
-                            <ShieldCheck className="w-4 h-4 text-primary group-hover:scale-110 transition-transform" />
-                            <span>Admin Dashboard</span>
-                          </Link>
-                        ) : (
-                          studentMenuItems.map((item) => {
-                            const Icon = item.icon;
-                            const isActive = pathname === item.href;
-                            return (
-                              <Link
-                                key={item.href}
-                                href={item.href}
-                                onClick={() => setActiveDropdown(null)}
-                                className={`flex items-center justify-between px-3 py-2 rounded-xl transition-all text-xs font-semibold ${
-                                  isActive 
-                                    ? "bg-primary text-white shadow-sm" 
-                                    : "text-navy hover:bg-[#FAF6F0] hover:text-primary"
-                                }`}
-                              >
-                                <div className="flex items-center gap-2.5">
-                                  <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-navy-light"}`} />
-                                  <span>{item.name}</span>
-                                </div>
-                                <ChevronRight className={`w-3.5 h-3.5 opacity-60 ${isActive ? "text-white" : "text-navy-light"}`} />
-                              </Link>
-                            );
-                          })
-                        )}
+                        {studentMenuItems.map((item) => {
+                          const Icon = item.icon;
+                          const isActive = pathname === item.href;
+                          return (
+                            <Link
+                              key={item.href}
+                              href={item.href}
+                              onClick={() => setActiveDropdown(null)}
+                              className={`flex items-center justify-between px-3 py-2 rounded-xl transition-all text-xs font-semibold ${
+                                isActive 
+                                  ? "bg-primary text-white shadow-sm" 
+                                  : "text-navy hover:bg-[#FAF6F0] hover:text-primary"
+                              }`}
+                            >
+                              <div className="flex items-center gap-2.5">
+                                <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-navy-light"}`} />
+                                <span>{item.name}</span>
+                              </div>
+                              <ChevronRight className={`w-3.5 h-3.5 opacity-60 ${isActive ? "text-white" : "text-navy-light"}`} />
+                            </Link>
+                          );
+                        })}
                       </div>
 
                       <div className="my-2 border-t border-border/80" />

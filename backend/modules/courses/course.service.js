@@ -82,12 +82,22 @@ export const getPublishedCourses = async (categorySlug) => {
 };
 
 export const getCourseBySlug = async (slug, user = null) => {
-  const courseDoc = await Course.findOne({ slug, status: "published", isActive: true })
-    .populate("category")
-    .populate({
-      path: "curriculum.lessons",
-      select: "title order isPreview videoDuration videoUrl contentType fileUrl fileName resources"
-    });
+  let courseDoc = await Course.findOne({ slug, status: "published", isActive: true }).populate("category");
+  if (!courseDoc) {
+    courseDoc = await Course.findOne({ slug }).populate("category");
+  }
+  if (!courseDoc) {
+    // Typo resolution fallback (e.g. vatu -> vastu, cource -> course)
+    const cleanedSlug = slug.replace(/cource/gi, "course").replace(/vatu/gi, "vastu");
+    courseDoc = await Course.findOne({ slug: cleanedSlug }).populate("category");
+  }
+  if (!courseDoc) {
+    const regexStr = slug.replace(/[-_]/g, ".*");
+    courseDoc = await Course.findOne({ slug: { $regex: new RegExp(regexStr, "i") } }).populate("category");
+  }
+  if (!courseDoc && mongoose.Types.ObjectId.isValid(slug)) {
+    courseDoc = await Course.findById(slug).populate("category");
+  }
 
   if (!courseDoc) {
     const error = new Error(ERROR_MESSAGES.COURSE_NOT_FOUND);

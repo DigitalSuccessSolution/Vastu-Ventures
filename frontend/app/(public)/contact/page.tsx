@@ -99,8 +99,8 @@ export default function ContactPage() {
                 </div>
                 <div className="flex items-center gap-3">
                   <Mail className="w-5 h-5 text-gold-start flex-shrink-0" />
-                  <a href="mailto:contact@VastuVentures.com" className="hover:text-gold-start transition-colors">
-                    contact@VastuVentures.com
+                  <a href="mailto:ganeshparadkar0706@gmail.com" className="hover:text-gold-start transition-colors break-all">
+                    ganeshparadkar0706@gmail.com
                   </a>
                 </div>
                 <div className="flex items-center gap-3">

@@ -223,7 +223,7 @@ export default function MyCoursesPage() {
               const isCompleted = enrollment.isCompleted || progress >= 100;
               const imgUrl = getCourseImage(course);
               const totalModules = enrollment.totalModules || (course.curriculum?.reduce((acc: number, sec: any) => acc + (sec.lessons?.length || 0), 0) || 0);
-              const completedModules = enrollment.completedModules || 0;
+              const completedModules = isCompleted ? totalModules : (enrollment.completedModules || 0);
 
               return (
                 <div

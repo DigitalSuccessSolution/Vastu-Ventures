@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect, use, useCallback } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { 
@@ -11,13 +11,10 @@ import {
   Download, 
   Loader2, 
   Video, 
-  Sparkles, 
   Award,
   ChevronLeft,
   ChevronRight,
-  BookOpen,
-  CheckCircle2,
-  Lock
+  CheckCircle2
 } from "lucide-react";
 import { useAuthStore } from "@/lib/store";
 import api from "@/lib/axios";
@@ -35,7 +32,6 @@ export default function StudentCoursePlayerPage({ params }: Props) {
   // State to track current active section and lesson
   const [activeSecIdx, setActiveSecIdx] = useState(0);
   const [activeLessonIdx, setActiveLessonIdx] = useState(0);
-  const [activeTab, setActiveTab] = useState<"overview" | "resources">("overview");
 
   // Track checked lesson completions by lesson ID
   const [completedLessons, setCompletedLessons] = useState<Record<string, boolean>>({});
@@ -48,25 +44,55 @@ export default function StudentCoursePlayerPage({ params }: Props) {
         if (data.success && data.data) {
           const courseData = data.data;
           setCourse(courseData);
+          const courseId = courseData._id;
 
-          // Fetch enrollment progress for this course
+          // 1. Read local storage cache first
+          const localKey = `vastu_completed_${courseId}`;
+          let localMap: Record<string, boolean> = {};
           try {
-            const enrollRes = await api.get(`/enrollments/${courseData._id}`);
+            const cached = localStorage.getItem(localKey);
+            if (cached) localMap = JSON.parse(cached);
+          } catch (e) {}
+
+          if (Object.keys(localMap).length > 0) {
+            setCompletedLessons(localMap);
+          }
+
+          // 2. Fetch DB enrollment & progress
+          try {
+            const enrollRes = await api.get(`/enrollments/${courseId}`);
             if (enrollRes.data.success && enrollRes.data.data) {
               const { enrollment, progress } = enrollRes.data.data;
+              const isCourse100Completed = enrollment?.isCompleted || (enrollment?.completionPercentage || 0) >= 100;
+
               if (enrollment) {
-                setDbCompletionPercent(enrollment.completionPercentage || 0);
+                setDbCompletionPercent(isCourse100Completed ? 100 : enrollment.completionPercentage || 0);
               }
+
+              const mergedMap: Record<string, boolean> = { ...localMap };
+
               if (Array.isArray(progress)) {
-                const compMap: Record<string, boolean> = {};
                 progress.forEach((p: any) => {
-                  const lesId = typeof p.lesson === "object" ? p.lesson?._id : p.lesson;
-                  if (lesId && p.isCompleted) {
-                    compMap[lesId] = true;
+                  if (p.isCompleted && p.lesson) {
+                    const lesIdStr = typeof p.lesson === "object" && p.lesson._id ? String(p.lesson._id) : String(p.lesson);
+                    mergedMap[lesIdStr] = true;
                   }
                 });
-                setCompletedLessons(compMap);
               }
+
+              // If course is 100% completed in DB, mark ALL curriculum lessons completed
+              if (isCourse100Completed && Array.isArray(courseData.curriculum)) {
+                courseData.curriculum.forEach((sec: any) => {
+                  (sec.lessons || []).forEach((les: any) => {
+                    if (les._id) mergedMap[String(les._id)] = true;
+                  });
+                });
+              }
+
+              setCompletedLessons(mergedMap);
+              try {
+                localStorage.setItem(localKey, JSON.stringify(mergedMap));
+              } catch (e) {}
             }
           } catch (enrollErr) {
             console.error("No specific enrollment progress record yet", enrollErr);
@@ -81,20 +107,7 @@ export default function StudentCoursePlayerPage({ params }: Props) {
     fetchCourseData();
   }, [slug]);
 
-  if (loading) {
-    return (
-      <div className="py-20 text-center flex flex-col items-center justify-center gap-3">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-        <p className="text-xs text-navy font-semibold">Loading Vastu Classroom...</p>
-      </div>
-    );
-  }
-
-  if (!course) {
-    notFound();
-  }
-
-  const curriculum = course.curriculum || [];
+  const curriculum = course?.curriculum || [];
   const activeSection = curriculum[activeSecIdx] || { lessons: [] };
   const activeLesson = activeSection.lessons?.[activeLessonIdx] || null;
 
@@ -110,12 +123,69 @@ export default function StudentCoursePlayerPage({ params }: Props) {
     (item) => item.secIdx === activeSecIdx && item.lesIdx === activeLessonIdx
   );
 
+  // Automatic Lesson Completion API Call (Permanent DB Record)
+  const autoMarkCompleted = useCallback(async (les: any) => {
+    if (!les || !les._id || !course?._id) return;
+    const lesId = String(les._id);
+    const courseId = course._id;
+    const localKey = `vastu_completed_${courseId}`;
+
+    setCompletedLessons((prev) => {
+      if (prev[lesId]) return prev;
+      const updated = { ...prev, [lesId]: true, [les._id]: true };
+      try {
+        localStorage.setItem(localKey, JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
+    });
+
+    try {
+      const res = await api.post(`/enrollments/${courseId}/lesson/${les._id}/complete`);
+      if (res.data.success && res.data.data) {
+        const { completionPercentage, isCompleted } = res.data.data;
+        if (completionPercentage !== undefined) {
+          setDbCompletionPercent(completionPercentage);
+        }
+        if (isCompleted && Array.isArray(course.curriculum)) {
+          const allMap: Record<string, boolean> = {};
+          course.curriculum.forEach((sec: any) => {
+            (sec.lessons || []).forEach((l: any) => {
+              if (l._id) allMap[String(l._id)] = true;
+            });
+          });
+          setCompletedLessons(allMap);
+          try {
+            localStorage.setItem(localKey, JSON.stringify(allMap));
+          } catch (e) {}
+        }
+      }
+    } catch (err) {
+      console.error("Auto lesson complete error", err);
+    }
+  }, [course]);
+
+  // Auto completion when student opens/views a lesson
+  useEffect(() => {
+    if (activeLesson && activeLesson._id) {
+      const timer = setTimeout(() => {
+        autoMarkCompleted(activeLesson);
+      }, 1500); // Automatically marks complete 1.5s after viewing/playing
+      return () => clearTimeout(timer);
+    }
+  }, [activeLesson, autoMarkCompleted]);
+
   const handleLessonSelect = (secIdx: number, lesIdx: number) => {
+    if (activeLesson) {
+      autoMarkCompleted(activeLesson);
+    }
     setActiveSecIdx(secIdx);
     setActiveLessonIdx(lesIdx);
   };
 
   const handlePrevLesson = () => {
+    if (activeLesson) {
+      autoMarkCompleted(activeLesson);
+    }
     if (currentFlatIndex > 0) {
       const prev = allLessons[currentFlatIndex - 1];
       setActiveSecIdx(prev.secIdx);
@@ -124,37 +194,13 @@ export default function StudentCoursePlayerPage({ params }: Props) {
   };
 
   const handleNextLesson = () => {
+    if (activeLesson) {
+      autoMarkCompleted(activeLesson);
+    }
     if (currentFlatIndex < allLessons.length - 1) {
       const next = allLessons[currentFlatIndex + 1];
       setActiveSecIdx(next.secIdx);
       setActiveLessonIdx(next.lesIdx);
-    }
-  };
-
-  const toggleComplete = async (lesson: any, e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!lesson || !lesson._id) return;
-
-    const lesId = lesson._id;
-    const isCurrentlyCompleted = !!completedLessons[lesId];
-    const nextState = !isCurrentlyCompleted;
-
-    // Optimistic UI update
-    setCompletedLessons((prev) => ({ ...prev, [lesId]: nextState }));
-
-    try {
-      const res = await api.post(`/enrollments/${course._id}/lesson/${lesId}/complete`);
-      if (res.data.success && res.data.data) {
-        const { completionPercentage, isCompleted } = res.data.data;
-        if (completionPercentage !== undefined) {
-          setDbCompletionPercent(completionPercentage);
-        }
-        if (isCompleted) {
-          alert("🎉 Congratulations! You have completed 100% of this course! Your certificate is available in your dashboard.");
-        }
-      }
-    } catch (err) {
-      console.error("Failed to save lesson completion in DB", err);
     }
   };
 
@@ -166,6 +212,9 @@ export default function StudentCoursePlayerPage({ params }: Props) {
 
   const handleDownloadPdf = async (url: string, filename: string) => {
     if (!url) return;
+    if (activeLesson) {
+      autoMarkCompleted(activeLesson);
+    }
     const cleanUrl = url.replace("/fl_attachment/", "/");
     try {
       const response = await fetch(cleanUrl);
@@ -182,6 +231,19 @@ export default function StudentCoursePlayerPage({ params }: Props) {
       window.open(cleanUrl, "_blank");
     }
   };
+
+  if (loading) {
+    return (
+      <div className="py-20 text-center flex flex-col items-center justify-center gap-3">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        <p className="text-xs text-navy font-semibold">Loading Vastu Classroom...</p>
+      </div>
+    );
+  }
+
+  if (!course) {
+    notFound();
+  }
 
   // Progress metrics
   const totalLessons = allLessons.length;
@@ -241,7 +303,7 @@ export default function StudentCoursePlayerPage({ params }: Props) {
           <div className="pb-3 border-b border-border/60 flex items-center justify-between">
             <div>
               <h2 className="font-serif text-base font-bold text-navy">Course Syllabus</h2>
-              <p className="text-[10px] text-muted-foreground font-normal">Click lesson to play • Mark ✓ on complete</p>
+              <p className="text-[10px] text-muted-foreground font-normal">Lessons complete automatically as you study</p>
             </div>
             <span className="text-xs font-bold text-primary bg-[#FAF6F0] border border-[#EDE3D0] px-2.5 py-1 rounded-xl">
               {completedCount}/{totalLessons} Done
@@ -255,7 +317,7 @@ export default function StudentCoursePlayerPage({ params }: Props) {
                 {/* Section Lessons */}
                 <div className="flex flex-col gap-1.5 pl-1">
                   {(section.lessons || []).map((lesson: any, lesIdx: number) => {
-                    const isCompleted = !!completedLessons[lesson._id];
+                    const isCompleted = !!completedLessons[String(lesson._id)] || !!completedLessons[lesson._id];
                     const isActive = activeSecIdx === secIdx && activeLessonIdx === lesIdx;
                     const isPdf = lesson.contentType === "pdf";
 
@@ -265,26 +327,23 @@ export default function StudentCoursePlayerPage({ params }: Props) {
                         onClick={() => handleLessonSelect(secIdx, lesIdx)}
                         className={`p-3 rounded-xl border text-xs flex items-center justify-between gap-3 transition-all cursor-pointer ${
                           isActive
-                            ? "border-primary bg-primary/5 shadow-sm font-bold text-navy"
+                            ? "border-primary bg-primary/10 shadow-sm font-bold text-navy"
+                            : isCompleted
+                            ? "border-border/40 bg-[#F8F7F4] text-navy/70 opacity-80 hover:opacity-100 hover:bg-white"
                             : "border-border/60 bg-white hover:bg-[#FAF9F6] text-navy font-medium"
                         }`}
                       >
                         <div className="flex items-center gap-2.5 overflow-hidden">
-                          {/* Checkbox button */}
-                          <button
-                            type="button"
-                            onClick={(e) => toggleComplete(lesson, e)}
-                            className="p-0.5 rounded focus:outline-none shrink-0 cursor-pointer"
-                            title={isCompleted ? "Mark as Incomplete" : "Mark as Completed"}
-                          >
+                          {/* Automatic Tick Icon (Read-only, no unticking) */}
+                          <div className="shrink-0 pointer-events-none">
                             <CheckCircle
                               className={`w-4 h-4 transition-colors ${
-                                isCompleted ? "text-emerald-600 fill-emerald-100" : "text-muted-foreground/30 hover:text-emerald-500"
+                                isCompleted ? "text-emerald-600 fill-emerald-100" : "text-muted-foreground/30"
                               }`}
                             />
-                          </button>
+                          </div>
 
-                          <span className={`truncate leading-tight ${isCompleted ? "line-through text-muted-foreground/70" : ""}`}>
+                          <span className={`truncate leading-tight font-medium ${isCompleted ? "text-navy/70 font-normal" : ""}`}>
                             {lesson.title}
                           </span>
                         </div>

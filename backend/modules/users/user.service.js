@@ -99,13 +99,15 @@ export const getPurchasedCourses = async (userId) => {
       isCompleted: true
     });
 
-    const progressPercentage = e.completionPercentage || (totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0);
+    const isCompleted = e.isCompleted || (e.completionPercentage || 0) >= 100;
+    const progressPercentage = isCompleted ? 100 : (e.completionPercentage || (totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0));
+    const finalCompletedModules = isCompleted ? totalModules : completedModules;
 
     const obj = e.toObject();
     obj.progressPercentage = progressPercentage;
     obj.totalModules = totalModules;
-    obj.completedModules = completedModules;
-    obj.isCompleted = e.isCompleted || progressPercentage >= 100;
+    obj.completedModules = finalCompletedModules;
+    obj.isCompleted = isCompleted;
     result.push(obj);
   }
 
