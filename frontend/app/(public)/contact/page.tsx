@@ -95,7 +95,7 @@ export default function ContactPage() {
               <div className="flex flex-col gap-5 mt-4 text-sm font-light">
                 <div className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-gold-start flex-shrink-0 mt-0.5" />
-                  <span>2,4 A Wing, New Administrative Building, Near Zilha Parishad Office, Nagpur - 440001</span>
+                  <span>B-28, Near Symbiosis College, Tarodi Khurd, Kamptee, Nagpur - 441001</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Mail className="w-5 h-5 text-gold-start flex-shrink-0" />

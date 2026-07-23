@@ -167,11 +167,11 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-3.5 h-3.5 text-gold-start flex-shrink-0 mt-0.5" />
-                <span>24 A Wing, New Administrative Building, Near Zilha Parishad Office</span>
+                <span>B-28, Near Symbiosis College, Tarodi Khurd,  Kamptee, </span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Compass className="w-3.5 h-3.5 text-gold-start flex-shrink-0" />
-                <span>Nagpur - 440001</span>
+                <span>Nagpur - 441001</span>
               </li>
             </ul>
           </div>
