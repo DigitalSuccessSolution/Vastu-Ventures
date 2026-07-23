@@ -144,6 +144,11 @@ export default function Footer() {
                   Terms & Conditions
                 </Link>
               </li>
+              <li>
+                <Link href="/refund-policy" className="hover:text-gold-start hover:pl-1 transition-all">
+                  Refund Policy
+                </Link>
+              </li>
             </ul>
           </div>
 

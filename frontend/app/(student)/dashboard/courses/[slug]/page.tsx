@@ -206,7 +206,7 @@ export default function StudentCoursePlayerPage({ params }: Props) {
 
   const getYoutubeId = (url: string) => {
     if (!url) return null;
-    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
     return match ? match[1] : null;
   };
 
@@ -405,6 +405,13 @@ export default function StudentCoursePlayerPage({ params }: Props) {
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
                 className="w-full h-full absolute inset-0 border-0"
+              />
+            ) : activeLesson?.videoUrl ? (
+              <video
+                src={activeLesson.videoUrl}
+                controls
+                controlsList="nodownload"
+                className="w-full h-full object-contain bg-black"
               />
             ) : (
               <div className="p-8 text-center flex flex-col items-center gap-2">

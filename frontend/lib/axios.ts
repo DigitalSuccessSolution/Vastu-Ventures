@@ -55,10 +55,10 @@ api.interceptors.response.use(
         }
         return Promise.reject(refreshError);
       }
-    } else if (error.response?.status === 401 || error.response?.status === 403) {
-      // If it's 403 Forbidden or retried 401, log out and redirect to login
+    } else if (error.response?.status === 401 && originalRequest._retry) {
+      // If retried 401 (refresh failed or token invalid), log out
       useAuthStore.getState().logout();
-      if (typeof window !== "undefined" && !window.location.pathname.startsWith("/admin")) {
+      if (typeof window !== "undefined") {
         window.location.href = "/login";
       }
     }

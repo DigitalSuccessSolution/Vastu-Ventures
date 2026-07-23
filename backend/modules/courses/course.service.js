@@ -3,6 +3,7 @@ import Course from "./course.model.js";
 import Lesson from "./lesson.model.js";
 import CourseCategory from "./courseCategory.model.js";
 import Enrollment from "../enrollments/enrollment.model.js";
+import Payment from "../payments/payment.model.js";
 import slugify from "../../utils/slugify.js";
 import { ERROR_MESSAGES } from "../../constants/errorMessages.js";
 
@@ -82,21 +83,31 @@ export const getPublishedCourses = async (categorySlug) => {
 };
 
 export const getCourseBySlug = async (slug, user = null) => {
-  let courseDoc = await Course.findOne({ slug, status: "published", isActive: true }).populate("category");
+  let courseDoc = await Course.findOne({ slug, status: "published", isActive: true })
+    .populate("category")
+    .populate("curriculum.lessons");
   if (!courseDoc) {
-    courseDoc = await Course.findOne({ slug }).populate("category");
+    courseDoc = await Course.findOne({ slug })
+      .populate("category")
+      .populate("curriculum.lessons");
   }
   if (!courseDoc) {
     // Typo resolution fallback (e.g. vatu -> vastu, cource -> course)
     const cleanedSlug = slug.replace(/cource/gi, "course").replace(/vatu/gi, "vastu");
-    courseDoc = await Course.findOne({ slug: cleanedSlug }).populate("category");
+    courseDoc = await Course.findOne({ slug: cleanedSlug })
+      .populate("category")
+      .populate("curriculum.lessons");
   }
   if (!courseDoc) {
     const regexStr = slug.replace(/[-_]/g, ".*");
-    courseDoc = await Course.findOne({ slug: { $regex: new RegExp(regexStr, "i") } }).populate("category");
+    courseDoc = await Course.findOne({ slug: { $regex: new RegExp(regexStr, "i") } })
+      .populate("category")
+      .populate("curriculum.lessons");
   }
   if (!courseDoc && mongoose.Types.ObjectId.isValid(slug)) {
-    courseDoc = await Course.findById(slug).populate("category");
+    courseDoc = await Course.findById(slug)
+      .populate("category")
+      .populate("curriculum.lessons");
   }
 
   if (!courseDoc) {
@@ -110,12 +121,16 @@ export const getCourseBySlug = async (slug, user = null) => {
   // Check enrollment or paid payment access
   let isPurchased = false;
   if (user) {
-    const enrollment = await Enrollment.exists({ user: user._id, course: course._id });
-    if (enrollment) {
+    if (user.role === "admin") {
       isPurchased = true;
     } else {
-      const paidPayment = await Payment.exists({ user: user._id, course: course._id, status: "paid", orderType: "course" });
-      if (paidPayment) isPurchased = true;
+      const enrollment = await Enrollment.exists({ user: user._id, course: course._id });
+      if (enrollment) {
+        isPurchased = true;
+      } else {
+        const paidPayment = await Payment.exists({ user: user._id, course: course._id, status: "paid", orderType: "course" });
+        if (paidPayment) isPurchased = true;
+      }
     }
   }
 

@@ -26,7 +26,7 @@ export default function PrivacyPage() {
         className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8"
       >
         {/* Header */}
-        <div className="mb-10 border-b border-border pb-6">
+        <div className="mb-10 pb-2">
           <h1 className="font-serif text-3xl sm:text-4xl font-bold text-navy mb-3">
             Privacy Policy
           </h1>
@@ -40,7 +40,7 @@ export default function PrivacyPage() {
           
           {/* Section 1 */}
           <div>
-            <h2 className="font-serif text-xl font-bold text-navy mb-3 pb-1 border-b border-border/50">
+            <h2 className="font-serif text-xl font-bold text-navy mb-3">
               1. Information We Collect
             </h2>
             <p className="text-navy/85 mb-3">
@@ -56,7 +56,7 @@ export default function PrivacyPage() {
 
           {/* Section 2 */}
           <div>
-            <h2 className="font-serif text-xl font-bold text-navy mb-3 pb-1 border-b border-border/50">
+            <h2 className="font-serif text-xl font-bold text-navy mb-3">
               2. How We Use Your Information
             </h2>
             <p className="text-navy/85 mb-3">
@@ -72,7 +72,7 @@ export default function PrivacyPage() {
 
           {/* Section 3 */}
           <div>
-            <h2 className="font-serif text-xl font-bold text-navy mb-3 pb-1 border-b border-border/50">
+            <h2 className="font-serif text-xl font-bold text-navy mb-3">
               3. Confidentiality of Property Floor Plans
             </h2>
             <p className="text-navy/85 mb-3">
@@ -88,7 +88,7 @@ export default function PrivacyPage() {
 
           {/* Section 4 */}
           <div>
-            <h2 className="font-serif text-xl font-bold text-navy mb-3 pb-1 border-b border-border/50">
+            <h2 className="font-serif text-xl font-bold text-navy mb-3">
               4. Data Sharing & Third-Party Service Providers
             </h2>
             <p className="text-navy/85 mb-3">
@@ -103,7 +103,7 @@ export default function PrivacyPage() {
 
           {/* Section 5 */}
           <div>
-            <h2 className="font-serif text-xl font-bold text-navy mb-3 pb-1 border-b border-border/50">
+            <h2 className="font-serif text-xl font-bold text-navy mb-3">
               5. Cookies & Session Storage
             </h2>
             <p className="text-navy/85">
@@ -113,7 +113,7 @@ export default function PrivacyPage() {
 
           {/* Section 6 */}
           <div>
-            <h2 className="font-serif text-xl font-bold text-navy mb-3 pb-1 border-b border-border/50">
+            <h2 className="font-serif text-xl font-bold text-navy mb-3">
               6. Data Security Safeguards
             </h2>
             <p className="text-navy/85">
@@ -123,7 +123,7 @@ export default function PrivacyPage() {
 
           {/* Section 7 */}
           <div>
-            <h2 className="font-serif text-xl font-bold text-navy mb-3 pb-1 border-b border-border/50">
+            <h2 className="font-serif text-xl font-bold text-navy mb-3">
               7. Data Retention & Your Rights
             </h2>
             <p className="text-navy/85 mb-3">
@@ -137,7 +137,7 @@ export default function PrivacyPage() {
 
           {/* Section 8 */}
           <div>
-            <h2 className="font-serif text-xl font-bold text-navy mb-3 pb-1 border-b border-border/50">
+            <h2 className="font-serif text-xl font-bold text-navy mb-3">
               8. Contact Us
             </h2>
             <p className="text-navy/85 mb-2">

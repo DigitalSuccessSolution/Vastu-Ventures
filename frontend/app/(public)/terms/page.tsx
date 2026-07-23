@@ -26,7 +26,7 @@ export default function TermsPage() {
         className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8"
       >
         {/* Header */}
-        <div className="mb-10 border-b border-border pb-6">
+        <div className="mb-10 pb-2">
           <h1 className="font-serif text-3xl sm:text-4xl font-bold text-navy mb-3">
             Terms & Conditions
           </h1>
@@ -40,7 +40,7 @@ export default function TermsPage() {
           
           {/* Section 1 */}
           <div>
-            <h2 className="font-serif text-xl font-bold text-navy mb-3 pb-1 border-b border-border/50">
+            <h2 className="font-serif text-xl font-bold text-navy mb-3">
               1. Acceptance of Terms
             </h2>
             <p className="text-navy/85">
@@ -50,7 +50,7 @@ export default function TermsPage() {
 
           {/* Section 2 */}
           <div>
-            <h2 className="font-serif text-xl font-bold text-navy mb-3 pb-1 border-b border-border/50">
+            <h2 className="font-serif text-xl font-bold text-navy mb-3">
               2. User Accounts & Security
             </h2>
             <p className="text-navy/85 mb-3">
@@ -65,7 +65,7 @@ export default function TermsPage() {
 
           {/* Section 3 */}
           <div>
-            <h2 className="font-serif text-xl font-bold text-navy mb-3 pb-1 border-b border-border/50">
+            <h2 className="font-serif text-xl font-bold text-navy mb-3">
               3. Vastu Consultation Services & Advisory Disclaimer
             </h2>
             <p className="text-navy/85 mb-3">
@@ -82,7 +82,7 @@ export default function TermsPage() {
 
           {/* Section 4 */}
           <div>
-            <h2 className="font-serif text-xl font-bold text-navy mb-3 pb-1 border-b border-border/50">
+            <h2 className="font-serif text-xl font-bold text-navy mb-3">
               4. Vastu Academy & Online Courses
             </h2>
             <p className="text-navy/85 mb-3">
@@ -96,7 +96,7 @@ export default function TermsPage() {
 
           {/* Section 5 */}
           <div>
-            <h2 className="font-serif text-xl font-bold text-navy mb-3 pb-1 border-b border-border/50">
+            <h2 className="font-serif text-xl font-bold text-navy mb-3">
               5. Intellectual Property Rights
             </h2>
             <p className="text-navy/85">
@@ -106,7 +106,7 @@ export default function TermsPage() {
 
           {/* Section 6 */}
           <div>
-            <h2 className="font-serif text-xl font-bold text-navy mb-3 pb-1 border-b border-border/50">
+            <h2 className="font-serif text-xl font-bold text-navy mb-3">
               6. Payments, Pricing & Taxes
             </h2>
             <p className="text-navy/85">
@@ -116,7 +116,7 @@ export default function TermsPage() {
 
           {/* Section 7 */}
           <div>
-            <h2 className="font-serif text-xl font-bold text-navy mb-3 pb-1 border-b border-border/50">
+            <h2 className="font-serif text-xl font-bold text-navy mb-3">
               7. Cancellation & Refund Policy
             </h2>
             <ul className="list-disc pl-6 space-y-2 text-navy/85">
@@ -131,7 +131,7 @@ export default function TermsPage() {
 
           {/* Section 8 */}
           <div>
-            <h2 className="font-serif text-xl font-bold text-navy mb-3 pb-1 border-b border-border/50">
+            <h2 className="font-serif text-xl font-bold text-navy mb-3">
               8. User Conduct & Acceptable Use
             </h2>
             <p className="text-navy/85">
@@ -141,7 +141,7 @@ export default function TermsPage() {
 
           {/* Section 9 */}
           <div>
-            <h2 className="font-serif text-xl font-bold text-navy mb-3 pb-1 border-b border-border/50">
+            <h2 className="font-serif text-xl font-bold text-navy mb-3">
               9. Limitation of Liability
             </h2>
             <p className="text-navy/85">
@@ -151,7 +151,7 @@ export default function TermsPage() {
 
           {/* Section 10 */}
           <div>
-            <h2 className="font-serif text-xl font-bold text-navy mb-3 pb-1 border-b border-border/50">
+            <h2 className="font-serif text-xl font-bold text-navy mb-3">
               10. Governing Law
             </h2>
             <p className="text-navy/85">
@@ -161,7 +161,7 @@ export default function TermsPage() {
 
           {/* Section 11 */}
           <div>
-            <h2 className="font-serif text-xl font-bold text-navy mb-3 pb-1 border-b border-border/50">
+            <h2 className="font-serif text-xl font-bold text-navy mb-3">
               11. Contact Information
             </h2>
             <p className="text-navy/85 mb-2">
