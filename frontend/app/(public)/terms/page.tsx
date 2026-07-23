@@ -174,6 +174,12 @@ export default function TermsPage() {
               </a>
             </p>
             <p className="text-navy/85">
+              <strong>Phone:</strong>{" "}
+              <a href="tel:+917049985097" className="text-primary underline hover:text-gold-end transition-colors">
+                +91 70499 85097
+              </a>
+            </p>
+            <p className="text-navy/85">
               <strong>Address:</strong> B-28, Near Symbiosis College, Tarodi Khurd, Kamptee, Nagpur - 441001
             </p>
           </div>
