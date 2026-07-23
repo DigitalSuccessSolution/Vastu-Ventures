@@ -518,7 +518,7 @@ export default function AdminCoursesPage() {
         lessons: courseForm.curriculum.map((item, idx) => ({
           title: item.title || `Chapter ${idx + 1}`,
           contentType: item.contentType || "youtube",
-          videoDuration: "45 mins",
+          videoDuration: "",
           videoUrl: item.contentType === "pdf" ? "" : (item.youtubeUrl || ""),
           fileUrl: item.contentType === "pdf" ? (item.youtubeUrl || "") : "",
           fileName: item.contentType === "pdf" ? (item.fileName || "") : ""

@@ -31,7 +31,12 @@ export default function PaymentsHistoryPage() {
     );
   }
 
-  const totalSpent = transactions.reduce((acc, tx) => acc + (tx.amount || 0), 0);
+  const formatRupees = (amount: number) => {
+    if (!amount) return 0;
+    return amount > 1000 ? Math.round(amount / 100) : amount;
+  };
+
+  const totalSpentInRupees = transactions.reduce((acc, tx) => acc + formatRupees(tx.amount || 0), 0);
 
   return (
     <div className="flex flex-col w-full">
@@ -45,7 +50,7 @@ export default function PaymentsHistoryPage() {
         </div>
 
         <div className="text-xs font-medium text-navy bg-white px-4 py-2 rounded-xl border border-border/80 shrink-0">
-          Total Spent: <span className="font-semibold text-primary">₹{totalSpent > 100000 ? (totalSpent/100).toLocaleString() : totalSpent.toLocaleString()}</span>
+          Total Spent: <span className="font-semibold text-primary">₹{totalSpentInRupees.toLocaleString()}</span>
         </div>
       </div>
 
@@ -90,7 +95,7 @@ export default function PaymentsHistoryPage() {
                       <td className="p-4 text-muted-foreground font-normal">
                         {new Date(tx.createdAt || Date.now()).toLocaleDateString("en-IN", { day: 'numeric', month: 'short', year: 'numeric' })}
                       </td>
-                      <td className="p-4 font-semibold text-navy">₹{tx.amount ? (tx.amount / (tx.amount > 10000 ? 100 : 1)).toLocaleString() : "0"}</td>
+                      <td className="p-4 font-semibold text-navy">₹{formatRupees(tx.amount).toLocaleString()}</td>
                       <td className="p-4">
                         <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200 inline-flex items-center gap-1">
                           <CheckCircle2 className="w-3 h-3 text-emerald-600" />

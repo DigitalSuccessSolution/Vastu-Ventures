@@ -11,8 +11,6 @@ const studentMenuItems = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { name: "Profile", href: "/dashboard/profile", icon: User },
   { name: "My Courses", href: "/dashboard/courses", icon: BookOpen },
-  { name: "Continue Learning", href: "/dashboard/continue-learning", icon: PlayCircle },
-  { name: "Course Progress", href: "/dashboard/progress", icon: TrendingUp },
   { name: "Certificates", href: "/dashboard/certificates", icon: Award },
   { name: "Appointment History", href: "/dashboard/appointments", icon: Calendar },
   { name: "Payment History", href: "/dashboard/payments", icon: CreditCard }
@@ -59,14 +57,17 @@ export default function Navbar() {
   // Prevent background scrolling when mobile menu is open
   useEffect(() => {
     if (isOpen) {
-      document.documentElement.classList.add("lenis-stopped");
+      document.documentElement.classList.add("lenis-stopped", "overflow-hidden");
+      document.documentElement.style.overflow = "hidden";
       document.body.style.overflow = "hidden";
     } else {
-      document.documentElement.classList.remove("lenis-stopped");
+      document.documentElement.classList.remove("lenis-stopped", "overflow-hidden");
+      document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
     }
     return () => {
-      document.documentElement.classList.remove("lenis-stopped");
+      document.documentElement.classList.remove("lenis-stopped", "overflow-hidden");
+      document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
     };
   }, [isOpen]);
@@ -234,17 +235,18 @@ export default function Navbar() {
             </nav>
           </div>
 
-          {/* Right Action & Account Button */}
-          <div className="hidden lg:flex items-center gap-4">
+          {/* Right Action & Account Buttons */}
+          <div className="flex items-center gap-3">
+            {/* Consultation Booking Button (Desktop) */}
             <Link
               href="/book"
-              className="px-5 py-2.5 rounded-xl bg-gold-gradient text-white text-sm font-semibold shadow-premium hover:shadow-premium-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2"
+              className="hidden lg:flex px-5 py-2.5 rounded-xl bg-gold-gradient text-white text-sm font-semibold shadow-premium hover:shadow-premium-lg hover:scale-[1.02] active:scale-[0.98] transition-all items-center gap-2"
             >
               <Calendar className="w-4 h-4" />
               Book Consultation
             </Link>
 
-            {/* Profile Dropdown */}
+            {/* Profile Dropdown / Login Button (Both Desktop & Mobile) */}
             {user ? (
               <div
                 className="relative"
@@ -254,9 +256,9 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={() => setActiveDropdown(activeDropdown === "profile" ? null : "profile")}
-                  className="flex items-center gap-2 p-1 rounded-full border border-[#EDE3D0] bg-white hover:bg-[#FAF6F0] transition-all shadow-sm cursor-pointer group"
+                  className="flex items-center gap-1.5 p-1 rounded-full border border-[#EDE3D0] bg-white hover:bg-[#FAF6F0] transition-all shadow-sm cursor-pointer group shrink-0"
                 >
-                  <div className="w-8 h-8 rounded-full bg-navy text-white font-bold flex items-center justify-center text-xs overflow-hidden border border-primary/40 shrink-0">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-navy text-white font-bold flex items-center justify-center text-xs overflow-hidden border border-primary/40 shrink-0">
                     {user?.avatar?.url ? (
                       <img src={user.avatar.url} alt={user.name || "User"} className="w-full h-full object-cover" />
                     ) : (
@@ -351,22 +353,23 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/login"
-                className="px-4 py-2.5 rounded-xl border border-border bg-white text-navy text-xs font-semibold shadow-sm hover:bg-[#FAF6F0] transition-all flex items-center gap-1.5"
+                title="Login to Account"
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-[#EDE3D0] bg-white hover:bg-[#FAF6F0] text-navy hover:text-primary flex items-center justify-center transition-all shadow-sm hover:scale-105 shrink-0"
               >
-                <UserRound className="w-4 h-4" />
-                Student Login
+                <UserRound className="w-4 h-4 sm:w-5 sm:h-5" />
               </Link>
             )}
-          </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 rounded-xl text-navy hover:bg-background-alt transition-colors focus:outline-none cursor-pointer"
-            aria-label="Toggle Menu"
-          >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+            {/* Mobile Hamburger Toggle Button */}
+            <button
+              type="button"
+              onClick={() => setIsOpen(!isOpen)}
+              className="lg:hidden p-2 rounded-xl text-navy hover:bg-background-alt transition-colors focus:outline-none cursor-pointer"
+              aria-label="Toggle Menu"
+            >
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -374,11 +377,12 @@ export default function Navbar() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            data-lenis-prevent
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "calc(100vh - 65px)" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="lg:hidden fixed left-0 right-0 top-full bottom-0 bg-[#FDFBF7] border-t border-border z-40 overflow-y-auto"
+            className="lg:hidden fixed left-0 right-0 top-full bottom-0 bg-[#FDFBF7] border-t border-border z-40 overflow-y-auto overscroll-contain touch-pan-y"
           >
             <div className="px-6 py-8 flex flex-col justify-between min-h-[calc(100vh-80px)]">
               {/* Menu Navigation Links */}
@@ -460,32 +464,6 @@ export default function Navbar() {
                 >
                   Contact Us
                 </Link>
-
-                {/* Logged-in Student Account Section in Mobile Menu */}
-                {user && user.role === "student" && (
-                  <div className="pt-4 border-t border-border flex flex-col gap-3">
-                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Student Portal</p>
-                    <div className="grid grid-cols-2 gap-2">
-                      {studentMenuItems.map((item) => {
-                        const Icon = item.icon;
-                        const isActive = pathname === item.href;
-                        return (
-                          <Link
-                            key={item.href}
-                            href={item.href}
-                            onClick={() => setIsOpen(false)}
-                            className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs font-semibold transition-all ${
-                              isActive ? "bg-primary text-white border-primary" : "bg-white text-navy border-border hover:bg-[#FAF6F0]"
-                            }`}
-                          >
-                            <Icon className="w-3.5 h-3.5" />
-                            <span className="truncate">{item.name}</span>
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
               </nav>
 
               {/* Drawer Footer Actions */}
@@ -496,28 +474,6 @@ export default function Navbar() {
                 >
                   Book Consultation
                 </Link>
-
-                <div className="mt-1">
-                  {user ? (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsOpen(false);
-                        handleLogout();
-                      }}
-                      className="w-full py-2.5 rounded-xl border border-red-200 bg-red-50 text-center font-bold text-red-600 text-xs hover:bg-red-100 transition-colors flex items-center justify-center gap-2"
-                    >
-                      <LogOut className="w-4 h-4" /> Log Out ({user.name || user.email})
-                    </button>
-                  ) : (
-                    <Link
-                      href="/login"
-                      className="block w-full py-2.5 rounded-xl border border-border text-center font-medium text-navy text-xs hover:bg-[#FAF6F0] transition-colors"
-                    >
-                      Student Login
-                    </Link>
-                  )}
-                </div>
               </div>
             </div>
           </motion.div>

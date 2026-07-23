@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { notFound, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuthStore } from "@/lib/store";
+import api from "@/lib/axios";
 import {
   Star,
   Clock,
@@ -16,7 +17,10 @@ import {
   ThumbsUp,
   Play,
   FileText,
-  Video
+  Video,
+  Lock,
+  Unlock,
+  Sparkles
 } from "lucide-react";
 
 interface Props {
@@ -116,8 +120,9 @@ export default function CourseDetailsPage({ params }: Props) {
             const verifyData = await verifyRes.json();
             
             if (verifyData.success) {
-              alert("Payment successful! You are now enrolled in the course.");
+              alert("Payment successful! All course curriculum items are now unlocked.");
               setShowBuyModal(false);
+              fetchCourseDetails();
             } else {
               alert("Payment verification failed. Please contact support.");
             }
@@ -145,6 +150,33 @@ export default function CourseDetailsPage({ params }: Props) {
     } catch (error: any) {
       console.error(error);
       alert(error.message || "An unexpected error occurred");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleMockPayment = async () => {
+    if (!token) {
+      router.push(`/login?redirect=/courses/${slug}`);
+      return;
+    }
+    setIsProcessing(true);
+    try {
+      const res = await api.post("/payments/verify-mock-course", {
+        courseId: course._id
+      });
+
+      if (res.data.success) {
+        alert("🎉 Payment Successful! Course enrolled. Taking you to My Courses dashboard.");
+        setShowBuyModal(false);
+        fetchCourseDetails();
+        router.push("/dashboard/courses");
+      } else {
+        alert("Sandbox payment failed.");
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert(err.response?.data?.message || "Sandbox payment failed.");
     } finally {
       setIsProcessing(false);
     }
@@ -187,22 +219,29 @@ export default function CourseDetailsPage({ params }: Props) {
     };
   }, [showBuyModal]);
 
-  useEffect(() => {
-    const fetchCourseDetails = async () => {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/courses/${slug}`);
-        const data = await res.json();
-        if (data.success) {
-          setCourse(data.data);
-        }
-      } catch (err) {
-        console.error("Error fetching course details:", err);
-      } finally {
-        setLoading(false);
+  const fetchCourseDetails = async () => {
+    try {
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
       }
-    };
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"}/courses/${slug}`, {
+        headers
+      });
+      const data = await res.json();
+      if (data.success) {
+        setCourse(data.data);
+      }
+    } catch (err) {
+      console.error("Error fetching course details:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchCourseDetails();
-  }, [slug]);
+  }, [slug, token]);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && isAuthenticated && user) {
@@ -412,126 +451,193 @@ export default function CourseDetailsPage({ params }: Props) {
 
             {activeTab === "curriculum" && (
               <div className="flex flex-col gap-6 animate-fade-in-up">
-                {/* Lecture Videos list looping through course.curriculum */}
+                {/* Lecture Videos & PDFs list looping through course.curriculum */}
                 <div className="flex flex-col gap-4">
                   {course.curriculum && course.curriculum.length > 0 ? (
-                    course.curriculum.map((section: any, secIdx: number) => (
-                      <div key={secIdx} className="flex flex-col gap-3">
-                        <h3 className="text-xs uppercase font-bold text-muted-foreground tracking-wider pl-1 mt-4 text-left">
-                          {section.sectionTitle}
-                        </h3>
+                    (() => {
+                      let globalItemCounter = 0;
+                      return course.curriculum.map((section: any, secIdx: number) => (
+                        <div key={secIdx} className="flex flex-col gap-3">
+                          <h3 className="text-xs uppercase font-bold text-muted-foreground tracking-wider pl-1 mt-4 text-left">
+                            {section.sectionTitle}
+                          </h3>
 
-                        {(section.lessons || []).map((lesson: any, lesIdx: number) => {
-                          const numPrefix = String(secIdx * 3 + lesIdx + 1).padStart(2, "0");
-                          const isPdf = lesson.contentType === "pdf";
-                          const expandedKey = `${secIdx}-${lesIdx}`;
+                          {(section.lessons || []).map((lesson: any, lesIdx: number) => {
+                            const itemIndex = globalItemCounter++;
+                            const isFree = lesson.isFree || itemIndex === 0;
+                            const isLocked = lesson.isLocked || (!course.isPurchased && !isFree);
+                            const numPrefix = String(itemIndex + 1).padStart(2, "0");
+                            const isPdf = lesson.contentType === "pdf";
+                            const expandedKey = `${secIdx}-${lesIdx}`;
 
-                          if (isPdf) {
-                            const fileUrl = lesson.fileUrl || "";
+                            const handleItemClick = () => {
+                              if (isLocked) {
+                                if (user) {
+                                  setPurchaseDetails({
+                                    name: user.name || "",
+                                    email: user.email || "",
+                                    phone: user.phone || ""
+                                  });
+                                  setShowBuyModal(true);
+                                } else {
+                                  router.push(`/login?redirect=/courses/${slug}`);
+                                }
+                              }
+                            };
+
+                            if (isPdf) {
+                              const fileUrl = lesson.fileUrl || "";
+
+                              return (
+                                <div
+                                  key={lesIdx}
+                                  className={`bg-white border rounded-2xl overflow-hidden shadow-premium transition-all duration-300 ${
+                                    isLocked ? "border-border opacity-90" : "border-border hover:border-primary/20"
+                                  }`}
+                                >
+                                  {/* Lesson header row */}
+                                  <div className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                    <div className="flex items-center gap-4">
+                                      {/* PDF Icon box */}
+                                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 border ${
+                                        isLocked ? "bg-amber-50 text-amber-600 border-amber-200" : "bg-navy/5 text-navy border-navy/10"
+                                      }`}>
+                                        {isLocked ? <Lock className="w-5 h-5" /> : <FileText className="w-5 h-5" />}
+                                      </div>
+
+                                      <div className="text-left">
+                                        <h4 className="text-sm font-semibold text-navy leading-snug flex items-center gap-2">
+                                          <span>{numPrefix}. {lesson.title}</span>
+                                        </h4>
+                                        <div className="text-[10px] text-muted-foreground mt-1 font-light flex items-center gap-2 flex-wrap">
+                                          <span className="uppercase text-[9px] font-bold text-navy bg-navy/5 border border-navy/10 px-1.5 py-0.5 rounded">
+                                            PDF Document
+                                          </span>
+                                          {isFree && (
+                                            <span className="uppercase text-[9px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                              <Sparkles className="w-3 h-3 text-emerald-600" /> Free Preview
+                                            </span>
+                                          )}
+                                          {isLocked && (
+                                            <span className="uppercase text-[9px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                              <Lock className="w-3 h-3 text-amber-600" /> Locked
+                                            </span>
+                                          )}
+                                          {lesson.fileName && <span className="truncate max-w-[120px] sm:max-w-xs">{lesson.fileName}</span>}
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div className="flex flex-col sm:flex-row gap-2 shrink-0">
+                                      {isLocked ? (
+                                        <button
+                                          type="button"
+                                          onClick={handleItemClick}
+                                          className="px-4 py-2 bg-[#FAF6F0] hover:bg-primary/10 border border-[#EDE3D0] text-navy text-center rounded-lg text-xs sm:text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                                        >
+                                          <Lock className="w-3.5 h-3.5 text-primary" />
+                                          Buy Course to Unlock
+                                        </button>
+                                      ) : fileUrl ? (
+                                        <button
+                                          type="button"
+                                          onClick={() => handleDownloadPdf(fileUrl, lesson.fileName || `${lesson.title.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`)}
+                                          className="px-5 py-2 bg-navy hover:bg-navy-light text-white text-center rounded-lg text-xs sm:text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                                        >
+                                          <FileText className="w-3.5 h-3.5" />
+                                          Download PDF
+                                        </button>
+                                      ) : null}
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            }
+
+                            // YouTube Video Item Layout
+                            const videoUrl = lesson.videoUrl || "";
+                            const youtubeId = videoUrl ? getYoutubeId(videoUrl) : null;
 
                             return (
                               <div
                                 key={lesIdx}
-                                className="bg-white border border-border rounded-2xl overflow-hidden shadow-premium hover:border-primary/20 transition-all duration-300"
+                                className={`bg-white border rounded-2xl overflow-hidden shadow-premium transition-all duration-300 ${
+                                  isLocked ? "border-border opacity-90" : "border-border hover:border-primary/20"
+                                }`}
                               >
                                 {/* Lesson header row */}
                                 <div className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                   <div className="flex items-center gap-4">
-                                    {/* PDF Icon box */}
-                                    <div className="w-12 h-12 rounded-xl bg-navy/5 text-navy border border-navy/10 flex items-center justify-center flex-shrink-0">
-                                      <FileText className="w-5 h-5" />
+                                    {/* Left Icon box */}
+                                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 border ${
+                                      isLocked ? "bg-amber-50 text-amber-600 border-amber-200" : "bg-navy/5 text-navy border-navy/10"
+                                    }`}>
+                                      {isLocked ? <Lock className="w-5 h-5" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
                                     </div>
 
                                     <div className="text-left">
                                       <h4 className="text-sm font-semibold text-navy leading-snug">
                                         {numPrefix}. {lesson.title}
                                       </h4>
-                                      <p className="text-[10px] text-muted-foreground mt-0.5 font-light flex items-center gap-2">
+                                      <div className="text-[10px] text-muted-foreground mt-1 font-light flex items-center gap-2 flex-wrap">
                                         <span className="uppercase text-[9px] font-bold text-navy bg-navy/5 border border-navy/10 px-1.5 py-0.5 rounded">
-                                          PDF Document
+                                          YouTube Video
                                         </span>
-                                        {lesson.fileName && <span className="truncate max-w-[120px] sm:max-w-xs">{lesson.fileName}</span>}
-                                      </p>
+                                        {isFree && (
+                                          <span className="uppercase text-[9px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                            <Sparkles className="w-3 h-3 text-emerald-600" /> Free Preview
+                                          </span>
+                                        )}
+                                        {isLocked && (
+                                          <span className="uppercase text-[9px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                            <Lock className="w-3 h-3 text-amber-600" /> Locked
+                                          </span>
+                                        )}
+                                      </div>
                                     </div>
                                   </div>
 
-                                  <div className="flex flex-col sm:flex-row gap-2 shrink-0">
-                                    {fileUrl && (
-                                      <button
-                                        type="button"
-                                        onClick={() => handleDownloadPdf(fileUrl, lesson.fileName || `${lesson.title.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`)}
-                                        className="px-5 py-2 bg-navy hover:bg-navy-light text-white text-center rounded-lg text-xs sm:text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer"
-                                      >
-                                        <FileText className="w-3.5 h-3.5" />
-                                        Download PDF
-                                      </button>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          }
-
-                          // YouTube Item Layout
-                          const videoUrl = lesson.videoUrl || "";
-                          const youtubeId = videoUrl ? getYoutubeId(videoUrl) : null;
-
-                          return (
-                            <div
-                              key={lesIdx}
-                              className="bg-white border border-border rounded-2xl overflow-hidden shadow-premium hover:border-primary/20 transition-all duration-300"
-                            >
-                              {/* Lesson header row */}
-                              <div className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                                <div className="flex items-center gap-4">
-                                  {/* Left Icon box */}
-                                  <div className="w-12 h-12 rounded-xl bg-navy/5 text-navy border border-navy/10 flex items-center justify-center flex-shrink-0">
-                                    <Play className="w-5 h-5 fill-current ml-0.5" />
-                                  </div>
-
-                                  <div className="text-left">
-                                    <h4 className="text-sm font-semibold text-navy leading-snug">
-                                      {numPrefix}. {lesson.title}
-                                    </h4>
-                                    <p className="text-[10px] text-muted-foreground mt-0.5 font-light flex items-center gap-2">
-                                      <span className="uppercase text-[9px] font-bold text-navy bg-navy/5 border border-navy/10 px-1.5 py-0.5 rounded">
-                                        YouTube Video
-                                      </span>
-                                    </p>
-                                  </div>
+                                  {isLocked ? (
+                                    <button
+                                      type="button"
+                                      onClick={handleItemClick}
+                                      className="px-4 py-2 bg-[#FAF6F0] hover:bg-primary/10 border border-[#EDE3D0] text-navy text-center rounded-lg text-xs sm:text-sm font-bold shadow-sm transition-all sm:self-center w-full sm:w-auto flex items-center justify-center gap-1.5 cursor-pointer"
+                                    >
+                                      <Lock className="w-3.5 h-3.5 text-primary" />
+                                      Buy Course to Unlock
+                                    </button>
+                                  ) : youtubeId ? (
+                                    <button
+                                      type="button"
+                                      onClick={() => setExpandedLesson(prev => prev === expandedKey ? null : expandedKey)}
+                                      className="px-5 py-2 bg-navy hover:bg-navy-light text-white text-center rounded-lg text-xs sm:text-sm font-bold shadow-sm transition-all sm:self-center w-full sm:w-auto flex items-center justify-center gap-2 cursor-pointer"
+                                    >
+                                      <Play className="w-3.5 h-3.5 fill-current" />
+                                      {expandedLesson === expandedKey ? "Close" : "Play Video"}
+                                    </button>
+                                  ) : null}
                                 </div>
 
-                                {youtubeId && (
-                                  <button
-                                    type="button"
-                                    onClick={() => setExpandedLesson(prev => prev === expandedKey ? null : expandedKey)}
-                                    className="px-5 py-2 bg-navy hover:bg-navy-light text-white text-center rounded-lg text-xs sm:text-sm font-bold shadow-sm transition-all sm:self-center w-full sm:w-auto flex items-center justify-center gap-2 cursor-pointer"
-                                  >
-                                    <Play className="w-3.5 h-3.5 fill-current" />
-                                    {expandedLesson === expandedKey ? "Close" : "Play Video"}
-                                  </button>
+                                {/* Inline YouTube embed — expands when Play is clicked (only for unlocked items) */}
+                                {!isLocked && youtubeId && expandedLesson === expandedKey && (
+                                  <div className="border-t border-border">
+                                    <div className="relative aspect-video w-full bg-black">
+                                      <iframe
+                                        src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0`}
+                                        title={lesson.title}
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                        className="w-full h-full absolute inset-0"
+                                      />
+                                    </div>
+                                  </div>
                                 )}
                               </div>
-
-                              {/* Inline YouTube embed — expands when Play is clicked */}
-                              {youtubeId && expandedLesson === expandedKey && (
-                                <div className="border-t border-border">
-                                  <div className="relative aspect-video w-full bg-black">
-                                    <iframe
-                                      src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0`}
-                                      title={lesson.title}
-                                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                      allowFullScreen
-                                      className="w-full h-full absolute inset-0"
-                                    />
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ))
+                            );
+                          })}
+                        </div>
+                      ));
+                    })()
                   ) : (
                     <div className="bg-white border border-border rounded-2xl p-6 shadow-premium">
                       <p className="text-navy-light text-sm font-light leading-relaxed">
@@ -784,18 +890,30 @@ export default function CourseDetailsPage({ params }: Props) {
               </div>
             </div>
               
-              <button
-                onClick={handlePayment}
-                disabled={isProcessing}
-                className={`w-full py-3.5 mt-2 bg-navy hover:bg-navy-light text-white text-sm font-bold rounded-xl shadow-premium transition-all flex justify-center items-center gap-2 group ${isProcessing ? 'opacity-75 cursor-not-allowed' : ''}`}
-              >
-                {isProcessing ? (
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : (
-                  <ShieldCheck className="w-5 h-5 group-hover:scale-110 transition-transform" /> 
-                )}
-                {isProcessing ? "Processing..." : "Proceed to Pay"}
-              </button>
+              <div className="flex flex-col gap-2.5 mt-3">
+                <button
+                  onClick={handlePayment}
+                  disabled={isProcessing}
+                  className={`w-full py-3.5 bg-navy hover:bg-navy-light text-white text-sm font-bold rounded-xl shadow-premium transition-all flex justify-center items-center gap-2 group ${isProcessing ? 'opacity-75 cursor-not-allowed' : ''}`}
+                >
+                  {isProcessing ? (
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <ShieldCheck className="w-5 h-5 group-hover:scale-110 transition-transform" /> 
+                  )}
+                  {isProcessing ? "Processing..." : "Proceed via Razorpay"}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleMockPayment}
+                  disabled={isProcessing}
+                  className="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded-xl shadow-sm transition-all flex justify-center items-center gap-2 cursor-pointer"
+                >
+                  <Sparkles className="w-4 h-4 text-white" />
+                  🛠️ Sandbox Bypass Payment (Demo Unlock)
+                </button>
+              </div>
           </motion.div>
         </div>
       )}

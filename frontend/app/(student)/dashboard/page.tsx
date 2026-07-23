@@ -172,13 +172,15 @@ export default function StudentDashboardRoot() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {recentCourses.map((enrollment: any) => {
                 const course = enrollment.course;
+                if (!course) return null;
                 const progress = enrollment.progressPercentage || 0;
+                const imgUrl = course.image?.url || (typeof course.image === "string" ? course.image : "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80");
                 return (
-                  <Link href={`/courses/${course.slug}`} key={enrollment._id} className="bg-white border border-border/80 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all group flex flex-col justify-between block">
+                  <Link href={`/dashboard/courses/${course.slug}`} key={enrollment._id} className="bg-white border border-border/80 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all group flex flex-col justify-between block">
                     <div>
                       <div className="relative w-full h-32 rounded-xl overflow-hidden mb-3">
                         <img
-                          src={course.image?.url || "https://placehold.co/600x400"}
+                          src={imgUrl}
                           alt={course.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />

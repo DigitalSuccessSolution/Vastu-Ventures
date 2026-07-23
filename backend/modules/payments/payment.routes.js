@@ -19,6 +19,7 @@ router.post("/webhook", paymentController.handleWebhook);
 // Authenticated Student payment routes
 router.post("/create-order", isAuthenticated, validateRequest(createOrderSchema), paymentController.createOrder);
 router.post("/verify", isAuthenticated, validateRequest(verifyPaymentSchema), paymentController.verifyPayment);
+router.post("/verify-mock-course", isAuthenticated, paymentController.verifyMockCoursePayment);
 router.get("/my", isAuthenticated, paymentController.getMyPayments);
 router.get("/my/:id", isAuthenticated, paymentController.getPaymentDetail);
 router.get("/my/:id/invoice", isAuthenticated, paymentController.downloadInvoice);

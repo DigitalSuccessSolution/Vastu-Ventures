@@ -89,24 +89,24 @@ export default function ContactPage() {
             <div className="flex flex-col gap-6">
               <h3 className="font-serif text-lg sm:text-xl font-bold text-gold-start">Office Headquarters</h3>
               <p className="text-sm text-background-alt/80 font-light leading-relaxed">
-                Our main consulting office is based in Bangalore, Karnataka. Visits are strictly by prior appointment only.
+                Our main consulting office is based in Nagpur, Maharashtra. Visits are strictly by prior appointment only.
               </p>
 
               <div className="flex flex-col gap-5 mt-4 text-sm font-light">
                 <div className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-gold-start flex-shrink-0 mt-0.5" />
-                  <span>108, Vedic Heritage Enclave, Jayanagar 4th Block, Bangalore, Karnataka - 560011</span>
+                  <span>2,4 A Wing, New Administrative Building, Near Zilha Parishad Office, Nagpur - 440001</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Mail className="w-5 h-5 text-gold-start flex-shrink-0" />
-                  <a href="mailto:contact@Vastu Ventures.com" className="hover:text-gold-start transition-colors">
-                    contact@Vastu Ventures.com
+                  <a href="mailto:contact@VastuVentures.com" className="hover:text-gold-start transition-colors">
+                    contact@VastuVentures.com
                   </a>
                 </div>
                 <div className="flex items-center gap-3">
                   <Phone className="w-5 h-5 text-gold-start flex-shrink-0" />
-                  <a href="tel:+919876543210" className="hover:text-gold-start transition-colors">
-                    +91 98765 43210
+                  <a href="tel:+917049985097" className="hover:text-gold-start transition-colors">
+                    +91 70499 85097
                   </a>
                 </div>
               </div>
@@ -114,7 +114,7 @@ export default function ContactPage() {
 
             {/* Map placeholder */}
             <div className="w-full h-40 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mt-8 text-sm text-background-alt/60 font-light">
-              Interactive Map Container (Bangalore, IN)
+              Interactive Map Container (Nagpur, IN)
             </div>
           </div>
 

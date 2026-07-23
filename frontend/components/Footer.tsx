@@ -144,11 +144,6 @@ export default function Footer() {
                   Terms & Conditions
                 </Link>
               </li>
-              <li>
-                <Link href="/terms" className="hover:text-gold-start hover:pl-1 transition-all">
-                  Refund Policy
-                </Link>
-              </li>
             </ul>
           </div>
 
@@ -160,23 +155,23 @@ export default function Footer() {
             <ul className="flex flex-col gap-3 text-sm text-background-alt/75 font-light">
               <li className="flex items-center gap-2.5">
                 <Phone className="w-3.5 h-3.5 text-gold-start" />
-                <a href="tel:+919876543210" className="hover:text-gold-start">
-                  +91 98765 43210
+                <a href="tel:+917049985097" className="hover:text-gold-start">
+                  +91 70499 85097
                 </a>
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="w-3.5 h-3.5 text-gold-start" />
-                <a href="mailto:info@Vastu Ventures.com" className="hover:text-gold-start">
-                  info@Vastu Ventures.com
+                <a href="mailto:info@VastuVentures.com" className="hover:text-gold-start">
+                  info@VastuVentures.com
                 </a>
               </li>
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-3.5 h-3.5 text-gold-start flex-shrink-0 mt-0.5" />
-                <span>123, Harmony Road, New Delhi,</span>
+                <span>24 A Wing, New Administrative Building, Near Zilha Parishad Office</span>
               </li>
               <li className="flex items-center gap-2.5">
-                <Compass className="w-3.5 h-3.5 text-gold-start" />
-                <span>India - 110001</span>
+                <Compass className="w-3.5 h-3.5 text-gold-start flex-shrink-0" />
+                <span>Nagpur - 440001</span>
               </li>
             </ul>
           </div>

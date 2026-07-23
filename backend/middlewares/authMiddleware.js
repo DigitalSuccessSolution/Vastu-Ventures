@@ -31,4 +31,26 @@ const isAuthenticated = async (req, res, next) => {
   }
 };
 
+/**
+ * Middleware: Optional JWT verification. Does not fail if token is missing/invalid.
+ */
+export const optionalAuth = async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      const token = authHeader.split(" ")[1];
+      const decoded = verifyAccessToken(token);
+      if (decoded && decoded.id) {
+        const user = await User.findById(decoded.id).select("-password -refreshToken -emailVerificationOTP");
+        if (user && !user.isBlocked) {
+          req.user = user;
+        }
+      }
+    }
+  } catch (error) {
+    // Ignore invalid/expired token for optional routes
+  }
+  next();
+};
+
 export default isAuthenticated;

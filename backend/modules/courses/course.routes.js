@@ -3,7 +3,7 @@ import multer from "multer";
 import * as courseController from "./course.controller.js";
 
 const upload = multer({ limits: { fileSize: 50 * 1024 * 1024 } }); // 50MB limits
-import isAuthenticated from "../../middlewares/authMiddleware.js";
+import isAuthenticated, { optionalAuth } from "../../middlewares/authMiddleware.js";
 import authorizeRoles from "../../middlewares/authorizeRoles.js";
 import validateRequest from "../../middlewares/validateRequest.js";
 import {
@@ -31,9 +31,10 @@ adminCategoryRouter.post("/", validateRequest(createCourseCategorySchema), cours
 adminCategoryRouter.put("/:id", validateRequest(updateCourseCategorySchema), courseController.updateCourseCategory);
 adminCategoryRouter.delete("/:id", courseController.deleteCourseCategory);
 
-// Courses - Public
+// Courses - Public & Secure Content
 router.get("/", courseController.getPublishedCourses);
-router.get("/:slug", courseController.getCourseBySlug);
+router.get("/:slug", optionalAuth, courseController.getCourseBySlug);
+router.get("/:courseId/curriculum/:lessonId/content", isAuthenticated, courseController.getSecureLessonContent);
 
 // Courses - Admin (securing subpages)
 adminRouter.use(isAuthenticated, authorizeRoles("admin", "instructor"));

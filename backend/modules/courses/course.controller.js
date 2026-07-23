@@ -39,8 +39,19 @@ export const getPublishedCourses = asyncHandler(async (req, res) => {
 
 export const getCourseBySlug = asyncHandler(async (req, res) => {
   const { slug } = req.params;
-  const course = await courseService.getCourseBySlug(slug);
+  const course = await courseService.getCourseBySlug(slug, req.user);
   return sendResponse(res, 200, "Course details retrieved", course);
+});
+
+export const getSecureLessonContent = asyncHandler(async (req, res) => {
+  const { courseId, lessonId } = req.params;
+  const lesson = await courseService.getSecureLessonContent(
+    req.user._id,
+    req.user.role,
+    courseId,
+    lessonId
+  );
+  return sendResponse(res, 200, "Lesson content retrieved", lesson);
 });
 
 export const getAllCoursesAdmin = asyncHandler(async (req, res) => {

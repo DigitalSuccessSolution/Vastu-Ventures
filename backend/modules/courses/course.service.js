@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import Course from "./course.model.js";
 import Lesson from "./lesson.model.js";
 import CourseCategory from "./courseCategory.model.js";
+import Enrollment from "../enrollments/enrollment.model.js";
 import slugify from "../../utils/slugify.js";
 import { ERROR_MESSAGES } from "../../constants/errorMessages.js";
 
@@ -80,19 +81,123 @@ export const getPublishedCourses = async (categorySlug) => {
     .select("-curriculum.lessons"); // Hide lesson details in catalog listing
 };
 
-export const getCourseBySlug = async (slug) => {
-  const course = await Course.findOne({ slug, status: "published", isActive: true })
+export const getCourseBySlug = async (slug, user = null) => {
+  const courseDoc = await Course.findOne({ slug, status: "published", isActive: true })
     .populate("category")
     .populate({
       path: "curriculum.lessons",
-      select: "title order isPreview videoDuration videoUrl contentType fileUrl fileName" // Include public fields for playing/reading/downloading
+      select: "title order isPreview videoDuration videoUrl contentType fileUrl fileName resources"
     });
+
+  if (!courseDoc) {
+    const error = new Error(ERROR_MESSAGES.COURSE_NOT_FOUND);
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const course = courseDoc.toObject();
+
+  // Check enrollment or paid payment access
+  let isPurchased = false;
+  if (user) {
+    const enrollment = await Enrollment.exists({ user: user._id, course: course._id });
+    if (enrollment) {
+      isPurchased = true;
+    } else {
+      const paidPayment = await Payment.exists({ user: user._id, course: course._id, status: "paid", orderType: "course" });
+      if (paidPayment) isPurchased = true;
+    }
+  }
+
+  course.isPurchased = isPurchased;
+
+  let globalLessonIndex = 0;
+  if (course.curriculum && Array.isArray(course.curriculum)) {
+    course.curriculum = course.curriculum.map((section) => {
+      const sanitizedLessons = (section.lessons || []).map((lesson) => {
+        const isFree = globalLessonIndex === 0; // First item is FREE preview
+        const isLocked = !isPurchased && !isFree;
+        globalLessonIndex++;
+
+        if (isLocked) {
+          // STRICT SECURITY: Strip actual video and PDF URLs for locked items
+          return {
+            _id: lesson._id,
+            title: lesson.title,
+            order: lesson.order,
+            videoDuration: "",
+            contentType: lesson.contentType,
+            isLocked: true,
+            isFree: false,
+            videoUrl: "",
+            fileUrl: "",
+            fileName: "",
+            resources: []
+          };
+        } else {
+          return {
+            ...lesson,
+            videoDuration: "",
+            isLocked: false,
+            isFree: isFree
+          };
+        }
+      });
+
+      return {
+        ...section,
+        lessons: sanitizedLessons
+      };
+    });
+  }
+
+  return course;
+};
+
+export const getSecureLessonContent = async (userId, userRole, courseId, lessonId) => {
+  const course = await Course.findById(courseId).populate("curriculum.lessons");
   if (!course) {
     const error = new Error(ERROR_MESSAGES.COURSE_NOT_FOUND);
     error.statusCode = 404;
     throw error;
   }
-  return course;
+
+  let targetLesson = null;
+  let globalIndex = -1;
+  let currentIndex = 0;
+
+  if (course.curriculum && Array.isArray(course.curriculum)) {
+    for (const section of course.curriculum) {
+      for (const les of section.lessons || []) {
+        if (les._id.toString() === lessonId.toString()) {
+          targetLesson = les;
+          globalIndex = currentIndex;
+          break;
+        }
+        currentIndex++;
+      }
+      if (targetLesson) break;
+    }
+  }
+
+  if (!targetLesson) {
+    const error = new Error(ERROR_MESSAGES.LESSON_NOT_FOUND || "Lesson not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  // Check authorization
+  const isFreeItem = globalIndex === 0;
+  if (!isFreeItem && userRole !== "admin") {
+    const enrolled = await Enrollment.exists({ user: userId, course: courseId });
+    if (!enrolled) {
+      const error = new Error("Course purchase required to access this curriculum content");
+      error.statusCode = 403;
+      throw error;
+    }
+  }
+
+  return targetLesson;
 };
 
 export const getAllCoursesAdmin = async () => {
@@ -135,7 +240,7 @@ export const createCourse = async (data) => {
           course: course._id,
           sectionTitle: section.sectionTitle,
           title: les.title || "Untitled Lesson",
-          videoDuration: les.videoDuration || les.duration || "45 mins",
+          videoDuration: les.videoDuration || les.duration || "",
           videoUrl: les.youtubeUrl || les.videoUrl || "",
           fileUrl: les.fileUrl || les.youtubeUrl || "",
           fileName: les.fileName || "",
@@ -188,7 +293,7 @@ export const updateCourse = async (id, data) => {
           course: course._id,
           sectionTitle: section.sectionTitle,
           title: les.title || "Untitled Lesson",
-          videoDuration: les.videoDuration || les.duration || "45 mins",
+          videoDuration: les.videoDuration || les.duration || "",
           videoUrl: les.youtubeUrl || les.videoUrl || "",
           fileUrl: les.fileUrl || les.youtubeUrl || "",
           fileName: les.fileName || "",

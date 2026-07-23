@@ -1,5 +1,7 @@
+
 import User from "./user.model.js";
 import Enrollment from "../enrollments/enrollment.model.js";
+import CourseProgress from "../enrollments/courseProgress.model.js";
 import Certificate from "../certificates/certificate.model.js";
 import Consultation from "../consultations/consultation.model.js";
 import Payment from "../payments/payment.model.js";
@@ -18,7 +20,7 @@ export const getProfile = async (userId) => {
 };
 
 export const updateProfile = async (userId, updateData) => {
-  const user = await User.findByIdAndUpdate(userId, { $set: updateData }, { new: true, runValidators: true });
+  const user = await User.findByIdAndUpdate(userId, updateData, { new: true, runValidators: true });
   if (!user) {
     const error = new Error(ERROR_MESSAGES.USER_NOT_FOUND);
     error.statusCode = 404;
@@ -52,11 +54,62 @@ export const updateAvatar = async (userId, fileBuffer) => {
 };
 
 export const getPurchasedCourses = async (userId) => {
-  const enrollments = await Enrollment.find({ user: userId }).populate({
-    path: "course",
-    populate: { path: "instructor" }
+  // Sync/heal any paid course payments that might be missing enrollment records
+  const paidPayments = await Payment.find({
+    user: userId,
+    orderType: "course",
+    status: "paid"
   });
-  return enrollments;
+
+  for (const pay of paidPayments) {
+    if (pay.course) {
+      const existing = await Enrollment.findOne({ user: userId, course: pay.course });
+      if (!existing) {
+        await Enrollment.create({
+          user: userId,
+          course: pay.course,
+          payment: pay._id,
+          enrolledAt: pay.paidAt || pay.createdAt || new Date()
+        });
+      }
+    }
+  }
+
+  const enrollments = await Enrollment.find({ user: userId })
+    .populate({
+      path: "course",
+      populate: { path: "category" }
+    })
+    .populate("payment")
+    .sort({ createdAt: -1 });
+
+  const result = [];
+  for (const e of enrollments) {
+    if (!e.course) continue;
+
+    const courseObj = e.course.toObject ? e.course.toObject() : e.course;
+    const totalModules = (courseObj.curriculum || []).reduce(
+      (acc, sec) => acc + (sec.lessons || []).length,
+      0
+    );
+
+    const completedModules = await CourseProgress.countDocuments({
+      user: userId,
+      course: courseObj._id,
+      isCompleted: true
+    });
+
+    const progressPercentage = e.completionPercentage || (totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0);
+
+    const obj = e.toObject();
+    obj.progressPercentage = progressPercentage;
+    obj.totalModules = totalModules;
+    obj.completedModules = completedModules;
+    obj.isCompleted = e.isCompleted || progressPercentage >= 100;
+    result.push(obj);
+  }
+
+  return result;
 };
 
 export const getCertificates = async (userId) => {
@@ -75,10 +128,7 @@ export const getPayments = async (userId) => {
 };
 
 export const getWishlist = async (userId) => {
-  const user = await User.findById(userId).populate({
-    path: "wishlist",
-    populate: { path: "instructor" }
-  });
+  const user = await User.findById(userId).populate("wishlist");
   if (!user) {
     const error = new Error(ERROR_MESSAGES.USER_NOT_FOUND);
     error.statusCode = 404;

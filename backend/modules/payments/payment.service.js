@@ -130,6 +130,36 @@ export const verifyPayment = async (userId, verificationData) => {
   return { status: "paid", paymentId: payment._id };
 };
 
+export const verifyMockCoursePayment = async (userId, courseId) => {
+  if (!courseId) throw new Error("Course ID is required for mock course payment");
+  const course = await Course.findById(courseId);
+  if (!course) throw new Error(ERROR_MESSAGES.COURSE_NOT_FOUND);
+
+  // Check if already enrolled
+  const existing = await Enrollment.findOne({ user: userId, course: courseId });
+  if (existing) {
+    return { success: true, message: "Already enrolled in this course" };
+  }
+
+  const mockPayId = `mock_course_pay_${Date.now()}`;
+  const mockOrderId = `mock_course_ord_${Date.now()}`;
+
+  const payment = await Payment.create({
+    user: userId,
+    orderType: "course",
+    course: courseId,
+    amount: (course.price || 0) * 100,
+    razorpayOrderId: mockOrderId,
+    razorpayPaymentId: mockPayId,
+    status: "paid",
+    paidAt: new Date()
+  });
+
+  await fulfillPayment(payment);
+
+  return { success: true, message: "Course sandbox payment verified successfully" };
+};
+
 export const handleWebhook = async (rawBody, signature) => {
   // Validate Webhook Signature
   const expectedSignature = crypto
@@ -168,16 +198,20 @@ const fulfillPayment = async (payment) => {
   let itemName = "";
 
   if (payment.orderType === "course") {
-    // Create enrollment
-    await Enrollment.create({
-      user: payment.user,
-      course: payment.course,
-      payment: payment._id,
-      enrolledAt: new Date()
-    });
+    // Create enrollment safely
+    let enrollment = await Enrollment.findOne({ user: payment.user, course: payment.course });
+    if (!enrollment) {
+      enrollment = await Enrollment.create({
+        user: payment.user,
+        course: payment.course,
+        payment: payment._id,
+        enrolledAt: new Date()
+      });
+      await Course.findByIdAndUpdate(payment.course, { $inc: { enrollmentCount: 1 } });
+    }
 
-    const course = await Course.findByIdAndUpdate(payment.course, { $inc: { enrollmentCount: 1 } });
-    itemName = course.title;
+    const course = await Course.findById(payment.course);
+    itemName = course ? course.title : "Course";
 
     await Notification.create({
       user: payment.user,

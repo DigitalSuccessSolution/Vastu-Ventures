@@ -12,6 +12,12 @@ export const verifyPayment = asyncHandler(async (req, res) => {
   return sendResponse(res, 200, "Payment verified successfully", result);
 });
 
+export const verifyMockCoursePayment = asyncHandler(async (req, res) => {
+  const { courseId } = req.body;
+  const result = await paymentService.verifyMockCoursePayment(req.user._id, courseId);
+  return sendResponse(res, 200, "Mock course payment verified successfully", result);
+});
+
 export const handleWebhook = asyncHandler(async (req, res) => {
   const signature = req.headers["x-razorpay-signature"];
   const result = await paymentService.handleWebhook(req.rawBody, signature);
